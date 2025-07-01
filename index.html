@@ -3,60 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register | Sportify</title>
+  <title>Sportify | Home</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <!-- Header -->
+
   <header class="site-header">
     <div class="logo">🏅 Sportify</div>
     <nav>
-      <a href="#">Home</a>
+      <a href="index.html">Home</a>
       <a href="#">Events</a>
-      <a href="#">Teams</a>
-      <a href="#">Login</a>
+      <a href="Contact-Us.html">Contact US</a>
+      <a href="login.html">Login</a>
     </nav>
   </header>
 
-  <!-- Main Form -->
-  <main class="form-container">
-    <h2>Create Your Account</h2>
-    <form action="#" method="post" class="register-form">
-      <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" id="firstName" name="firstName" required />
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Welcome to Sportify</h1>
+      <p>Your one-stop destination for sports events, teams, and registration.</p>
+      <div class="hero-buttons">
+        <a href="register.html" class="btn primary-btn">Register</a>
+        <a href="login.html" class="btn secondary-btn">Login</a>
       </div>
-      <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" name="lastName" required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-      <div class="form-group">
-        <label for="number">Phone Number</label>
-        <input type="tel" id="number" name="number" pattern="[0-9]{10}" required />
-      </div>
-      <div class="form-group">
-        <label for="dob">Date of Birth</label>
-        <input type="date" id="dob" name="dob" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password (Min 6 characters)</label>
-        <input type="password" id="password" name="password" minlength="6" required />
-      </div>
+    </div>
+  </section>
 
-      <button type="submit" class="btn primary-btn">Sign Up</button>
-      <button type="button" class="btn google-btn">
-  <span>Sign Up with Google</span>
-  <img src="googleicon.png" alt="Google icon" class="google-icon" />
-</button>
+  <!-- About Section -->
+  <section id="about" class="info-section">
+    <h2>About Us</h2>
+    <p>Sportify centralizes all your campus and inter-college sports events in one place. Whether you're an athlete, organizer, or fan — we've got you covered!</p>
+  </section>
 
-    </form>
-  </main>
+  <!-- Features Section -->
+  <section id="features" class="info-section features">
+    <h2>Features</h2>
+    <ul>
+      <li>🏆 Easy event registration</li>
+      <li>📅 Centralized sports calendar</li>
+      <li>📣 Team announcements & updates</li>
+      <li>📥 Contact support & FAQs</li>
+    </ul>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="info-section contact-section">
+    <h2>Contact</h2>
+    <p>Have questions or want to collaborate? Email us at:</p>
+    <a href="mailto:sportifyofficial@gmail.com" class="email-link">sportifyofficial@gmail.com</a>
+  </section>
 
   <!-- Footer -->
   <footer class="site-footer">

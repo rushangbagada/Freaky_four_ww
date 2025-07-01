@@ -8,7 +8,121 @@ body {
   font-family: 'Roboto', sans-serif;
   background: #f0f4f8;
   color: #333;
+  
 }
+
+/* --------------------------------------------------------------------- */
+
+/* index page */
+
+/* Hero Section */
+.hero {
+  background: url('Assets/bg.jpeg') no-repeat center center/cover;
+  /* background: url('sports-background.jpg') no-repeat center center/cover; */
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: white;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-text {
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons .btn {
+  margin: 0 1rem;
+}
+
+/* Info Sections */
+.info-section {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: #f7f9fc;
+}
+
+.info-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #0a3d62;
+}
+
+.info-section p,
+.info-section ul {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Contact */
+.email-link {
+  color: #0a3d62;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* Buttons */
+.primary-btn {
+  background-color: #0a3d62;
+  color: white;
+}
+
+.secondary-btn {
+  background-color: white;
+  color: #0a3d62;
+  border: 2px solid #0a3d62;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  background-color: #074173;
+  color: white;
+}
+
+/* Footer */
+.site-footer {
+  background-color: #0a3d62;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+
+
+
+/* --------------------------------------------------------------------- */
 
 /* Header */
 .site-header {
@@ -128,3 +242,92 @@ body {
   text-decoration: none;
   margin: 0 0.5rem;
 }
+
+/* ----------------------------------------------------------------- */
+
+/* Contact Form Section */
+.contact-section {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.contact-section h2 {
+  text-align: center;
+  color: #0a3d62;
+  margin-bottom: 1rem;
+}
+
+.contact-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Team Section */
+.team-section {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+.team-section h2 {
+  color: #0a3d62;
+  margin-bottom: 2rem;
+}
+
+.team-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.team-card {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.team-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.team-card h3 {
+  margin-bottom: 0.5rem;
+  color: #0a3d62;
+}
+
+.team-card p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.Official-Email {
+  text-align: center;
+  margin-top: 2rem;
+  color: #0a3d62;
+}
+
