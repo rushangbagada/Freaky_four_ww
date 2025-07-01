@@ -1,0 +1,130 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #f0f4f8;
+  color: #333;
+}
+
+/* Header */
+.site-header {
+  background: #0a3d62;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.site-header nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+}
+
+.site-header nav a:hover {
+  text-decoration: underline;
+}
+
+/* Form */
+.form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0a3d62;
+}
+
+.register-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.register-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Buttons */
+.btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background-color: #0a3d62;
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #074173;
+}
+
+.google-btn {
+  background-color: white;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.google-btn:hover {
+  background-color: #f2f2f2;
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* space between text and icon */
+  background-color: white;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.google-icon {
+  height: 20px;
+  width: 20px;
+}
+
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #0a3d62;
+  color: white;
+  margin-top: 2rem;
+}
+
+.site-footer a {
+  color: #f9c74f;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
