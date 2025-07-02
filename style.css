@@ -52,17 +52,17 @@ body {
   color: #0a3d62;
 }
 
-.register-form .form-group {
+.Login-form .form-group,.register-form .form-group {
   margin-bottom: 1rem;
 }
 
-.register-form label {
+.Login-form label,.register-form label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.register-form input {
+.Login-form input,.register-form input {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -80,25 +80,25 @@ body {
   cursor: pointer;
 }
 
-.primary-btn {
+.primary-login,.primary-btn {
   background-color: #0a3d62;
   color: white;
 }
 
-.primary-btn:hover {
+.primary-login:hover,.primary-btn:hover {
   background-color: #074173;
 }
 
-.google-btn {
+.googe-login,.google-btn {
   background-color: white;
   color: #333;
   border: 1px solid #ccc;
 }
 
-.google-btn:hover {
+.google-login:hover,.google-btn:hover {
   background-color: #f2f2f2;
 }
-.google-btn {
+.google-login,.google-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,3 +128,31 @@ body {
   text-decoration: none;
   margin: 0 0.5rem;
 }
+
+.create{
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  text-align:center;
+  background-color: #0a3d62;
+  color: white;
+  position: relative;
+  bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.login{
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.create a {
+  color:white;
+  text-decoration: none;
+}
+.create .btn{
+  background-color:white;
+  color:#0a3d62;
+  margin-bottom: 2rem;
+}
+
