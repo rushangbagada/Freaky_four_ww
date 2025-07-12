@@ -4,7 +4,13 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "init-all": "node init_all.js",
+    "init-clubs": "node init_club.js",
+    "init-matches": "node init_match.js",
+    "init-upcoming": "node init_old_match.js",
+    "init-reviews": "node init_review.js",
+    "create-admin": "node createAdmin.js"
   },
   "keywords": [],
   "author": "",
