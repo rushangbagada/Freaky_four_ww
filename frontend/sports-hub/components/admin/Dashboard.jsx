@@ -8,6 +8,7 @@ import Analytics from './Analytics';
 import GalleryManagement from './GalleryManagement';
 import NewsManagement from './NewsManagement';
 import LiveMatchManagement from './LiveMatchManagement';
+import PlayerManagement from './PlayerManagement';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -103,6 +104,13 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('matches')}
         >
           ⚽ Match Management
+        </button>
+        
+        <button 
+          className={`nav-btn ${activeTab === 'players' ? 'active' : ''}`}
+          onClick={() => setActiveTab('players')}
+        >
+          👤 Player Management
         </button>
         
         {isAdmin && (
@@ -248,6 +256,7 @@ export default function AdminDashboard() {
         {activeTab === 'users' && isAdmin && <UserManagement />}
         {activeTab === 'clubs' && <ClubManagement user={user} />}
         {activeTab === 'matches' && <MatchManagement user={user} />}
+        {activeTab === 'players' && <PlayerManagement user={user} />}
         {activeTab === 'live-matches' && isAdmin && <LiveMatchManagement user={user} />}
         {activeTab === 'news' && isAdmin && <NewsManagement user={user} />}
         {activeTab === 'analytics' && isAdmin && <Analytics />}

@@ -1,28 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../src/AuthContext';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './css/header.css';
+import { useAuth } from '../src/AuthContext';
 
 export default function Header() {
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
-
+  const { user, isAuthenticated } = useAuth();
+  
   const toggleMenu = () => {
     const menu = document.getElementById('mobileMenu');
     if (menu) {
       menu.classList.toggle('show');
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    setShowUserMenu(false);
-    navigate('/');
-  };
-
-  const toggleUserMenu = () => {
-    setShowUserMenu(!showUserMenu);
   };
 
   return (
@@ -44,39 +32,15 @@ export default function Header() {
               <Link to="/calender" className="nav-link">🗓️ Calendar</Link>
               <Link to="/result" className="nav-link">🏅 Results</Link>
               <Link to="/gallery" className="nav-link">📸 Gallery</Link>
-              <Link to="/blog" className="nav-link">📝 Blog</Link>
-              <Link to="/gamepage" className="nav-link">🎮 Game</Link>
-              <Link to="/leaderboard" className="nav-link">🏆 Leaderboard</Link>
-              <Link to="/livesports" className="nav-link">📺 Live Sports</Link>
+              <Link to="/register" className="nav-link">👤 Register</Link>
               <Link to="/aboutus" className="nav-link">ℹ️ About</Link>
-              
-              {isAuthenticated() ? (
-                <div className="user-menu-container">
-                  <button className="user-menu-btn" onClick={toggleUserMenu}>
-                    👤 {user?.name || 'User'}
-                  </button>
-                  {showUserMenu && (
-                    <div className="user-menu">
-                      <div className="user-info">
-                        <p><strong>{user?.name}</strong></p>
-                        <p>{user?.email}</p>
-                        <p>{user?.department} • {user?.year}</p>
-                      </div>
-                      <div className="user-menu-actions">
-                        {(user?.role === 'admin' || user?.role === 'club_leader') && (
-                          <Link to="/admin" className="admin-btn">
-                            ⚙️ Admin Dashboard
-                          </Link>
-                        )}
-                        <button onClick={handleLogout} className="logout-btn">
-                          🚪 Logout
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <Link to="/gamepage" className="nav-link">ℹ️ gamepage</Link>
+              <Link to="/blog" className="nav-link">ℹ️ blog</Link>
+              <Link to="/livesports" className="nav-link">ℹ️ livesports</Link>
+              {!isAuthenticated() ? (
+                <Link to="/login" className="nav-link">ℹ️ login</Link>
               ) : (
-                <Link to="/login" className="nav-link">🔑 Login</Link>
+                <Link to="/profile" className="nav-link">👤 Profile</Link>
               )}
             </nav>
 
@@ -89,30 +53,15 @@ export default function Header() {
             <Link to="/calender" className="nav-link">🗓️ Calendar</Link>
             <Link to="/result" className="nav-link">🏅 Results</Link>
             <Link to="/gallery" className="nav-link">📸 Gallery</Link>
-            <Link to="/blog" className="nav-link">📝 Blog</Link>
-            <Link to="/gamepage" className="nav-link">🎮 Game</Link>
-            <Link to="/leaderboard" className="nav-link">🏆 Leaderboard</Link>
-            <Link to="/livesports" className="nav-link">📺 Live Sports</Link>
+            <Link to="/register" className="nav-link">👤 Register</Link>
             <Link to="/aboutus" className="nav-link">ℹ️ About</Link>
-            
-            {isAuthenticated() ? (
-              <div className="mobile-user-info">
-                <div className="user-details">
-                  <p><strong>{user?.name}</strong></p>
-                  <p>{user?.email}</p>
-                  <p>{user?.department} • {user?.year}</p>
-                </div>
-                {(user?.role === 'admin' || user?.role === 'club_leader') && (
-                  <Link to="/admin" className="mobile-admin-btn">
-                    ⚙️ Admin Dashboard
-                  </Link>
-                )}
-                <button onClick={handleLogout} className="mobile-logout-btn">
-                  🚪 Logout
-                </button>
-              </div>
+            <Link to="/gamepage" className="nav-link">ℹ️ gamepage</Link>
+            <Link to="/blog" className="nav-link">ℹ️ blog</Link>
+            <Link to="/livesports" className="nav-link">ℹ️ livesports</Link>
+            {!isAuthenticated() ? (
+              <Link to="/login" className="nav-link">ℹ️ login</Link>
             ) : (
-              <Link to="/login" className="nav-link">🔑 Login</Link>
+              <Link to="/profile" className="nav-link">👤 Profile</Link>
             )}
           </div>
         </div>

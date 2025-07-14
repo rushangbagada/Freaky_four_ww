@@ -1,5 +1,6 @@
+
 import React from 'react';
-import NewsFeed from './newsfeed';
+import NewsFeed from '../components/NewsFeed';
 import './css/blog.css';
 
 const Blog = () => {
@@ -16,6 +17,8 @@ const Blog = () => {
       <main className="main-content">
         <NewsFeed />
       </main>
+      
+      
     </div>
   );
 };

@@ -1,0 +1,47 @@
+/* leader.css */
+
+.leaderboard {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.leaderboard h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+  color: #333;
+}
+
+.leaderboard ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leaderboard li {
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leaderboard li:hover {
+  background-color: #e2e6ea;
+}
+
+.leaderboard li.highlight {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+}

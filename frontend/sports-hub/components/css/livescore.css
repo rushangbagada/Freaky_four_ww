@@ -1,0 +1,154 @@
+.score-card {
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.score-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Header Section */
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.sport-type {
+  font-size: 1rem;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.match-status {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-weight: bold;
+}
+
+/* Status Colors */
+.status-live {
+  background-color: #ff1744;
+  color: white;
+}
+
+.status-upcoming {
+  background-color: #2979ff;
+  color: white;
+}
+
+.status-finished {
+  background-color: #43a047;
+  color: white;
+}
+
+/* Team & Scores */
+.teams-scores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.team-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+
+.team-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.team-score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111;
+  margin-top: 0.4rem;
+}
+
+.vs-divider {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #888;
+}
+
+/* Match Info */
+.match-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.match-time, .match-venue {
+  flex: 1;
+}
+
+/* Live Pulse Animation */
+.live-pulse {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.pulse-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #ff1744;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(255, 23, 68, 0.7);
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(255, 23, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 23, 68, 0);
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .score-card {
+    padding: 1rem;
+  }
+
+  .teams-scores {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .team-row {
+    width: 100%;
+  }
+
+  .match-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

@@ -26,18 +26,18 @@ const MatchCard = ({ match, onPredict, userPrediction }) => {
             type="number"
             value={homeScore}
             onChange={e => setHomeScore(e.target.value)}
-            placeholder={`${match.team1} score`}
+            placeholder={`${match.homeTeam} score`}
           />
           <input
             type="number"
             value={awayScore}
             onChange={e => setAwayScore(e.target.value)}
-            placeholder={`${match.team2} score`}
+            placeholder={`${match.awayTeam} score`}
           />
           <button onClick={handleSubmit}>Submit Prediction</button>
         </>
       ) : (
-        <p>Final Score: {match.team1_score} - {match.team2_score}</p>
+        <p>Final Score: {match.homeScore} - {match.awayScore}</p>
       )}
 
       {userPrediction && (

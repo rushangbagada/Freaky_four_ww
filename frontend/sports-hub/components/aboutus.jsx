@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect , useState } from 'react';
 import './css/aboutus.css';
 
 export default function AboutUs() {
+
+  const [dataState, setDataState] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/review')
+    .then(res => res.json())
+    .then(data => {
+      setDataState(data);
+    })
+    .catch(err => console.error('Failed to fetch data:', err));
+  }, []);
   return (
     <div>
       {/* Hero Section */}
@@ -89,25 +100,25 @@ export default function AboutUs() {
 
       {/* Testimonials */}
       <section className="testimonials">
-        <h2>What Our Athletes Say</h2>
-        <p className="lead">Hear from the heart of our community</p>
-        <div className="grid grid-3">
-          <div className="card">
-            <img
-              src="https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=400"
-              alt="Sarah Johnson"
-            />
-            <h3>Sarah Johnson</h3>
-            <p className="role">Basketball Team Captain, Senior</p>
-            <blockquote>
-              Campus Sports Hub transformed my college experience. The friendships I've made and skills I've developed
-              here will last a lifetime.
-            </blockquote>
-          </div>
+  <h2>What Our Athletes Say</h2>
+  <p className="lead">Hear from the heart of our community</p>
+  <div className="grid grid-3">
+    {dataState.map((item, index) => (
+      <div className="card" key={index}>
+        <img
+          src={item.image}
+          alt={item.name}
+        />
+        <h3>{item.name}</h3>
+        <p className="role">{item.position}</p>
+        <blockquote className="quote">{item.review}</blockquote>
+      </div>
+    ))}
+  </div>
+</section> 
+
 
           {/* ... Add other testimonial cards for Michael Chen, Emma Rodriguez ... */}
-        </div>
-      </section>
 
       {/* Contact Section */}
       <section className="contact">

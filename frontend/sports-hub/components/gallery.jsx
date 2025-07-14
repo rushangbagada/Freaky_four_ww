@@ -1,123 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import './css/gallery.css';
 
-export default function Gallery({ user }) {
-  const [dataState, setDataState] = useState([]);
+export default function Gallery() {
+  const [allData, setAllData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [likedArray, setLikedArray] = useState([]);
   const [viewArray, setViewArray] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(""); // Add this state
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
     fetch('/api/gallery')
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch gallery items');
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        setDataState(data);
+        setAllData(data);
+        setFilteredData(data);
         setLikedArray(Array(data.length).fill(false));
         setViewArray(Array(data.length).fill(false));
-        setLoading(false);
       })
-      .catch(err => {
-        console.error('Failed to fetch data:', err);
-        setError('Failed to load gallery items. Please try again later.');
-        setLoading(false);
-      });
+      .catch(err => console.error('Failed to fetch data:', err));
   }, []);
 
-  const handleClick = (index) => {
-    const newLiked = [...likedArray];
-    const newView = [...viewArray];
-    const newData = [...dataState];
+  const handleLike = (index, id) => {
+    const updated = [...filteredData];
+    const likedCopy = [...likedArray];
+    likedCopy[index] = !likedCopy[index];
+    updated[index].likes += likedCopy[index] ? 1 : -1;
 
-    const wasLiked = newLiked[index];
-    newLiked[index] = !wasLiked;
-
-    const updatedCard = { ...newData[index] };
-    updatedCard.likes += newLiked[index] ? 1 : -1;
-
-    if (!newView[index]) {
-      updatedCard.views += 1;
-      newView[index] = true;
-    }
-
-    newData[index] = updatedCard;
-
-    setLikedArray(newLiked);
-    setViewArray(newView);
-    setDataState(newData);
-
-    // Only allow admin to update gallery
-    if (user && user.role === 'admin') {
-      handleClick_card(updatedCard.id, updatedCard.likes, updatedCard.views);
-    }
+    setLikedArray(likedCopy);
+    setFilteredData(updated);
+    handleUpdate(id, updated[index].likes, updated[index].views);
   };
 
-  const handleClick_card = (id, likes, views) => {
-    fetch("/api/gallery/update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem('token')}`
-      },
+  const handleView = (index, id) => {
+    if (viewArray[index]) return;
+
+    const viewedCopy = [...viewArray];
+    const updated = [...filteredData];
+    viewedCopy[index] = true;
+    updated[index].views += 1;
+
+    setViewArray(viewedCopy);
+    setFilteredData(updated);
+    handleUpdate(id, updated[index].likes, updated[index].views);
+  };
+
+  const handleUpdate = (id, likes, views) => {
+    fetch('/api/gallery/update', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, likes, views })
     })
-      .then(response => {
-        if (!response.ok) throw new Error("Failed to update");
-        return response.json();
-      })
-      .then(data => {
-        console.log("✅ Server updated:", data);
-      })
-      .catch((error) => {
-        console.error("❌ Update error:", error);
-      });
+      .then(res => res.json())
+      .then(data => console.log('Updated:', data))
+      .catch(err => console.error('Update failed:', err));
   };
 
-  // Filter gallery items based on selected category
-  const filteredItems = selectedCategory
-    ? dataState.filter(item => item.category === selectedCategory)
-    : dataState;
+  const handleFilterChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+    if (category === 'All') {
+      setFilteredData(allData);
+      setLikedArray(Array(allData.length).fill(false));
+      setViewArray(Array(allData.length).fill(false));
+    } else {
+      const filtered = allData.filter(item => item.category === category);
+      setFilteredData(filtered);
+      setLikedArray(Array(filtered.length).fill(false));
+      setViewArray(Array(filtered.length).fill(false));
+    }
+  };
+
+  const sportOptions = ['All', 'Football', 'Basketball', 'Cricket', 'Badminton', 'Volleyball', 'Tennis'];
 
   return (
     <>
-      
+      <header className="hero">
+        <div className="hero-content">
+          <h1>Photo Gallery</h1>
+          <p>Capturing the spirit, passion, and triumph of campus sports</p>
+        </div>
+      </header>
+
       <main>
         <section className="gallery-header">
           <h2>Sports Gallery</h2>
           <div className="filter-box">
-            <select 
-              value={selectedCategory} 
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="">All Sports</option>
-              <option>Football</option>
-              <option>Basketball</option>
-              <option>Cricket</option>
-              <option>Badminton</option>
-              <option>Volleyball</option>
-              <option>Tennis</option>
+            <select value={selectedCategory} onChange={handleFilterChange}>
+              {sportOptions.map(sport => (
+                <option key={sport} value={sport}>{sport}</option>
+              ))}
             </select>
           </div>
         </section>
 
         <section className="gallery-grid">
-          {filteredItems.map((item, index) => (
+          {filteredData.map((item, index) => (
             <div className="card" key={item.id}>
               <img
                 src={item.image}
-                alt={item.title || item.category || "Sport moment"}
-                onClick={() => handleClick(index)}
+                alt="Sport moment"
+                onClick={() => handleView(index, item.id)}
+                style={{ cursor: 'pointer' }}
               />
-              {item.title && <h3 className="card-title">{item.title}</h3>}
-              {item.description && <p className="card-description">{item.description}</p>}
               <div className="info">
-                <span onClick={() => handleClick(index)} style={{ cursor: 'pointer' }}>
+                <span onClick={() => handleLike(index, item.id)} style={{ cursor: 'pointer' }}>
                   <svg
                     className={`heart-icon ${likedArray[index] ? 'liked' : 'unliked'}`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -135,9 +121,7 @@ export default function Gallery({ user }) {
                   <span>{item.likes}</span>
                 </span>
                 <span>👁️ <span>{item.views}</span></span>
-                <span className={`tag ${item.category?.toLowerCase() || 'football'}`}>
-                  {item.category || 'Football'}
-                </span>
+                <span className={`tag ${item.category?.toLowerCase()}`}>{item.category}</span>
               </div>
             </div>
           ))}
@@ -146,3 +130,4 @@ export default function Gallery({ user }) {
     </>
   );
 }
+

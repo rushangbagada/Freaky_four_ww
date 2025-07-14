@@ -1,27 +1,33 @@
 const mongoose = require('mongoose');
 
 const clubDetailSchema = new mongoose.Schema({
-    name: {
+    name:
+    {
         type: String,
         required: true
     },
-    description: {
+    description:
+    {
         type: String,
         required: true
     },
-    image: {
+    image:
+    {
         type: String,
         required: true
     },
-    upcoming_matches: {
+    upcoming_matches:
+    {
         type: Number,
         required: true
     },
-    active_players: {
+    active_players:
+    {
         type: Number,
         required: true
     },
-    win_rate: {
+    win_rate:
+    {
         type: Number,
         required: true
     }
@@ -29,3 +35,4 @@ const clubDetailSchema = new mongoose.Schema({
 
 const ClubDetail = mongoose.model('ClubDetail', clubDetailSchema);
 module.exports = ClubDetail;
+    

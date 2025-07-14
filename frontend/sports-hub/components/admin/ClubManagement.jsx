@@ -334,12 +334,18 @@ export default function ClubManagement({ user }) {
                 </button>
                 {isAdmin && (
                   <>
-                    <button
+                    <a 
+                      href="#/player-management"
                       className="manage-players-btn"
-                      onClick={() => openPlayerManagement(club)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        // Store the selected club ID in localStorage or use a state management solution
+                        localStorage.setItem('selectedClubId', club._id);
+                        window.location.href = '/admin/player-management';
+                      }}
                     >
                       Manage Players
-                    </button>
+                    </a>
                     <button
                       className="delete-btn"
                       onClick={() => handleDeleteClub(club._id)}

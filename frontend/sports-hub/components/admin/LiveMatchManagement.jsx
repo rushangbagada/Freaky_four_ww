@@ -49,7 +49,7 @@ export default function LiveMatchManagement({ user }) {
 
   const fetchLiveMatches = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/live-matches', {
+      const response = await fetch('http://localhost:5000/api/admin/live-matches', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -88,6 +88,8 @@ export default function LiveMatchManagement({ user }) {
   const handleAddLiveMatch = async (e) => {
     e.preventDefault();
     try {
+      console.log('Submitting new match:', newMatch);
+      
       const response = await fetch('http://localhost:5000/api/admin/live-matches', {
         method: 'POST',
         headers: {
@@ -97,7 +99,12 @@ export default function LiveMatchManagement({ user }) {
         body: JSON.stringify(newMatch)
       });
 
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
+        const data = await response.json();
+        console.log('Success response:', data);
+        
         setShowAddMatch(false);
         setNewMatch({
           id: Math.floor(Math.random() * 10000),
@@ -119,9 +126,15 @@ export default function LiveMatchManagement({ user }) {
           }
         });
         fetchLiveMatches();
+        alert('Live match added successfully!');
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error response:', errorData);
+        alert(`Failed to add live match: ${errorData.message || response.statusText}`);
       }
     } catch (error) {
       console.error('Error adding live match:', error);
+      alert(`Error adding live match: ${error.message}`);
     }
   };
 
@@ -227,6 +240,52 @@ export default function LiveMatchManagement({ user }) {
     }
   };
 
+  // Add this function to the existing LiveMatchManagement component
+  
+  // Inside the LiveMatchManagement component, add this function:
+  const handleUpdateScoresAndCalculatePoints = async (matchId, team1Score, team2Score) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}/update-scores`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({
+          team1_score: parseInt(team1Score),
+          team2_score: parseInt(team2Score),
+          status: 'finished'
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update scores and calculate points');
+      }
+  
+      const data = await response.json();
+      console.log('Scores updated and points calculated:', data);
+      
+      // Update the match in the UI
+      setLiveMatches(prevMatches => 
+        prevMatches.map(match => 
+          match._id === matchId ? data.match : match
+        )
+      );
+  
+      // Show success message
+      alert('Match scores updated and user points calculated successfully!');
+    } catch (error) {
+      console.error('Error updating scores:', error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Then add a button in your match display UI:
+  // <button onClick={() => handleUpdateScoresAndCalculatePoints(match._id, team1Score, team2Score)}>Update Scores & Calculate Points</button>
+  
   if (loading) {
     return <div className="loading">Loading live matches...</div>;
   }

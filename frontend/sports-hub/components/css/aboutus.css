@@ -122,6 +122,12 @@ section {
   margin-bottom: 1rem;
 }
 
+.quote {
+  font-style: italic;
+  color:#111827;
+  margin-bottom: 1rem;
+}
+
 /* Contact Section */
 .contact ul {
   list-style: none;

@@ -3,6 +3,8 @@ const Live_Match = require('../models/live_match');
 // Create a new live match
 const createLiveMatch = async (req, res) => {
   try {
+    console.log('Received request to create live match:', req.body);
+    
     const { id, sport, team1, team2, team1_score, team2_score, status, time, venue, url } = req.body;
     
     const newLiveMatch = new Live_Match({
@@ -25,9 +27,14 @@ const createLiveMatch = async (req, res) => {
       }
     });
 
+    console.log('Created new live match object:', newLiveMatch);
+    
     const savedLiveMatch = await newLiveMatch.save();
+    console.log('Saved live match:', savedLiveMatch);
+    
     res.status(201).json({ message: 'Live match created successfully', match: savedLiveMatch });
   } catch (error) {
+    console.error('Error in createLiveMatch:', error);
     res.status(500).json({ message: 'Error creating live match', error: error.message });
   }
 };
