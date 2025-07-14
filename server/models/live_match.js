@@ -19,20 +19,28 @@ const live_matchSchema = new mongoose.Schema({
   },
   team1_score: {
     type: Number,
-    default: 0
+    required: true
   },
   team2_score: {
     type: Number,
-    default: 0
+    required: true
   },
   status: {
     type: String,
-    enum: ['live', 'upcoming', 'finished'],
-    default: 'upcoming'
+    required: true
   },
-  time: String,
-  venue: String,
-  url: String,
+  time: {
+    type: String,
+    required: true
+  },
+  venue: {
+    type: String,
+    required: true
+  },
+  url: {
+    type: String,
+    required: false  // Change from true to false to make it optional
+  },
   events: [
     {
       time: { type: String, required: true },
@@ -47,23 +55,24 @@ const live_matchSchema = new mongoose.Schema({
   ],
   stats: {
     possession: {
-      home: { type: Number, default: 50 },
-      away: { type: Number, default: 50 }
+      home: { type: Number, required: true },
+      away: { type: Number, required: true }
     },
     shots: {
-      home: { type: Number, default: 0 },
-      away: { type: Number, default: 0 }
+      home: { type: Number, required: true },
+      away: { type: Number, required: true }
     },
     shots_on_target: {
-      home: { type: Number, default: 0 },
-      away: { type: Number, default: 0 }
+      home: { type: Number, required: true },
+      away: { type: Number, required: true }
     },
     fouls: {
-      home: { type: Number, default: 0 },
-      away: { type: Number, default: 0 }
-    }
+      home: { type: Number, required: true },
+      away: { type: Number, required: true }
+    },
+    
   }
 });
 
-const Live_Match = mongoose.model('Live_Match', live_matchSchema);
-module.exports = Live_Match;
+const Live_match = mongoose.model('Live_Match', live_matchSchema);
+module.exports = Live_match;

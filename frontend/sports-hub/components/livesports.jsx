@@ -1,74 +1,114 @@
+
 import React, { useState, useEffect } from 'react';
+import LiveScore from './livescore';
+import MatchViewer from './matchviewer';
+import './css/livesports.css';
 
 const LiveSports = () => {
-  const [liveMatches, setLiveMatches] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState([]);
 
   useEffect(() => {
-    // Fetch live matches data from your API
-    fetch('/api/live-matches')
+    fetch("/api/live_matches")
       .then(res => res.json())
-      .then(data => {
-        setLiveMatches(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching live matches:', err);
-        setLoading(false);
-      });
+      .then(data => 
+        {
+            // console.log(data);
+            setMatches(data)
+        })
+      .catch(err => console.error(err));
   }, []);
 
-  if (loading) {
-    return <div className="loading">Loading live matches...</div>;
-  }
+  const [selectedMatch, setSelectedMatch] = useState(null);
+
+  // Simulate live score updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMatches((prevMatches) => 
+        prevMatches.map(match => {
+          if (match.status === 'live' && Math.random() > 0.7) {
+            const isHomeScore = Math.random() > 0.5;
+            return {
+              ...match,
+              team1_score: isHomeScore ? match.team1_score + 1 : match.team1_score,
+              team2_score: !isHomeScore ? match.team2_score + 1 : match.team2_score,
+            };
+          }
+          return match;
+        })
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const liveMatches = matches.filter(match => match.status === 'live');
 
   return (
-    <div className="live-sports-page">
-      <div className="hero-section">
-        <h1>Live Sports</h1>
-        <p>Watch and follow live matches in real-time!</p>
-      </div>
-      
-      <div className="live-matches-container">
-        {liveMatches.length > 0 ? (
-          liveMatches.map(match => (
-            <div key={match.id} className="live-match-card">
-              <div className="match-header">
-                <div className="match-title">{match.title}</div>
-                <div className="live-indicator">LIVE</div>
-              </div>
-              
-              <div className="teams-container">
-                <div className="team team-home">
-                  <div className="team-name">{match.homeTeam}</div>
-                  <div className="team-score">{match.homeScore}</div>
-                </div>
-                
-                <div className="vs">VS</div>
-                
-                <div className="team team-away">
-                  <div className="team-name">{match.awayTeam}</div>
-                  <div className="team-score">{match.awayScore}</div>
-                </div>
-              </div>
-              
-              <div className="match-details">
-                <div className="match-time">{match.currentTime}' min</div>
-                <div className="match-status">{match.status}</div>
-              </div>
-              
-              <div className="recent-events">
-                {match.recentEvents && match.recentEvents.map((event, index) => (
-                  <div key={index} className={`event ${event.type}`}>
-                    <span className="event-time">{event.time}'</span>
-                    <span className="event-description">{event.description}</span>
-                  </div>
+    <div className="live-sports-container">
+      <header className="sports-header">
+        <h1>Campus Sports Live</h1>
+        <div className="live-indicator">
+          <span className="live-dot"></span>
+          <span>LIVE</span>
+        </div>
+      </header>
+
+      <div className="sports-content">
+        <div className="scores-section">
+          <h2>Live Scores</h2>
+          <div className="live-scores-grid">
+            {liveMatches.map(match => (
+              <LiveScore 
+                key={match.id}
+                match={match}
+                onMatchSelect={setSelectedMatch}
+              />
+            ))}
+          </div>
+
+          {/* {otherMatches.length > 0 && (
+            <>
+              <h3>Recent & Upcoming</h3>
+              <div className="other-scores-grid">
+                {otherMatches.map(match => (
+                  <LiveScore 
+                    key={match.id}
+                    match={match}
+                    onMatchSelect={setSelectedMatch}
+                  />
                 ))}
               </div>
-            </div>
-          ))
-        ) : (
-          <div className="no-matches">No live matches currently available</div>
+            </>
+          )} */}
+          
+            
+        {liveMatches.map((match) => (
+  <div key={match.id}>
+    <h2>{match.team1} vs {match.team2} ({match.sport})</h2>
+    <iframe 
+      src={match.url}
+      title={`Live match: ${match.team1} vs ${match.team2}`}
+      width="100%" 
+      height="500"
+      style={{ border: 'none' }}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="strict-origin-when-cross-origin"
+    />
+  </div>
+))}
+
+
+        </div>
+
+        {selectedMatch && (
+          <div className="match-viewer-section">
+            <MatchViewer 
+              match={selectedMatch}
+              onClose={() => setSelectedMatch(null)}
+            />
+          </div>
         )}
       </div>
     </div>

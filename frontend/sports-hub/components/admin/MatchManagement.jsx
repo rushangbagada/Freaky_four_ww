@@ -611,3 +611,25 @@ export default function MatchManagement({ user }) {
     </div>
   );
 }
+const fetchMatches = async () => {
+  try {
+    // Use the result endpoint directly instead of trying matches first
+    const response = await fetch('http://localhost:5000/api/result', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      setMatches(Array.isArray(data) ? data : []);
+    } else {
+      setMatches([]);
+    }
+  } catch (error) {
+    console.error('Error fetching matches:', error);
+    setMatches([]);
+  } finally {
+    setLoading(false);
+  }
+};

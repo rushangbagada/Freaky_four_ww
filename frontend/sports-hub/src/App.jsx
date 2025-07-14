@@ -12,6 +12,7 @@ import Result from '../components/result';
 import ClubDetails from '../components/club-details';
 import Calendar from '../components/calender';
 import AdminDashboard from '../components/admin/Dashboard';
+import Profile from '../components/profile';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -38,8 +39,10 @@ function AppRoutes() {
         <Route path="/result" element={<Result />} />
         <Route path="/club-details" element={<ClubDetails />} />
         <Route path="/calender" element={<Calendar />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         {/* Add more protected routes here as needed */}
+        <Route path='/profile' element={<Profile/>}/>
       </Routes>
       <Footer />
     </Router>

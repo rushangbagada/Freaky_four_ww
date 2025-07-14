@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import FunFacts from './funfacts';
+import FunFacts from './funfacts.jsx';
 import './css/newsfeed.css';
 
 const NewsFeed = () => {
@@ -43,7 +44,7 @@ const NewsFeed = () => {
           </div>
           
           <div className="news-grid">
-            {newsItems.map((item, index) => (
+            {newsItems.map((item,index) => (
               <article key={index} className="news-card">
                 <div className="news-card-header">
                   <span className="news-emoji">{item.image}</span>
@@ -57,6 +58,7 @@ const NewsFeed = () => {
                   <h3 className="news-title">{item.title}</h3>
                   <p className="news-summary">{item.description}</p>
                 </div>
+                
               </article>
             ))}
           </div>

@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 const Live_Match = require('./models/live_match');
-const connectDB = require('./config/db');
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 5000;
 
-connectDB();
+main()
+  .then(() => app.listen(port, () => console.log(`Server is listening on port ${port}`)))
+  .catch(err => console.log(err));
 
-const sampleLiveMatches = [
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/sports-hub');
+}
+
+const all_live_matches = [
   {
     id: '1',
     sport: 'Basketball',
@@ -18,32 +26,32 @@ const sampleLiveMatches = [
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
     events: [
       {
-        time: '2nd Quarter',
-        type: 'score',
+        time: '45\'',
+        type: 'goal',
         team: 'Engineering Eagles',
         player: 'John Smith',
-        description: '3-point shot'
+        description: 'Goal scored from penalty kick'
       },
       {
-        time: '1st Quarter',
-        type: 'foul',
+        time: '38\'',
+        type: 'card',
         team: 'Business Bears',
         player: 'Mike Johnson',
-        description: 'Personal foul'
+        description: 'Yellow card for unsporting behavior'
       },
       {
-        time: '1st Quarter',
-        type: 'score',
+        time: '22\'',
+        type: 'goal',
         team: 'Business Bears',
         player: 'Sarah Davis',
-        description: 'Layup'
+        description: 'Goal from free kick'
       }
     ],
     stats: {
-      possession: { home: 45, away: 55 },
-      shots: { home: 32, away: 28 },
-      shots_on_target: { home: 18, away: 15 },
-      fouls: { home: 8, away: 12 }
+      possession: { home: 58, away: 42 },
+      shots: { home: 12, away: 8 },
+      shots_on_target: { home: 5, away: 3 },
+      fouls: { home: 7, away: 11 }
     }
   },
   {
@@ -62,21 +70,21 @@ const sampleLiveMatches = [
         time: '45\'',
         type: 'goal',
         team: 'Arts Arrows',
-        player: 'Emily Parker',
+        player: 'John Smith',
         description: 'Goal scored from penalty kick'
       },
       {
         time: '38\'',
         type: 'card',
         team: 'Science Sharks',
-        player: 'David Wilson',
+        player: 'Mike Johnson',
         description: 'Yellow card for unsporting behavior'
       },
       {
         time: '22\'',
         type: 'goal',
         team: 'Science Sharks',
-        player: 'Lisa Brown',
+        player: 'Sarah Davis',
         description: 'Goal from free kick'
       }
     ],
@@ -100,55 +108,80 @@ const sampleLiveMatches = [
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
     events: [
       {
-        time: 'Set 3',
-        type: 'point',
+        time: '45\'',
+        type: 'goal',
         team: 'Medical Mavericks',
-        player: 'Alex Turner',
-        description: 'Ace serve'
+        player: 'John Smith',
+        description: 'Goal scored from penalty kick'
       },
       {
-        time: 'Set 2',
-        type: 'substitution',
+        time: '38\'',
+        type: 'card',
         team: 'Law Lions',
-        player: 'Chris Martin',
-        description: 'Player substitution'
+        player: 'Mike Johnson',
+        description: 'Yellow card for unsporting behavior'
       },
       {
-        time: 'Set 1',
-        type: 'point',
+        time: '22\'',
+        type: 'goal',
         team: 'Law Lions',
-        player: 'Jessica Lee',
-        description: 'Spike point'
+        player: 'Sarah Davis',
+        description: 'Goal from free kick'
       }
     ],
     stats: {
-      possession: { home: 55, away: 45 },
-      shots: { home: 45, away: 42 },
-      shots_on_target: { home: 32, away: 28 },
-      fouls: { home: 3, away: 5 }
+      possession: { home: 58, away: 42 },
+      shots: { home: 12, away: 8 },
+      shots_on_target: { home: 5, away: 3 },
+      fouls: { home: 7, away: 11 }
+    }
+  },
+  {
+    id: '4',
+    sport: 'Tennis',
+    team1: 'Computer Cobras',
+    team2: 'History Hawks',
+    team1_score: 6,
+    team2_score: 4,
+    status: 'finished',
+    time: 'Final',
+    venue: 'Tennis Courts',
+    url: 'https://www.youtube.com/embed/l88pZnG-2S0',
+    events:[
+      {
+        time: '45\'',
+        type: 'goal',
+        team: 'Computer Cobras',
+        player: 'John Smith',
+        description: 'Goal scored from penalty kick'
+      },
+      {
+        time: '38\'',
+        type: 'card',
+        team: 'History Hawks',
+        player: 'Mike Johnson',
+        description: 'Yellow card for unsporting behavior'
+      },
+      {
+        time: '22\'',
+        type: 'goal',
+        team: 'History Hawks',
+        player: 'Sarah Davis',
+        description: 'Goal from free kick'
+      }
+    ],
+    stats: {
+      possession: { home: 58, away: 42 },
+      shots: { home: 12, away: 8 },
+      shots_on_target: { home: 5, away: 3 },
+      fouls: { home: 7, away: 11 }
     }
   }
 ];
 
-async function initializeLiveMatches() {
-  try {
-    console.log("🚀 Starting live match data initialization...");
-    
-    // Clear existing data
-    await Live_Match.deleteMany({});
-    console.log("🗑️  Cleared existing live match data");
-    
-    // Insert new data
-    const liveMatches = await Live_Match.insertMany(sampleLiveMatches);
-    
-    console.log("✅ Live match data initialization completed successfully!");
-    console.log(`📊 Live matches added: ${liveMatches.length}`);
-    
-    process.exit(0);
-  } catch (err) {
-    console.log("❌ Error during live match initialization:", err);
-    process.exit(1);
-  }
-}
+Live_Match.insertMany(all_live_matches)
+  .then((res) => console.log('Inserted Matches:', res))
+  .catch((err) => console.log('Error Inserting Matches:', err));
 
-initializeLiveMatches();
+
+ 

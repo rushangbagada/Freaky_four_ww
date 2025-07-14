@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2024 Campus Sports Hub. All rights reserved. Built with passion for college sports.</p>
+          <p>© 2025 Campus Sports Hub. All rights reserved. Built with passion for college sports.</p>
         </div>
       </div>
     </footer>
