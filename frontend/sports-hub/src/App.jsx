@@ -45,8 +45,8 @@ function AppRoutes() {
         <Route path="/turf" element={<Turf />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/PaymentSuccess" element={<PaymentSuccess />} />
-        <Route path="/PaymentFailed" element={<PaymentFailed />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
         {/* Add more protected routes here as needed */}
       </Routes>
       <Footer />
