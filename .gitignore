@@ -74,3 +74,5 @@ Thumbs.db
 # Stripe keys and secrets
 stripe_*
 *stripe*
+
+

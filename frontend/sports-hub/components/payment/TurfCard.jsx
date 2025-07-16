@@ -2,7 +2,9 @@ import React from 'react';
 import './TurfCard.css';
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe("pk_test_51RlXxaEF9zgTF9mRW3INOvLqxwJCxX5jRQEc5GSv3IYnpS7Ewg9OhMAjR6SwOpQ0V76OrM1nQ20k2kiublFyVE1A00ihn2qr7i");
+console.log("Loaded Stripe Key:", import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const TurfCard = ({ id, name, location, price, imageUrl, availability }) => {
   const handleBooking = async () => {
