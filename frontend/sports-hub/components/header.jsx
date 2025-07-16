@@ -30,6 +30,7 @@ export default function Header() {
               <Link to="/" className="nav-link active">🏆 Home</Link>
               <Link to="/sports-clubs" className="nav-link">👥 Sports Clubs</Link>
               <Link to="/calender" className="nav-link">🗓️ Calendar</Link>
+              <Link to="/turf" className="nav-link">🏟️ Book Turf</Link>
               <Link to="/result" className="nav-link">🏅 Results</Link>
               <Link to="/gallery" className="nav-link">📸 Gallery</Link>
               <Link to="/register" className="nav-link">👤 Register</Link>
@@ -51,6 +52,7 @@ export default function Header() {
             <Link to="/" className="nav-link active">🏆 Home</Link>
             <Link to="/sports-clubs" className="nav-link">👥 Sports Clubs</Link>
             <Link to="/calender" className="nav-link">🗓️ Calendar</Link>
+            <Link to="/turf" className="nav-link">🏟️ Book Turf</Link>
             <Link to="/result" className="nav-link">🏅 Results</Link>
             <Link to="/gallery" className="nav-link">📸 Gallery</Link>
             <Link to="/register" className="nav-link">👤 Register</Link>

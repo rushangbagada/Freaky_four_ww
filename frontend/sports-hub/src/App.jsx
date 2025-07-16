@@ -13,6 +13,9 @@ import ClubDetails from '../components/club-details';
 import Calendar from '../components/calender';
 import AdminDashboard from '../components/admin/Dashboard';
 import Profile from '../components/profile';
+import PaymentSuccess from '../components/payment/PaymentSuccess';
+import PaymentFailed from '../components/payment/PaymentFailed';
+import Turf from '../components/turf';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -39,10 +42,12 @@ function AppRoutes() {
         <Route path="/result" element={<Result />} />
         <Route path="/club-details" element={<ClubDetails />} />
         <Route path="/calender" element={<Calendar />} />
+        <Route path="/turf" element={<Turf />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/PaymentSuccess" element={<PaymentSuccess />} />
+        <Route path="/PaymentFailed" element={<PaymentFailed />} />
         {/* Add more protected routes here as needed */}
-        <Route path='/profile' element={<Profile/>}/>
       </Routes>
       <Footer />
     </Router>

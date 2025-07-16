@@ -533,3 +533,39 @@ app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
 });
 
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+app.post("/api/booking", async (req, res) => {
+  const { price, name, location } = req.body;
+
+  if (!price || !name || !location) {
+    return res.status(400).json({ message: "Price, name, and location are required" });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: { 
+              name: `Turf Booking - ${name}`,
+              description: `Location: ${location}`
+            },
+            unit_amount: price * 100, // price in paise
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: "http://localhost:5173/payment/PaymentSuccess", // ✅ make sure this exists in frontend
+      cancel_url: "http://localhost:5173/payment/PaymentFailed",   // ✅ make sure this exists in frontend
+    });
+
+    res.status(200).json({ id: session.id, url: session.url });
+  } catch (err) {
+    console.error("Stripe checkout error:", err);
+    res.status(500).json({ message: "Stripe checkout failed", error: err.message });
+  }
+});

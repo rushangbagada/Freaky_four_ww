@@ -21,7 +21,9 @@ import LiveSports from '../components/livesports'
 import ClubDetails from '../components/club-details'
 import ReviewsPage from '../components/reviews'
 const AdminDashboard = lazy(() => import('../components/admin/Dashboard'));
-
+import PaymentSuccess from '../components/payment/PaymentSuccess';
+import PaymentFailed from '../components/payment/PaymentFailed';
+import Turf from '../components/turf';
 
 
 const router = createBrowserRouter([
@@ -98,6 +100,18 @@ const router = createBrowserRouter([
       {
         path: '/admin',
         element: <Suspense fallback={<div>Loading...</div>}><AdminDashboard /></Suspense>
+      },
+      {
+        path: '/payment/PaymentSuccess',
+        element: <PaymentSuccess />
+      },
+      {
+        path: '/payment/PaymentFailed',
+        element: <PaymentFailed />
+      },
+      {
+        path: '/turf',
+        element: <Turf />
       },
       {
         path: '*',
