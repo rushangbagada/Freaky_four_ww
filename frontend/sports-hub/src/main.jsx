@@ -24,6 +24,7 @@ const AdminDashboard = lazy(() => import('../components/admin/Dashboard'));
 import PaymentSuccess from '../components/payment/PaymentSuccess';
 import PaymentFailed from '../components/payment/PaymentFailed';
 import Turf from '../components/turf';
+import Minigames from '../components/minigames';
 
 
 const router = createBrowserRouter([
@@ -112,6 +113,22 @@ const router = createBrowserRouter([
       {
         path: '/turf',
         element: <Turf />
+      },
+      {
+        path: '/minigames',
+        element: <Minigames />
+      },
+      {
+        path: '/tetris',
+        element: <div>Tetris Game - Coming Soon!</div>
+      },
+      {
+        path: '/memory-game', 
+        element: <div>Memory Game - Coming Soon!</div>
+      },
+      {
+        path: '/candy-crush',
+        element: <div>Candy Crush - Coming Soon!</div>
       },
       {
         path: '*',

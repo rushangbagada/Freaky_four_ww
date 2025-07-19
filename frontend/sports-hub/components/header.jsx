@@ -43,6 +43,7 @@ export default function Header() {
               ) : (
                 <Link to="/profile" className="nav-link">👤 Profile</Link>
               )}
+              <Link to="/minigames" className="nav-link">🎮 Minigames</Link>
             </nav>
 
             <button className="menu-toggle" onClick={toggleMenu}>☰</button>
@@ -65,6 +66,7 @@ export default function Header() {
             ) : (
               <Link to="/profile" className="nav-link">👤 Profile</Link>
             )}
+            <Link to="/minigames" className="nav-link">🎮 Minigames</Link>
           </div>
         </div>
       </header>
