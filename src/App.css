@@ -1,0 +1,36 @@
+/* Additional game-specific styles can be added here if needed */
+
+.game-container {
+  position: relative;
+}
+
+/* Add some responsive design for smaller screens */
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .game-title {
+    font-size: 2rem;
+  }
+  
+  .game {
+    width: 320px;
+    height: 320px;
+    padding: 3px;
+  }
+  
+  .game img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .score-board {
+    padding: 10px 20px;
+  }
+  
+  .score-board h2 {
+    font-size: 1.5rem;
+  }
+}
