@@ -1,0 +1,152 @@
+/* General Layout */
+.game-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  background-color: #f9f9f9;
+}
+
+/* Info Bar (Timer + Button + Message) */
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.timer h3 {
+  font-size: 1.5rem;
+  color: #4caf50;
+  background: #e0f7ea;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+/* Reset / Start Button */
+.reset-btn {
+  background-color: #2196f3;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  padding: 0.6em 1.4em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.2);
+}
+
+.reset-btn:hover {
+  background-color: #1976d2;
+}
+
+/* Completion Message */
+.completion-message {
+  width: 100%;
+  margin-top: 1.2rem;
+  background-color: #e8f5e9;
+  border-left: 6px solid #4caf50;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Game Grid (Cards) */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  justify-items: center;
+}
+
+/* Card Component Placeholder (customize as needed) */
+.card {
+  width: 80px;
+  height: 80px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.card img {
+  width: 70%;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+.card.correct {
+  background-color: #c8e6c9;
+}
+.card.wrong {
+  background-color: #ffcdd2;
+}
+.card.active {
+  background-color: #bbdefb;
+}
+
+/* Leaderboard */
+.leaderboard {
+  margin-top: 2rem;
+  background-color: #fff3e0;
+  border: 1px solid #ffcc80;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.leaderboard h3 {
+  color: #ff9800;
+  margin-bottom: 0.8rem;
+}
+
+.leaderboard ol {
+  padding-left: 1rem;
+  list-style-position: inside;
+}
+
+.leaderboard li {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+}
+
+.leaderboard .time {
+  color: #e65100;
+  font-weight: bold;
+}
+
+.leaderboard .date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Responsive Fixes */
+@media (max-width: 600px) {
+  .game-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .card {
+    width: 70px;
+    height: 70px;
+  }
+}
