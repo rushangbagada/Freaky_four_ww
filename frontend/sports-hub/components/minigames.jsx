@@ -4,13 +4,14 @@ import './css/minigames.css';
 
 const GameLandingPage = () => {
   const navigate = useNavigate();
+
   const games = [
     {
       id: 'tetris-game',
       title: 'Tetris Game',
       icon: '🧩',
       description: 'Stack blocks and clear lines in this classic puzzle game!',
-      url: '/tetris',
+      url: 'D:/react+express/tetris-react-js', // ✅ safer path
       delay: '0s'
     },
     {
@@ -18,7 +19,7 @@ const GameLandingPage = () => {
       title: 'Memory Game',
       icon: '🧠',
       description: 'Test your memory skills by matching pairs of cards!',
-      url: '/memory-game',
+      url: 'D:/react+express/memory_game/memory-game', // ✅
       delay: '0.5s'
     },
     {
@@ -26,7 +27,7 @@ const GameLandingPage = () => {
       title: 'Candy Crush',
       icon: '🍭',
       description: 'Match colorful candies and score big in this sweet puzzle adventure!',
-      url: '/candy-crush',
+      url: 'D:/react+express/candy-crush/candy-crush', // ✅
       delay: '1s'
     }
   ];
@@ -45,14 +46,26 @@ const GameLandingPage = () => {
     { emoji: '🎪', delay: '3s', top: '10%', left: '60%' }
   ];
 
-  const handleGameClick = (url) => {
-    // Use React Router navigation for local routes
-    if (url.startsWith('/')) {
-      navigate(url);
-    } else {
-      window.open(url, '_blank');
+  const handleRunProject = async (gameId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/${gameId}`, {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Server error: ${response.status} - ${error.message}`);
     }
-  };
+
+    const data = await response.json();
+    console.log(`Opening game at ${data.url}`);
+    window.open(data.url, '_blank'); // opens in new tab
+  } catch (err) {
+    console.error('Error launching game:', err);
+    alert(`Error: ${err.message}`);
+  }
+};
+
 
   return (
     <div className="game-landing-container">
@@ -61,7 +74,7 @@ const GameLandingPage = () => {
           <h1 className="title">🎮 Freaky Four Games 🎮</h1>
           <p className="subtitle">Choose your adventure and dive into exciting games!</p>
         </header>
-        
+
         <div className="games-grid">
           {games.map((game) => (
             <div key={game.id} className={`game-card ${game.id}`}>
@@ -75,7 +88,7 @@ const GameLandingPage = () => {
               <p>{game.description}</p>
               <button 
                 className="play-btn"
-                onClick={() => handleGameClick(game.url)}
+                onClick={() => handleRunProject(game.id)}
               >
                 <span>Play Now</span>
                 <div className="btn-glow"></div>
@@ -84,7 +97,7 @@ const GameLandingPage = () => {
           ))}
         </div>
       </div>
-      
+
       <div className="floating-elements">
         {floatingElements.map((element, index) => (
           <div 

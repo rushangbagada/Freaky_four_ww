@@ -181,6 +181,19 @@
     transform: translateY(-1px);
 }
 
+.play-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.play-btn:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: none;
+}
+
 /* Footer */
 .footer {
     text-align: center;

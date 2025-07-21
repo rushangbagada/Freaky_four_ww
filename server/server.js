@@ -42,8 +42,26 @@ app.use(methodoverride('_method'));
 
 
 main()
-.then(() => app.listen(port, () => console.log(`Server is listening on port ${port}`)))
-.catch(err => console.log(err));
+.then(() => {
+  const server = app.listen(port, () => {
+    console.log(`✅ Server is listening on port ${port}`);
+    console.log(`🌐 Server URL: http://localhost:${port}`);
+    console.log(`🎮 Game launch endpoints ready at /api/:gameId`);
+  });
+  
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`❌ Port ${port} is already in use. Please use a different port or stop the existing server.`);
+    } else {
+      console.error(`❌ Server error:`, error.message);
+    }
+    process.exit(1);
+  });
+})
+.catch(err => {
+  console.error('❌ Failed to start server:', err.message);
+  process.exit(1);
+});
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URI);
@@ -568,4 +586,93 @@ app.post("/api/booking", async (req, res) => {
     console.error("Stripe checkout error:", err);
     res.status(500).json({ message: "Stripe checkout failed", error: err.message });
   }
+});
+
+
+
+const { exec } = require('child_process');
+// const path = require('path');
+const gameRoutes = require('./routes/gameRoutes');
+
+const gameConfigs = {
+  'tetris-game': {
+    dir: 'D:/react+express/tetris-react-js/tetris-game',
+    port: 4001
+  },
+  'memory-game': {
+    dir: 'D:/react+express/memory_game/memory-game',
+    port: 4002
+  },
+  'candy-crush': {
+    dir: 'D:/react+express/candy-crush/candy-crush',
+    port: 4003
+  }
+};
+
+// app.post('/api/:gameId', (req, res) => {
+//   const gameId = req.params.gameId;
+//   const config = gameConfigs[gameId];
+
+//   if (!config) {
+//     return res.status(404).json({ success: false, message: 'Game config not found' });
+//   }
+
+//   const { dir, port } = config;
+
+//   // Run the Vite dev server
+//   const command = `start cmd /k "cd /d ${dir} && npm run dev"`;
+
+//   exec(command, (err) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).json({ success: false, message: 'Failed to start game server' });
+//     }
+
+//     // Give it a second to spin up (optional)
+//     setTimeout(() => {
+//       res.json({ success: true, url: `http://localhost:${port}` });
+//     }, 1500);
+//   });
+// });
+
+const axios = require('axios'); 
+
+app.post('/api/:gameId', async (req, res) => {
+  const gameId = req.params.gameId;
+  const config = gameConfigs[gameId];
+
+  if (!config) {
+    return res.status(404).json({ success: false, message: 'Game config not found' });
+  }
+
+  const { dir, port } = config;
+  const command = `start cmd /k "cd /d ${dir} && npm run dev"`;
+
+  // Start the dev server
+  exec(command, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Failed to start game server' });
+    }
+  });
+
+  // ✅ Wait until the game server is ready (polling every 500ms)
+  const checkUrl = `http://localhost:${port}`;
+  const maxRetries = 20;
+  let attempts = 0;
+
+  const waitUntilReady = async () => {
+    while (attempts < maxRetries) {
+      try {
+        await axios.get(checkUrl);
+        return res.json({ success: true, url: checkUrl });
+      } catch (e) {
+        attempts++;
+        await new Promise((r) => setTimeout(r, 500)); // wait 500ms
+      }
+    }
+    return res.status(504).json({ success: false, message: 'Game server did not respond in time.' });
+  };
+
+  waitUntilReady();
 });
