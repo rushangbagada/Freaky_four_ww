@@ -155,14 +155,14 @@ app.get("/api/review",(req,res)=>
 });
 
 app.get("/api/result",(req,res)=>{
-        const { sport, time } = req.query;
+  const { sport, time } = req.query;
 
   const filter = {};
 
   if (sport !== "All Sports") {
-    filter.category = sport;
+    // Use case-insensitive regex for category matching
+    filter.category = { $regex: new RegExp("^" + sport + "$", "i") };
   }
-
 
   const now = new Date();
 

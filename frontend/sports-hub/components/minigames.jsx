@@ -4,6 +4,9 @@ import './css/minigames.css';
 
 const GameLandingPage = () => {
   const navigate = useNavigate();
+  
+  // Get API URL from environment variable
+  const apiUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:5000';
 
   const games = [
     {
@@ -11,21 +14,27 @@ const GameLandingPage = () => {
       title: 'Tetris Game',
       icon: '🧩',
       description: 'Stack blocks and clear lines in this classic puzzle game!',
-      delay: '0s'
+      delay: '0s',
+      url: import.meta.env.VITE_APP_TETRIS_URL,
+      path: import.meta.env.VITE_APP_TETRIS_PATH
     },
     {
       id: 'memory',
       title: 'Memory Game',
       icon: '🧠',
       description: 'Test your memory skills by matching pairs of cards!',
-      delay: '0.5s'
+      delay: '0.5s',
+      url: import.meta.env.VITE_APP_MEMORY_GAME_URL,
+      path: import.meta.env.VITE_APP_MEMORY_GAME_PATH
     },
     {
       id: 'candy-crush',
       title: 'Candy Crush',
       icon: '🍭',
       description: 'Match colorful candies and score big in this sweet puzzle adventure!',
-      delay: '1s'
+      delay: '1s',
+      url: import.meta.env.VITE_APP_CANDY_CRUSH_URL,
+      path: import.meta.env.VITE_APP_CANDY_CRUSH_PATH
     }
   ];
 
@@ -45,7 +54,7 @@ const GameLandingPage = () => {
 
   const handleRunProject = async (gameId) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/${gameId}`, {
+    const response = await fetch(`${apiUrl}/api/${gameId}`, {
       method: 'POST',
     });
 

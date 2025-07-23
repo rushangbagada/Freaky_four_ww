@@ -6,6 +6,7 @@ export default function Result() {
   const [sport,setSport]=useState("All Sports");
   const [time,setTime]=useState("All Times");
   const [mvp,setMvp]=useState([]);
+  const [sortBy, setSortBy] = useState("date"); // Add sorting state
 
   const find_mvp=async(data)=>
   {
@@ -31,11 +32,25 @@ export default function Result() {
     fetch(`/api/result?sport=${sport}&time=${time}`)
     .then(res => res.json())
     .then(data => {
-      setData(data);
-      find_mvp(data);
+      // Sort data based on sortBy value
+      let sortedData = [...data];
+      if (sortBy === "date") {
+        sortedData.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (sortBy === "team1") {
+        sortedData.sort((a, b) => a.team1.localeCompare(b.team1));
+      } else if (sortBy === "team2") {
+        sortedData.sort((a, b) => a.team2.localeCompare(b.team2));
+      } else if (sortBy === "venue") {
+        sortedData.sort((a, b) => a.venue.localeCompare(b.venue));
+      } else if (sortBy === "score") {
+        sortedData.sort((a, b) => (b.team1_score + b.team2_score) - (a.team1_score + a.team2_score));
+      }
+      
+      setData(sortedData);
+      find_mvp(sortedData);
     })
     .catch(err => console.error('Failed to fetch data:', err));
-  }, [sport, time]);
+  }, [sport, time, sortBy]);
  return(
   <>
 
@@ -60,11 +75,21 @@ export default function Result() {
             <option>All Sports</option>
             <option>football</option>
             <option>cricket</option>
+            <option>basketball</option>
+            <option>volleyball</option>
+            <option>tennis</option>
           </select>
           <select onChange={(e) => setTime(e.target.value)}>
             <option>All Time</option>
             <option>This Month</option>
             <option>This Season</option>
+          </select>
+          <select onChange={(e) => setSortBy(e.target.value)}>
+            <option value="date">Sort by Date</option>
+            <option value="team1">Sort by Team 1</option>
+            <option value="team2">Sort by Team 2</option>
+            <option value="venue">Sort by Venue</option>
+            <option value="score">Sort by Score</option>
           </select>
         </div>
       </div>
@@ -143,6 +168,5 @@ export default function Result() {
     </div>
   </div>
 
-</>
- )
+</>)
 }

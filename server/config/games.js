@@ -8,15 +8,15 @@ const path = require('path');
 
 const gameConfigs = {
   'tetris': { 
-    path: 'C:\\Users\\Rushang\\Desktop\\web_wonders\\tetris-react-js\\tetris-react-js\\tetris-game',
+    path: process.env.VITE_APP_TETRIS_PATH,
     port: 4001 // Updated to match Vite configuration
   },
   'memory': { 
-    path: 'C:\\Users\\Rushang\\Desktop\\web_wonders\\memory_game\\memory_game\\memory-game',
+    path: process.env.VITE_APP_MEMORY_GAME_PATH,
     port: 4002 // Updated to match Vite configuration
   },
   'candy-crush': { 
-    path: 'C:\\Users\\Rushang\\Desktop\\web_wonders\\candy-crush\\candy-crush\\candy-crush',
+    path: process.env.VITE_APP_CANDY_CRUSH_PATH,
     port: 4003 // Updated to match Vite configuration
   }
 };
