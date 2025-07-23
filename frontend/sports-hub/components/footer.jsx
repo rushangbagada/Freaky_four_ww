@@ -23,7 +23,7 @@ export default function Footer() {
             <div className="social-icons">
               <a href="#" className="icon">📘</a>
               <a href="#" className="icon">📸</a>
-              <a href="#" className="icon">🐦</a>
+              <a href="#" className="icon">💻</a>
             </div>
           </div>
 

@@ -6,6 +6,11 @@ export default function SportsClubs() {
   const [clubs, setClubs] = useState([]);
   const [type, setType] = useState("All");
   const [searchtext, setSearchText] = useState("");
+  const typeClassMap = {
+  "Team Sports": "team-sports",
+  "Racket Sports": "racket-sports",
+  "Individual Sports": "individual-sports",
+};
 
   useEffect(() => {
     fetch(`/api/clubs?type=${type}`)
@@ -46,8 +51,9 @@ export default function SportsClubs() {
       <section className="sports-grid">
         {clubs.filter((club) => club.name.toLowerCase().includes(searchtext.toLowerCase())).map((item,index) => 
         (
-          <div className="card" key={index}>
-          <div className="card-header team-sport">
+          <div className="sports-club-card" key={index}>
+          <div className={`card-header ${typeClassMap[item.type] || ''}`}>
+
             <div className="badge">{item.type}</div>
             <div className="icon">🏆</div>
           </div>

@@ -25,7 +25,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container">
+    <div className="home-container">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-overlay"></div>
@@ -43,7 +43,7 @@ export default function Home() {
       </section>
 
       {/* Popular Sports Clubs */}
-      <section className="section sports">
+      <section className="sports-section">
         <div className="section-header">
           <h2>Popular Sports Clubs</h2>
           <p>Find your sport and join our competitive teams</p>
