@@ -58,7 +58,16 @@ export default function SportsClubs() {
               <span>{item.players} players</span>
               <span>{item.matches} upcoming</span>
             </div>
-            <Link to={`/club-details/${item.name}`} className="details-btn">View Club Details</Link>
+            <Link 
+              to={`/club-details/${item._id || item.name}`} 
+              className="details-btn"
+              onClick={(e) => {
+                // Debug info in case of navigation issues
+                console.log(`Navigating to club: ${item.name} with ID: ${item._id}`);
+              }}
+            >
+              View Club Details
+            </Link>
           </div>
         </div>
         ))}

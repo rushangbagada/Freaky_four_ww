@@ -97,6 +97,11 @@ export default function UserManagement() {
   };
 
   const handleUpdateUser = async (userId, updatedData) => {
+    // Only send club as ID if it's an object
+    let payload = { ...updatedData };
+    if (payload.club && typeof payload.club === 'object' && payload.club._id) {
+      payload.club = payload.club._id;
+    }
     try {
       const response = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
         method: 'PUT',
@@ -104,7 +109,7 @@ export default function UserManagement() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify(updatedData)
+        body: JSON.stringify(payload)
       });
 
       if (response.ok) {

@@ -20,12 +20,40 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
     
-    if (storedToken && storedUser) {
+    if (storedToken) {
       setToken(storedToken);
+      // Always try to fetch the latest user info from backend
+      fetch('/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${storedToken}`
+        }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch user info');
+          return res.json();
+        })
+        .then(data => {
+          setUser(data);
+          localStorage.setItem('user', JSON.stringify(data));
+        })
+        .catch(err => {
+          // fallback to stored user if fetch fails
+          if (storedUser) {
+            setUser(JSON.parse(storedUser));
+          } else {
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+          }
+        })
+        .finally(() => setLoading(false));
+    } else if (storedUser) {
       setUser(JSON.parse(storedUser));
+      setLoading(false);
+    } else {
+      setLoading(false);
     }
-    
-    setLoading(false);
   }, []);
 
   const login = (userData, authToken) => {

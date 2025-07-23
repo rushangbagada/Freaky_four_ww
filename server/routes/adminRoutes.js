@@ -136,6 +136,8 @@ router.get('/club-leader/list', requireAdmin, listClubLeaders);
 router.get('/users', requireAdmin, listUsers);
 // Create a new user (admin only)
 router.post('/users', requireAdmin, createUser);
+// Full user update (admin only)
+router.put('/users/:id', requireAdmin, require('./../controllers/adminController').updateUser);
 
 // Player Management Routes (admin)
 router.post('/clubs/add-player', requireAdmin, addPlayerToClub);

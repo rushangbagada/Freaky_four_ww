@@ -483,6 +483,49 @@ const createUser = async (req, res) => {
   }
 };
 
+// Full user update (admin only)
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Only allow updating these fields
+    const {
+      name,
+      email,
+      mobile,
+      year,
+      department,
+      role,
+      club,
+      isActive
+    } = req.body;
+
+    // Build update object
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (mobile !== undefined) updateData.mobile = mobile;
+    if (year !== undefined) updateData.year = year;
+    if (department !== undefined) updateData.department = department;
+    if (role !== undefined) updateData.role = role;
+    if (club !== undefined) updateData.club = club || null;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    ).select('-password -otp -otpExpires -resetToken -resetExpires');
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({ message: 'User updated successfully', user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+};
+
 // Add this function before the module.exports
 const getAnalytics = async (req, res) => {
   try {
@@ -648,6 +691,7 @@ module.exports = {
   getAllUsers,
   updateUserRole,
   toggleUserStatus,
+  updateUser,
   
   // Dashboard
   getDashboardStats,

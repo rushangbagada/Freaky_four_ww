@@ -1,0 +1,9 @@
+IMPORTANT: Please restart the server to apply the recent changes.
+
+The changes made to fix the club details page require the server to be restarted.
+
+Steps:
+1. If the server is running, press Ctrl+C to stop it
+2. Start the server again with: node server.js
+
+After restarting, the club details page should now work correctly with both ID and name-based lookups.

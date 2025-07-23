@@ -7,19 +7,17 @@ const GameLandingPage = () => {
 
   const games = [
     {
-      id: 'tetris-game',
+      id: 'tetris',
       title: 'Tetris Game',
       icon: '🧩',
       description: 'Stack blocks and clear lines in this classic puzzle game!',
-      url: 'D:/react+express/tetris-react-js', // ✅ safer path
       delay: '0s'
     },
     {
-      id: 'memory-game',
+      id: 'memory',
       title: 'Memory Game',
       icon: '🧠',
       description: 'Test your memory skills by matching pairs of cards!',
-      url: 'D:/react+express/memory_game/memory-game', // ✅
       delay: '0.5s'
     },
     {
@@ -27,7 +25,6 @@ const GameLandingPage = () => {
       title: 'Candy Crush',
       icon: '🍭',
       description: 'Match colorful candies and score big in this sweet puzzle adventure!',
-      url: 'D:/react+express/candy-crush/candy-crush', // ✅
       delay: '1s'
     }
   ];

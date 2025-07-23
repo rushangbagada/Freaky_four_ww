@@ -40,7 +40,7 @@ function AppRoutes() {
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/sports-clubs" element={<SportsClubs />} />
         <Route path="/result" element={<Result />} />
-        <Route path="/club-details" element={<ClubDetails />} />
+        <Route path="/club-details/:id" element={<ClubDetails />} />
         <Route path="/calender" element={<Calendar />} />
         <Route path="/turf" element={<Turf />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

@@ -33,7 +33,12 @@ const Player_user = require('./models/player_user');
 const Club_Details = require('./models/club-detail');
 const Club_player = require('./models/club-player');
 
-app.use(cors());
+// Configure CORS to allow requests from the frontend
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -216,6 +221,64 @@ app.get("/api/clubs", (req, res) => {
     });
   })
 
+// Debug endpoint to verify club existence
+app.get("/api/debug/club/:id", async (req, res) => {
+  try {
+    const {id} = req.params;
+    console.log(`Debug endpoint - Checking club with ID: ${id}`);
+    
+    // Try different lookup methods
+    const results = {
+      byId: null,
+      byName: null,
+      allClubs: []
+    };
+    
+    // Get all clubs for reference
+    const allClubs = await Club.find().lean();
+    results.allClubs = allClubs.map(club => ({
+      id: club._id,
+      name: club.name
+    }));
+    
+    // Try direct ID lookup
+    try {
+      const clubById = await Club.findById(id).lean();
+      if (clubById) {
+        results.byId = {
+          found: true,
+          id: clubById._id,
+          name: clubById.name
+        };
+      }
+    } catch (e) {
+      results.byId = { error: e.message };
+    }
+    
+    // Try name lookup
+    try {
+      const clubByName = await Club.findOne({ name: id }).lean();
+      if (clubByName) {
+        results.byName = {
+          found: true,
+          id: clubByName._id,
+          name: clubByName.name
+        };
+      }
+    } catch (e) {
+      results.byName = { error: e.message };
+    }
+    
+    res.json({
+      requestedId: id,
+      results
+    });
+  } catch (err) {
+    console.error("Error in debug endpoint:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+})
+
   app.get("/api/events", async (req, res) => {
   try {
     const pastMatches = await Match.find({});
@@ -345,17 +408,74 @@ app.get("/api/leaderboard", (req, res) => {
     })
 })
 
-app.get("/api/club-details/:name", async (req, res) => {
+// Simplified endpoint to get club by exact ID
+app.get("/api/club-details/:id", async (req, res) => {
   try {
-    const {name}=req.params;
-    const club = await Club_Details.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+    const {id} = req.params;
+    console.log(`Received request for club details with ID: ${id}`);
+    
+    // Get club directly from the Club collection
+    const club = await Club.findOne({ _id: id }).lean();
+    
     if (!club) {
-      return res.status(404).json({ message: "Club not found" });
+      console.log(`Club not found with ID: ${id}, trying by name...`);
+      // Try to find by name
+      const clubByName = await Club.findOne({ name: { $regex: new RegExp(`^${id}$`, 'i') } }).lean();
+      
+      if (!clubByName) {
+        console.log(`Club not found with name: ${id}`);
+        return res.status(404).json({ message: "Club not found" });
+      }
+      
+      // Return the club found by name, with additional fields
+      console.log(`Found club by name:`, clubByName);
+      return res.json({
+        ...clubByName,
+        active_players: clubByName.players || 0,
+        upcoming_matches: clubByName.matches || 0,
+        win_rate: 75 // Default value
+      });
     }
-    res.json(club);
+    
+    // Return the club found by ID, with additional fields
+    console.log(`Found club by ID:`, club);
+    return res.json({
+      ...club,
+      active_players: club.players || 0,
+      upcoming_matches: club.matches || 0,
+      win_rate: 75 // Default value
+    });
   } catch (err) {
     console.error("Error fetching club by ID:", err);
-    res.status(500).json({ message: "Server error", error: err });
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// New endpoint to get club by exact name
+app.get("/api/club-by-name/:name", async (req, res) => {
+  try {
+    const {name} = req.params;
+    console.log(`Received request for club details with name: ${name}`);
+    
+    // Get club directly from the Club collection by name
+    const club = await Club.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } }).lean();
+    
+    if (!club) {
+      console.log(`Club not found with name: ${name}`);
+      return res.status(404).json({ message: "Club not found" });
+    }
+    
+    // Return the club with additional fields
+    console.log(`Found club by name:`, club);
+    return res.json({
+      ...club,
+      active_players: club.players || 0,
+      upcoming_matches: club.matches || 0,
+      win_rate: 75 // Default value
+    });
+  } catch (err) {
+    console.error("Error fetching club by name:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
@@ -592,87 +712,8 @@ app.post("/api/booking", async (req, res) => {
 
 const { exec } = require('child_process');
 // const path = require('path');
+// Import the game routes module
 const gameRoutes = require('./routes/gameRoutes');
 
-const gameConfigs = {
-  'tetris-game': {
-    dir: 'D:/react+express/tetris-react-js/tetris-game',
-    port: 4001
-  },
-  'memory-game': {
-    dir: 'D:/react+express/memory_game/memory-game',
-    port: 4002
-  },
-  'candy-crush': {
-    dir: 'D:/react+express/candy-crush/candy-crush',
-    port: 4003
-  }
-};
-
-// app.post('/api/:gameId', (req, res) => {
-//   const gameId = req.params.gameId;
-//   const config = gameConfigs[gameId];
-
-//   if (!config) {
-//     return res.status(404).json({ success: false, message: 'Game config not found' });
-//   }
-
-//   const { dir, port } = config;
-
-//   // Run the Vite dev server
-//   const command = `start cmd /k "cd /d ${dir} && npm run dev"`;
-
-//   exec(command, (err) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).json({ success: false, message: 'Failed to start game server' });
-//     }
-
-//     // Give it a second to spin up (optional)
-//     setTimeout(() => {
-//       res.json({ success: true, url: `http://localhost:${port}` });
-//     }, 1500);
-//   });
-// });
-
-const axios = require('axios'); 
-
-app.post('/api/:gameId', async (req, res) => {
-  const gameId = req.params.gameId;
-  const config = gameConfigs[gameId];
-
-  if (!config) {
-    return res.status(404).json({ success: false, message: 'Game config not found' });
-  }
-
-  const { dir, port } = config;
-  const command = `start cmd /k "cd /d ${dir} && npm run dev"`;
-
-  // Start the dev server
-  exec(command, (err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, message: 'Failed to start game server' });
-    }
-  });
-
-  // ✅ Wait until the game server is ready (polling every 500ms)
-  const checkUrl = `http://localhost:${port}`;
-  const maxRetries = 20;
-  let attempts = 0;
-
-  const waitUntilReady = async () => {
-    while (attempts < maxRetries) {
-      try {
-        await axios.get(checkUrl);
-        return res.json({ success: true, url: checkUrl });
-      } catch (e) {
-        attempts++;
-        await new Promise((r) => setTimeout(r, 500)); // wait 500ms
-      }
-    }
-    return res.status(504).json({ success: false, message: 'Game server did not respond in time.' });
-  };
-
-  waitUntilReady();
-});
+// Use the game routes for the /api endpoint
+app.use('/api', gameRoutes);

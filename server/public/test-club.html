@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .club-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .club-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .club-id {
+            color: #666;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Club API Tester</h1>
+    
+    <div class="container">
+        <div>
+            <h2>Clubs List</h2>
+            <button id="fetchClubs">Fetch All Clubs</button>
+            <div id="clubsList"></div>
+        </div>
+
+        <div>
+            <h2>Test Get Club by ID</h2>
+            <div class="form-group">
+                <input type="text" id="clubIdInput" placeholder="Enter club ID">
+                <button id="fetchById">Fetch by ID</button>
+            </div>
+            <pre id="idResult"></pre>
+        </div>
+
+        <div>
+            <h2>Test Get Club by Name</h2>
+            <div class="form-group">
+                <input type="text" id="clubNameInput" placeholder="Enter club name">
+                <button id="fetchByName">Fetch by Name</button>
+            </div>
+            <pre id="nameResult"></pre>
+        </div>
+
+        <div>
+            <h2>Debug Club</h2>
+            <div class="form-group">
+                <input type="text" id="debugInput" placeholder="Enter club ID or name">
+                <button id="debugClub">Debug Club</button>
+            </div>
+            <pre id="debugResult"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Fetch all clubs
+        document.getElementById('fetchClubs').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/clubs');
+                const clubs = await response.json();
+                
+                const clubsListDiv = document.getElementById('clubsList');
+                clubsListDiv.innerHTML = '';
+                
+                clubs.forEach(club => {
+                    const clubDiv = document.createElement('div');
+                    clubDiv.className = 'club-card';
+                    clubDiv.innerHTML = `
+                        <div class="club-name">${club.name}</div>
+                        <div class="club-id">ID: ${club._id}</div>
+                        <button class="copy-id" data-id="${club._id}">Copy ID</button>
+                        <button class="copy-name" data-name="${club.name}">Copy Name</button>
+                        <button class="test-id" data-id="${club._id}">Test this ID</button>
+                    `;
+                    clubsListDiv.appendChild(clubDiv);
+                });
+                
+                // Add event listeners to copy buttons
+                document.querySelectorAll('.copy-id').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        navigator.clipboard.writeText(id);
+                        alert(`Copied ID: ${id}`);
+                    });
+                });
+                
+                document.querySelectorAll('.copy-name').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const name = button.getAttribute('data-name');
+                        navigator.clipboard.writeText(name);
+                        alert(`Copied name: ${name}`);
+                    });
+                });
+                
+                document.querySelectorAll('.test-id').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const id = button.getAttribute('data-id');
+                        document.getElementById('clubIdInput').value = id;
+                        await fetchClubById(id);
+                    });
+                });
+            } catch (error) {
+                console.error('Error fetching clubs:', error);
+                alert('Error fetching clubs. See console for details.');
+            }
+        });
+        
+        // Fetch club by ID
+        async function fetchClubById(id) {
+            try {
+                const response = await fetch(`/api/club-details/${id}`);
+                const result = await response.json();
+                document.getElementById('idResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error fetching club by ID:', error);
+                document.getElementById('idResult').textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        document.getElementById('fetchById').addEventListener('click', () => {
+            const id = document.getElementById('clubIdInput').value.trim();
+            if (!id) {
+                alert('Please enter a club ID');
+                return;
+            }
+            fetchClubById(id);
+        });
+        
+        // Fetch club by name
+        document.getElementById('fetchByName').addEventListener('click', async () => {
+            const name = document.getElementById('clubNameInput').value.trim();
+            if (!name) {
+                alert('Please enter a club name');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/club-by-name/${encodeURIComponent(name)}`);
+                const result = await response.json();
+                document.getElementById('nameResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error fetching club by name:', error);
+                document.getElementById('nameResult').textContent = `Error: ${error.message}`;
+            }
+        });
+        
+        // Debug club
+        document.getElementById('debugClub').addEventListener('click', async () => {
+            const input = document.getElementById('debugInput').value.trim();
+            if (!input) {
+                alert('Please enter a club ID or name');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/debug/club/${encodeURIComponent(input)}`);
+                const result = await response.json();
+                document.getElementById('debugResult').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                console.error('Error debugging club:', error);
+                document.getElementById('debugResult').textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

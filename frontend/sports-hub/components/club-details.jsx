@@ -10,35 +10,147 @@ export default function ClubDetails() {
   const [recentMatches, setRecentMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
 
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Fetch club info
-    fetch(`/api/club-details/${name}`)
-      .then(res => res.json())
-      .then(data => {
+    // Debug log for name parameter
+    console.log('Club-details component received name parameter:', name);
+    if (!name) {
+      console.error('Warning: name parameter is undefined or null');
+      setError('Invalid club identifier.');
+      setLoading(false);
+      return;
+    }
+
+    // Try first to get all clubs to have fallback data
+    const fetchAllClubs = async () => {
+      try {
+        const response = await fetch('/api/clubs');
+        if (!response.ok) throw new Error(`Failed to fetch clubs list`);
+        const clubs = await response.json();
+        console.log('Fetched clubs list:', clubs);
+        
+        // Find the club with matching ID or name, with safety check for name property
+        const matchedClub = clubs.find(c => 
+          c._id === name || (c.name && c.name.toLowerCase() === name?.toLowerCase())
+        );
+        
+        if (matchedClub) {
+          console.log('Found club in clubs list:', matchedClub);
+          // Format the club to match expected shape
+          const formattedClub = {
+            ...matchedClub,
+            active_players: matchedClub.players || 0,
+            upcoming_matches: matchedClub.matches || 0,
+            win_rate: 75 // Default value
+          };
+          setClub(formattedClub);
+          
+          // Now fetch related data using the club name with safety check
+          if (matchedClub.name) {
+            const sport = encodeURIComponent(matchedClub.name.toLowerCase().trim());
+            fetchRelatedData(sport);
+          } else {
+            console.error('Error: Matched club is missing name property');
+            setError('Club data is missing name property');
+            setLoading(false);
+          }
+        } else {
+          // If not found in clubs list, try direct endpoint
+          fetchClubByName(name);
+        }
+      } catch (err) {
+        console.error('Error fetching clubs list:', err);
+        // Fall back to direct endpoint
+        fetchClubByName(name);
+      }
+    };
+    
+    // Fetch club by name using direct endpoint
+    const fetchClubByName = async (clubName) => {
+      try {
+        console.log(`Fetching club details for name: ${clubName}`);
+        const response = await fetch(`/api/club-details/${clubName}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Club data received:', data);
         setClub(data);
-
-        // Now use the club name/type to fetch others
-        const sport = encodeURIComponent((data.name || data.type).toLowerCase().trim());
-
-        fetch(`/api/club_players/${sport}`)
-          .then(res => res.json())
-          .then(setPlayers)
-          .catch(console.error);
-
-        fetch(`/api/recent_matches/${sport}`)
-          .then(res => res.json())
-          .then(setRecentMatches)
-          .catch(console.error);
-
-        fetch(`/api/upcoming_matches/${sport}`)
-          .then(res => res.json())
-          .then(setUpcomingMatches)
-          .catch(console.error);
-      })
-      .catch(console.error);
+        
+        // Use club name for related data with safety check
+        if (data.name) {
+          const sport = encodeURIComponent(data.name.toLowerCase().trim());
+          fetchRelatedData(sport);
+        } else {
+          console.error('Error: Club data is missing name property');
+          setError('Club data is missing name property');
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Error fetching club details:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+    
+    // Fetch related data (players, matches)
+    const fetchRelatedData = async (sport) => {
+      try {
+        console.log('Using sport name for further queries:', sport);
+        
+        // Fetch players
+        try {
+          const playersResponse = await fetch(`/api/club_players/${sport}`);
+          if (!playersResponse.ok) throw new Error(`Players fetch error! Status: ${playersResponse.status}`);
+          const playersData = await playersResponse.json();
+          console.log('Players data received:', playersData);
+          setPlayers(playersData);
+        } catch (err) {
+          console.error('Error fetching players:', err);
+        }
+        
+        // Fetch recent matches
+        try {
+          const recentMatchesResponse = await fetch(`/api/recent_matches/${sport}`);
+          if (!recentMatchesResponse.ok) throw new Error(`Recent matches fetch error! Status: ${recentMatchesResponse.status}`);
+          const recentMatchesData = await recentMatchesResponse.json();
+          console.log('Recent matches data received:', recentMatchesData);
+          setRecentMatches(recentMatchesData);
+        } catch (err) {
+          console.error('Error fetching recent matches:', err);
+        }
+        
+        // Fetch upcoming matches
+        try {
+          const upcomingMatchesResponse = await fetch(`/api/upcoming_matches/${sport}`);
+          if (!upcomingMatchesResponse.ok) throw new Error(`Upcoming matches fetch error! Status: ${upcomingMatchesResponse.status}`);
+          const upcomingMatchesData = await upcomingMatchesResponse.json();
+          console.log('Upcoming matches data received:', upcomingMatchesData);
+          setUpcomingMatches(upcomingMatchesData);
+        } catch (err) {
+          console.error('Error fetching upcoming matches:', err);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching related data:', err);
+        setLoading(false);
+      }
+    };
+    
+    // Start the fetching process
+    setLoading(true);
+    setError(null);
+    fetchAllClubs();
   }, [name]);
 
-  if (!club) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <div className="error-message">Error: {error}. <Link to="/sports-clubs">Return to clubs list</Link></div>;
+  if (!club) return <p>No club data found. <Link to="/sports-clubs">Return to clubs list</Link></p>;
 
   return (
     <>
@@ -110,9 +222,9 @@ export default function ClubDetails() {
           <div className="card">
             <h3 className="sidebar-title">Club Statistics</h3>
             <ul>
-              <li><span>Active Players:</span> <strong>{club.activePlayers}</strong></li>
-              <li><span>Upcoming Matches:</span> <strong>{club.upcomingMatches}</strong></li>
-              <li><span>Win Rate:</span> <strong>{club.winRate || "N/A"}%</strong></li>
+              <li><span>Active Players:</span> <strong>{club.active_players}</strong></li>
+              <li><span>Upcoming Matches:</span> <strong>{club.upcoming_matches}</strong></li>
+              <li><span>Win Rate:</span> <strong>{club.win_rate || "N/A"}%</strong></li>
             </ul>
           </div>
 
