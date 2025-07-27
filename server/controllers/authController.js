@@ -349,3 +349,30 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error during password reset" });
   }
 };
+
+// Add this function at the end of the file
+
+// Get current user
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ 
+      id: user._id, 
+      name: user.name, 
+      email: user.email,
+      mobile: user.mobile,
+      year: user.year,
+      department: user.department,
+      role: user.role,
+      isActive: user.isActive
+    });
+  } catch (err) {
+    console.error('Get current user error:', err);
+    res.status(500).json({ message: "Server error while fetching user data" });
+  }
+};

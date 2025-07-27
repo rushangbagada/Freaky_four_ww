@@ -62,7 +62,11 @@ body {
   color: #9CA3AF;
   text-decoration: none;
   font-size: 18px;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease-in-out;
+  transform: translateY(0);
+}
+.social-icons .icon:hover {
+  transform: translateY(-3px);
 }
 
 .social-icons .icon:hover {

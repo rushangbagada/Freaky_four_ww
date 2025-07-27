@@ -11,10 +11,17 @@ const port=process.env.PORT || 5000;
 const cors=require('cors');
 dotenv.config();
 
-const jwt = require("jsonwebtoken"); // Add this line
+const jwt = require("jsonwebtoken"); 
+// Add this line with the other imports at the top
+// Add this line
+// const connectDB = require("./config/db");
+// const authRoutes = require("./routes/authRoutes");
+// const adminRoutes = require("./routes/adminRoutes");
 const connectDB = require("./config/db");
+const { protect } = require('./middlewares/authMiddleware');
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const gameRoutes = require("./routes/gameRoutes");
 
 const Gallery=require('./models/gallery');
 const User=require('./models/User');
@@ -77,6 +84,7 @@ async function main() {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/game", gameRoutes);
 
 
 
@@ -523,12 +531,13 @@ app.get("/api/upcoming_matches/:name", async (req, res) => {
   }
 });
 
-// Import the LiveMatchPrediction model
-const LiveMatchPrediction = require('./models/live_match_prediction');
+// Import the OldMatchPrediction model
+const OldMatchPrediction = require('./models/old_match_prediction');
+const Old_match = require('./models/old_match');
 
-// Get all live matches for the game page
-app.get("/api/game/live-matches", (req, res) => {
-  Live_Match.find()
+// Get all old matches for the game page
+app.get("/api/game/old-matches", (req, res) => {
+  Old_match.find()
     .then(matches => res.json(matches))
     .catch(err => {
       console.error(err);
@@ -536,10 +545,15 @@ app.get("/api/game/live-matches", (req, res) => {
     });
 });
 
-// Submit a prediction for a live match
-app.post("/api/user/live-match-prediction", async (req, res) => {
+// Submit a prediction for an old match - add the protect middleware
+app.post("/api/user/old-match-prediction", protect, async (req, res) => {
   try {
     const { userId, matchId, team1Score, team2Score } = req.body;
+    
+    // Verify that the userId in the request matches the authenticated user
+    if (userId !== req.userId) {
+      return res.status(403).json({ message: "You can only submit predictions for your own account" });
+    }
     
     if (!userId || !matchId || team1Score === undefined || team2Score === undefined) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -552,18 +566,13 @@ app.post("/api/user/live-match-prediction", async (req, res) => {
     }
     
     // Check if match exists
-    const match = await Live_Match.findById(matchId);
+    const match = await Old_match.findById(matchId);
     if (!match) {
       return res.status(404).json({ message: "Match not found" });
     }
     
-    // Check if match is still open for predictions (not finished)
-    if (match.status === "finished") {
-      return res.status(400).json({ message: "Match is already finished, predictions closed" });
-    }
-    
     // Create or update prediction
-    const prediction = await LiveMatchPrediction.findOneAndUpdate(
+    const prediction = await OldMatchPrediction.findOneAndUpdate(
       { userId, matchId },
       { 
         userId,
@@ -585,12 +594,17 @@ app.post("/api/user/live-match-prediction", async (req, res) => {
   }
 });
 
-// Get user's predictions for live matches
-app.get("/api/user/:userId/live-match-predictions", async (req, res) => {
+// Also protect the endpoint for fetching user predictions
+app.get("/api/user/:userId/old-match-predictions", protect, async (req, res) => {
   try {
     const { userId } = req.params;
     
-    const predictions = await LiveMatchPrediction.find({ userId })
+    // Verify that the userId in the request matches the authenticated user
+    if (userId !== req.userId) {
+      return res.status(403).json({ message: "You can only view your own predictions" });
+    }
+    
+    const predictions = await OldMatchPrediction.find({ userId })
       .populate('matchId')
       .sort({ createdAt: -1 });
     
@@ -601,16 +615,16 @@ app.get("/api/user/:userId/live-match-predictions", async (req, res) => {
   }
 });
 
-// Admin endpoint to update match scores and calculate points
-app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
+// Admin endpoint to update old match scores and calculate points
+app.post("/api/admin/old-matches/:matchId/update-scores", async (req, res) => {
   try {
     const { matchId } = req.params;
-    const { team1_score, team2_score, status } = req.body;
+    const { team1_score, team2_score } = req.body;
     
     // Update the match scores
-    const updatedMatch = await Live_Match.findByIdAndUpdate(
+    const updatedMatch = await Old_match.findByIdAndUpdate(
       matchId,
-      { team1_score, team2_score, status },
+      { team1_score, team2_score },
       { new: true }
     );
     
@@ -618,54 +632,47 @@ app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
       return res.status(404).json({ message: "Match not found" });
     }
     
-    // If match is finished, calculate points for all predictions
-    if (status === "finished") {
-      // Find all predictions for this match
-      const predictions = await LiveMatchPrediction.find({ matchId, isProcessed: false });
+    // Find all predictions for this match
+    const predictions = await OldMatchPrediction.find({ matchId, isProcessed: false });
+    
+    // Process each prediction
+    for (const prediction of predictions) {
+      let points = 0;
       
-      // Process each prediction
-      for (const prediction of predictions) {
-        let points = 0;
-        
-        // Exact score match (highest points)
-        if (prediction.predictedTeam1Score === team1_score && 
-            prediction.predictedTeam2Score === team2_score) {
-          points = 10; // 10 points for exact score
-        }
-        // Correct winner or draw prediction (medium points)
-        else if (
-          (team1_score > team2_score && prediction.predictedTeam1Score > prediction.predictedTeam2Score) ||
-          (team1_score < team2_score && prediction.predictedTeam1Score < prediction.predictedTeam2Score) ||
-          (team1_score === team2_score && prediction.predictedTeam1Score === prediction.predictedTeam2Score)
-        ) {
-          points = 5; // 5 points for correct outcome
-        }
-        // Correct goal difference (bonus points)
-        const actualDiff = team1_score - team2_score;
-        const predictedDiff = prediction.predictedTeam1Score - prediction.predictedTeam2Score;
-        if (actualDiff === predictedDiff) {
-          points += 2; // 2 bonus points for correct goal difference
-        }
-        
-        // Update prediction with points
-        prediction.points = points;
-        prediction.isProcessed = true;
-        await prediction.save();
-        
-        // Update user's total points
-        await Prediction_user.findByIdAndUpdate(
-          prediction.userId,
-          { $inc: { total_point: points } }
-        );
+      // Exact score match (correct prediction) - 10 points
+      if (prediction.predictedTeam1Score === team1_score && 
+          prediction.predictedTeam2Score === team2_score) {
+        points = 10;
       }
+      // Partial correct prediction (correct winner/draw) - 5 points
+      else if (
+        (team1_score > team2_score && prediction.predictedTeam1Score > prediction.predictedTeam2Score) ||
+        (team1_score < team2_score && prediction.predictedTeam1Score < prediction.predictedTeam2Score) ||
+        (team1_score === team2_score && prediction.predictedTeam1Score === prediction.predictedTeam2Score)
+      ) {
+        points = 5;
+      }
+      
+      // Update prediction with points
+      await OldMatchPrediction.findByIdAndUpdate(
+        prediction._id,
+        { points, isProcessed: true }
+      );
+      
+      // Update user's total points
+      await Prediction_user.findByIdAndUpdate(
+        prediction.userId,
+        { $inc: { total_point: points } }
+      );
     }
     
     res.json({
-      message: "Match scores updated successfully",
-      match: updatedMatch
+      message: "Match scores updated and predictions processed",
+      match: updatedMatch,
+      predictionsProcessed: predictions.length
     });
   } catch (error) {
-    console.error("Error updating scores:", error);
+    console.error("Error updating match scores:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -712,8 +719,5 @@ app.post("/api/booking", async (req, res) => {
 
 const { exec } = require('child_process');
 // const path = require('path');
-// Import the game routes module
-const gameRoutes = require('./routes/gameRoutes');
 
-// Use the game routes for the /api endpoint
-app.use('/api', gameRoutes);
+// Game routes are already registered above

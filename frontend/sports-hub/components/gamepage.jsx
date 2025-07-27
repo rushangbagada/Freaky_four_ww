@@ -1,34 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import MatchCard from './matchcard.jsx';
-import LiveMatchCard from './liveMatchCard.jsx'; // New component for live matches
+import OldMatchCard from './OldMatchCard.jsx'; // Import the new component
 import Leaderboard from './leader.jsx';
 import UserStats from './userStates.jsx';
+import { useAuth } from '../src/AuthContext'; // Import useAuth
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
   const [matches, setMatches] = useState([]);
-  const [liveMatches, setLiveMatches] = useState([]);
+  const [oldMatches, setOldMatches] = useState([]);
   const [predictions, setPredictions] = useState([]);
-  const [livePredictions, setLivePredictions] = useState([]);
+  const [oldMatchPredictions, setOldMatchPredictions] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const { user, token } = useAuth(); // Use the auth context
 
-  // Fetch current user
-  useEffect(() => {
-    const email = localStorage.getItem("email");
-
-    if (!email) return;
-
-    fetch(`/api/user?email=${encodeURIComponent(email)}`)
-      .then(res => {
-        if (!res.ok) throw new Error("User not found");
-        return res.json();
-      })
-      .then(data => setCurrentUser(data)) // set full user object
-      .catch(err => console.error("Error fetching user:", err));
-  }, []);
-
-  // Fetch matches, live matches, and leaderboard
+  // Fetch matches, old matches, and leaderboard
   useEffect(() => {
     // Fetch regular matches
     fetch("/api/prediction_match")
@@ -36,11 +22,11 @@ const PredictionGamePage = () => {
       .then(data => setMatches(data))
       .catch(err => console.error("Error fetching prediction matches:", err));
 
-    // Fetch live matches
-    fetch("/api/game/live-matches")
+    // Fetch old matches
+    fetch("/api/game/old-matches")
       .then(res => res.json())
-      .then(data => setLiveMatches(data))
-      .catch(err => console.error("Error fetching live matches:", err));
+      .then(data => setOldMatches(data))
+      .catch(err => console.error("Error fetching old matches:", err));
 
     // Fetch leaderboard
     fetch("/api/leader")
@@ -54,14 +40,18 @@ const PredictionGamePage = () => {
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
-    if (currentUser && currentUser._id) {
-      // Fetch live match predictions
-      fetch(`/api/user/${currentUser._id}/live-match-predictions`)
+    if (user && user._id) {
+      // Fetch old match predictions
+      fetch(`/api/user/${user._id}/old-match-predictions`, {
+        headers: {
+          'Authorization': `Bearer ${token}` // Add token to request
+        }
+      })
         .then(res => res.json())
-        .then(data => setLivePredictions(data))
-        .catch(err => console.error("Error fetching live match predictions:", err));
+        .then(data => setOldMatchPredictions(data))
+        .catch(err => console.error("Error fetching old match predictions:", err));
     }
-  }, [currentUser]);
+  }, [user, token]);
 
   // Handle regular match prediction submission
   const handlePrediction = (matchId, homeScore, awayScore) => {
@@ -79,41 +69,40 @@ const PredictionGamePage = () => {
       }
       return [...prev, newPrediction];
     });
-
-    if (currentUser) {
-      setCurrentUser(prev => ({
-        ...prev,
-        predictions: (prev.predictions || 0) + 1
-      }));
-    }
   };
 
-  // Handle live match prediction submission
-  const handleLivePrediction = (matchId, team1Score, team2Score) => {
-    if (!currentUser || !currentUser._id) {
+  // Handle old match prediction submission
+  const handleOldMatchPrediction = (matchId, team1Score, team2Score) => {
+    if (!user || !user._id) {
       alert("Please log in to submit predictions");
       return;
     }
 
-    fetch("/api/user/live-match-prediction", {
+    fetch("/api/user/old-match-prediction", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}` // Add token to request
       },
       body: JSON.stringify({
-        userId: currentUser._id,
+        userId: user._id,
         matchId,
         team1Score: parseInt(team1Score),
         team2Score: parseInt(team2Score)
       })
     })
       .then(res => {
-        if (!res.ok) throw new Error("Failed to submit prediction");
+        if (!res.ok) {
+          if (res.status === 401) {
+            throw new Error("You are not logged in or your session has expired");
+          }
+          throw new Error("Failed to submit prediction");
+        }
         return res.json();
       })
       .then(data => {
-        // Update the live predictions state
-        setLivePredictions(prev => {
+        // Update the old match predictions state
+        setOldMatchPredictions(prev => {
           const existing = prev.find(p => p.matchId._id === matchId);
           if (existing) {
             return prev.map(p => p.matchId._id === matchId ? data.prediction : p);
@@ -121,17 +110,13 @@ const PredictionGamePage = () => {
           return [...prev, data.prediction];
         });
 
-        // Update user stats
-        setCurrentUser(prev => ({
-          ...prev,
-          predictions: (prev.predictions || 0) + 1
-        }));
+        // Remove the setCurrentUser code
 
         alert("Prediction submitted successfully!");
       })
       .catch(err => {
         console.error("Error submitting prediction:", err);
-        alert("Error submitting prediction. Please try again.");
+        alert(err.message || "Error submitting prediction. Please try again.");
       });
   };
 
@@ -146,20 +131,20 @@ const PredictionGamePage = () => {
 
       <div className="game-container">
         <div className="matches-section">
-          {/* Live Matches Section */}
-          <h2>Live Matches</h2>
+          {/* Old Matches Section */}
+          <h2>Old Matches</h2>
           <div className="matches-grid">
-            {liveMatches.length > 0 ? (
-              liveMatches.map(match => (
-                <LiveMatchCard
+            {oldMatches.length > 0 ? (
+              oldMatches.map(match => (
+                <OldMatchCard
                   key={match._id}
                   match={match}
-                  onPredict={handleLivePrediction}
-                  userPrediction={livePredictions.find(p => p.matchId._id === match._id)}
+                  onPredict={handleOldMatchPrediction}
+                  userPrediction={oldMatchPredictions.find(p => p.matchId._id === match._id)}
                 />
               ))
             ) : (
-              <p>No live matches currently available</p>
+              <p>No old matches currently available</p>
             )}
           </div>
 
@@ -193,8 +178,8 @@ const PredictionGamePage = () => {
         </div>
 
         <div className="sidebar">
-          {currentUser && <UserStats user={currentUser} />}
-          <Leaderboard users={leaderboard} currentUserId={currentUser?._id} />
+          {user && <UserStats user={user} />}
+          <Leaderboard users={leaderboard} currentUserId={user?._id} />
         </div>
       </div>
     </div>

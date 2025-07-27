@@ -24,8 +24,16 @@ const old_matchSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true
+  },
+  team1_score: {
+    type: Number,
+    default: 0
+  },
+  team2_score: {
+    type: Number,
+    default: 0
   }
 });
 
 const Old_match = mongoose.model('Old_match', old_matchSchema);
-module.exports = Old_match; 
+module.exports = Old_match;
