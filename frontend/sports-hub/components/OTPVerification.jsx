@@ -83,6 +83,7 @@ export default function OTPVerification() {
           // Store token and user data for login
           localStorage.setItem('token', result.token);
           localStorage.setItem('user', JSON.stringify(result.user));
+          localStorage.setItem('email', email); // Store email for backward compatibility
           // Update auth context
           login(result.user, result.token);
         }

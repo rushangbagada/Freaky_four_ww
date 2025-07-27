@@ -3,7 +3,7 @@ import MatchCard from './matchcard.jsx';
 import OldMatchCard from './OldMatchCard.jsx'; // Import the new component
 import Leaderboard from './leader.jsx';
 import UserStats from './userStates.jsx';
-import { useAuth } from '../src/AuthContext'; // Import useAuth
+import { useAuth } from '../src/AuthContext';
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
@@ -12,7 +12,26 @@ const PredictionGamePage = () => {
   const [predictions, setPredictions] = useState([]);
   const [oldMatchPredictions, setOldMatchPredictions] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
-  const { user, token } = useAuth(); // Use the auth context
+  const [currentUser, setCurrentUser] = useState(null);
+  const { user, isAuthenticated, token } = useAuth();
+
+  // Set current user from AuthContext
+  useEffect(() => {
+    console.log('AuthContext state:', { user, isAuthenticated: isAuthenticated(), token: !!token });
+    console.log('localStorage contents:', {
+      token: localStorage.getItem('token'),
+      user: localStorage.getItem('user'),
+      email: localStorage.getItem('email')
+    });
+    
+    if (isAuthenticated() && user) {
+      console.log('Setting current user:', user);
+      setCurrentUser(user);
+    } else {
+      console.log('User not authenticated, clearing current user');
+      setCurrentUser(null);
+    }
+  }, [user, isAuthenticated, token]);
 
   // Fetch matches, old matches, and leaderboard
   useEffect(() => {
@@ -40,18 +59,22 @@ const PredictionGamePage = () => {
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
-    if (user && user._id) {
-      // Fetch old match predictions
-      fetch(`/api/user/${user._id}/old-match-predictions`, {
-        headers: {
-          'Authorization': `Bearer ${token}` // Add token to request
-        }
+    const userId = currentUser?._id || currentUser?.id;
+    if (currentUser && userId && token) {
+      // Fetch live match predictions with authorization
+      const headers = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      
+      fetch(`/api/user/${userId}/live-match-predictions`, {
+        headers
       })
         .then(res => res.json())
         .then(data => setOldMatchPredictions(data))
         .catch(err => console.error("Error fetching old match predictions:", err));
     }
-  }, [user, token]);
+  }, [currentUser, token]);
 
   // Handle regular match prediction submission
   const handlePrediction = (matchId, homeScore, awayScore) => {
@@ -71,38 +94,91 @@ const PredictionGamePage = () => {
     });
   };
 
-  // Handle old match prediction submission
-  const handleOldMatchPrediction = (matchId, team1Score, team2Score) => {
-    if (!user || !user._id) {
+  // Handle live match prediction submission
+  const handleLivePrediction = (matchId, team1Score, team2Score) => {
+    console.log('handleLivePrediction called with:', { matchId, team1Score, team2Score });
+    console.log('Authentication check:', {
+      isAuthenticated: isAuthenticated(),
+      currentUser,
+      hasUserId: currentUser?._id || currentUser?.id,
+      token: !!token
+    });
+    
+    const userId = currentUser?._id || currentUser?.id;
+    if (!isAuthenticated() || !currentUser || !userId) {
+      console.log('Authentication failed - showing login alert');
       alert("Please log in to submit predictions");
       return;
     }
+    
+    // Validate input scores
+    if (team1Score === '' || team2Score === '' || team1Score === null || team2Score === null) {
+      alert("Please enter scores for both teams");
+      return;
+    }
+    
+    const parsedTeam1Score = parseInt(team1Score);
+    const parsedTeam2Score = parseInt(team2Score);
+    
+    if (isNaN(parsedTeam1Score) || isNaN(parsedTeam2Score) || parsedTeam1Score < 0 || parsedTeam2Score < 0) {
+      alert("Please enter valid positive numbers for scores");
+      return;
+    }
+    
+    console.log('Authentication passed - proceeding with prediction submission');
+    console.log('Request payload:', {
+      userId: userId,
+      matchId,
+      team1Score: parsedTeam1Score,
+      team2Score: parsedTeam2Score
+    });
 
-    fetch("/api/user/old-match-prediction", {
+    const headers = {
+      "Content-Type": "application/json"
+    };
+    
+    // Add authorization header if token exists
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    console.log('Request headers:', headers);
+
+    fetch("/api/user/live-match-prediction", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}` // Add token to request
-      },
+      headers,
       body: JSON.stringify({
-        userId: user._id,
+        userId: userId,
         matchId,
-        team1Score: parseInt(team1Score),
-        team2Score: parseInt(team2Score)
+        team1Score: parsedTeam1Score,
+        team2Score: parsedTeam2Score
       })
     })
       .then(res => {
+        console.log('Response status:', res.status);
+        console.log('Response headers:', res.headers);
+        
         if (!res.ok) {
-          if (res.status === 401) {
-            throw new Error("You are not logged in or your session has expired");
-          }
-          throw new Error("Failed to submit prediction");
+          return res.text().then(text => {
+            console.error('Server error response:', text);
+            let errorMessage = 'Failed to submit prediction';
+            try {
+              const errorData = JSON.parse(text);
+              errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+              console.log('Response is not JSON:', text);
+              errorMessage = text || errorMessage;
+            }
+            throw new Error(errorMessage);
+          });
         }
         return res.json();
       })
       .then(data => {
-        // Update the old match predictions state
-        setOldMatchPredictions(prev => {
+        console.log('Success response:', data);
+        
+        // Update the live predictions state
+        setLivePredictions(prev => {
           const existing = prev.find(p => p.matchId._id === matchId);
           if (existing) {
             return prev.map(p => p.matchId._id === matchId ? data.prediction : p);
@@ -115,8 +191,17 @@ const PredictionGamePage = () => {
         alert("Prediction submitted successfully!");
       })
       .catch(err => {
-        console.error("Error submitting prediction:", err);
-        alert(err.message || "Error submitting prediction. Please try again.");
+        console.error("Detailed error submitting prediction:", {
+          error: err,
+          message: err.message,
+          stack: err.stack,
+          userId,
+          matchId,
+          team1Score: parsedTeam1Score,
+          team2Score: parsedTeam2Score,
+          token: !!token
+        });
+        alert(`Error submitting prediction: ${err.message}`);
       });
   };
 
@@ -178,8 +263,8 @@ const PredictionGamePage = () => {
         </div>
 
         <div className="sidebar">
-          {user && <UserStats user={user} />}
-          <Leaderboard users={leaderboard} currentUserId={user?._id} />
+          {currentUser && <UserStats user={currentUser} />}
+          <Leaderboard users={leaderboard} currentUserId={currentUser?._id || currentUser?.id} />
         </div>
       </div>
     </div>
