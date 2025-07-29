@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
-import '../components/css/colors.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Home from '../components/home';

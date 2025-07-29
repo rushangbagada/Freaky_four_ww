@@ -77,23 +77,20 @@ function waitForServer(port, timeout = 30000) { // Increased timeout to 30 secon
 
 // Add GET endpoint for frontend compatibility
 router.get('/:gameId', async (req, res) => {
-  const gameId = req.params.gameId;
-  const config = gameConfigs[gameId];
-
-  if (!config) {
-    return res.status(404).json({ success: false, message: 'Invalid game ID' });
-  }
-
-  if (!fs.existsSync(config.path)) {
-    return res.status(500).json({ success: false, message: `Game directory not found: ${config.path}` });
-  }
-
-  return res.status(200).json({ success: true, message: `Game ${gameId} is available`, config: config });
+  // Just redirect to the POST handler
+  return router.handle({
+    method: 'POST',
+    url: req.url,
+    body: req.body,
+    params: req.params,
+    query: req.query,
+    headers: req.headers
+  }, res);
 });
 
 router.post('/:gameId', async (req, res) => {
   const gameId = req.params.gameId;
-  const config = gameConfigs[gameId];
+  const config = gameConfig[gameId];
 
   if (!config) {
     return res.status(404).json({ success: false, message: 'Invalid game ID' });

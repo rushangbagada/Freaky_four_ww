@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
-    <footer className="footer fade-in">
+    <footer className="footer">
       <div className="container">
         <div className="footer-grid">
           {/* Logo and Description */}

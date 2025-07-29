@@ -418,6 +418,21 @@ export default function LiveMatchManagement({ user }) {
                 >
                   Delete
                 </button>
+                {match.status !== 'finished' && (
+                  <button 
+                    className="finish-match-button"
+                    onClick={() => {
+                      const team1Score = prompt(`Enter final score for ${match.team1}:`, match.team1_score);
+                      const team2Score = prompt(`Enter final score for ${match.team2}:`, match.team2_score);
+                      
+                      if (team1Score !== null && team2Score !== null) {
+                        handleUpdateScoresAndCalculatePoints(match._id, team1Score, team2Score);
+                      }
+                    }}
+                  >
+                    🏁 Finish Match & Calculate Points
+                  </button>
+                )}
               </div>
             </div>
           ))

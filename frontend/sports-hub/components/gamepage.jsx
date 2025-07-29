@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MatchCard from './matchcard.jsx';
-import OldMatchCard from './OldMatchCard.jsx'; // Import the new component
+import LiveMatchCard from './liveMatchCard.jsx'; // New component for live matches
 import Leaderboard from './leader.jsx';
 import UserStats from './userStates.jsx';
 import { useAuth } from '../src/AuthContext';
@@ -8,11 +8,12 @@ import './css/gamepage.css';
 
 const PredictionGamePage = () => {
   const [matches, setMatches] = useState([]);
-  const [oldMatches, setOldMatches] = useState([]);
+  const [liveMatches, setLiveMatches] = useState([]);
   const [predictions, setPredictions] = useState([]);
-  const [oldMatchPredictions, setOldMatchPredictions] = useState([]);
+  const [livePredictions, setLivePredictions] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [predictionUser, setPredictionUser] = useState(null);
   const { user, isAuthenticated, token } = useAuth();
 
   // Set current user from AuthContext
@@ -27,13 +28,37 @@ const PredictionGamePage = () => {
     if (isAuthenticated() && user) {
       console.log('Setting current user:', user);
       setCurrentUser(user);
+      
+      // Fetch prediction user data using email
+      fetchPredictionUser(user.email);
     } else {
       console.log('User not authenticated, clearing current user');
       setCurrentUser(null);
+      setPredictionUser(null);
     }
   }, [user, isAuthenticated, token]);
+  
+  // Function to fetch prediction user data
+  const fetchPredictionUser = async (email) => {
+    try {
+      console.log('Fetching prediction user for email:', email);
+      const response = await fetch(`/api/user?email=${encodeURIComponent(email)}`);
+      
+      if (response.ok) {
+        const predUser = await response.json();
+        console.log('Prediction user found:', predUser);
+        setPredictionUser(predUser);
+      } else {
+        console.log('Prediction user not found, response status:', response.status);
+        setPredictionUser(null);
+      }
+    } catch (error) {
+      console.error('Error fetching prediction user:', error);
+      setPredictionUser(null);
+    }
+  };
 
-  // Fetch matches, old matches, and leaderboard
+  // Fetch matches, live matches, and leaderboard
   useEffect(() => {
     // Fetch regular matches
     fetch("/api/prediction_match")
@@ -41,11 +66,11 @@ const PredictionGamePage = () => {
       .then(data => setMatches(data))
       .catch(err => console.error("Error fetching prediction matches:", err));
 
-    // Fetch old matches
-    fetch("/api/game/old-matches")
+    // Fetch live matches
+    fetch("/api/game/live-matches")
       .then(res => res.json())
-      .then(data => setOldMatches(data))
-      .catch(err => console.error("Error fetching old matches:", err));
+      .then(data => setLiveMatches(data))
+      .catch(err => console.error("Error fetching live matches:", err));
 
     // Fetch leaderboard
     fetch("/api/leader")
@@ -59,22 +84,25 @@ const PredictionGamePage = () => {
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
-    const userId = currentUser?._id || currentUser?.id;
-    if (currentUser && userId && token) {
-      // Fetch live match predictions with authorization
+    if (predictionUser && predictionUser._id && token) {
+      // Fetch live match predictions with authorization using predictionUser's _id
       const headers = {};
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }
       
-      fetch(`/api/user/${userId}/live-match-predictions`, {
+      console.log('Fetching live predictions for predictionUser ID:', predictionUser._id);
+      fetch(`/api/user/${predictionUser._id}/live-match-predictions`, {
         headers
       })
         .then(res => res.json())
-        .then(data => setOldMatchPredictions(data))
-        .catch(err => console.error("Error fetching old match predictions:", err));
+        .then(data => {
+          console.log('Live predictions fetched:', data);
+          setLivePredictions(data);
+        })
+        .catch(err => console.error("Error fetching live match predictions:", err));
     }
-  }, [currentUser, token]);
+  }, [predictionUser, token]);
 
   // Handle regular match prediction submission
   const handlePrediction = (matchId, homeScore, awayScore) => {
@@ -92,6 +120,13 @@ const PredictionGamePage = () => {
       }
       return [...prev, newPrediction];
     });
+
+    if (currentUser) {
+      setCurrentUser(prev => ({
+        ...prev,
+        predictions: (prev.predictions || 0) + 1
+      }));
+    }
   };
 
   // Handle live match prediction submission
@@ -100,14 +135,16 @@ const PredictionGamePage = () => {
     console.log('Authentication check:', {
       isAuthenticated: isAuthenticated(),
       currentUser,
-      hasUserId: currentUser?._id || currentUser?.id,
+      predictionUser,
+      hasPredictionUserId: predictionUser?.id,
       token: !!token
     });
     
-    const userId = currentUser?._id || currentUser?.id;
-    if (!isAuthenticated() || !currentUser || !userId) {
-      console.log('Authentication failed - showing login alert');
-      alert("Please log in to submit predictions");
+    // Use the prediction user's MongoDB _id for the API call
+    const userId = predictionUser?._id;
+    if (!isAuthenticated() || !currentUser || !predictionUser || !userId) {
+      console.log('Authentication failed - missing prediction user data');
+      alert("Please log in to submit predictions. If you continue to see this error, your account may need to be set up for predictions.");
       return;
     }
     
@@ -179,14 +216,32 @@ const PredictionGamePage = () => {
         
         // Update the live predictions state
         setLivePredictions(prev => {
-          const existing = prev.find(p => p.matchId._id === matchId);
+          const existing = prev.find(p => p.matchId?._id === matchId);
           if (existing) {
-            return prev.map(p => p.matchId._id === matchId ? data.prediction : p);
+            return prev.map(p => p.matchId?._id === matchId ? data.prediction : p);
           }
           return [...prev, data.prediction];
         });
 
-        // Remove the setCurrentUser code
+        // Update user stats and refresh prediction user data
+        setCurrentUser(prev => ({
+          ...prev,
+          predictions: (prev.predictions || 0) + 1
+        }));
+        
+        // Refresh prediction user data to get updated stats
+        if (currentUser && currentUser.email) {
+          fetchPredictionUser(currentUser.email);
+        }
+        
+        // Refresh leaderboard to show updated rankings
+        fetch("/api/leader")
+          .then(res => res.json())
+          .then(data => {
+            data.sort((a, b) => b.total_point - a.total_point);
+            setLeaderboard(data.slice(0, 7));
+          })
+          .catch(err => console.error("Error refreshing leaderboard:", err));
 
         alert("Prediction submitted successfully!");
       })
@@ -216,20 +271,20 @@ const PredictionGamePage = () => {
 
       <div className="game-container">
         <div className="matches-section">
-          {/* Old Matches Section */}
-          <h2>Old Matches</h2>
+          {/* Live Matches Section */}
+          <h2>Live Matches</h2>
           <div className="matches-grid">
-            {oldMatches.length > 0 ? (
-              oldMatches.map(match => (
-                <OldMatchCard
+            {liveMatches.length > 0 ? (
+              liveMatches.map(match => (
+                <LiveMatchCard
                   key={match._id}
                   match={match}
-                  onPredict={handleOldMatchPrediction}
-                  userPrediction={oldMatchPredictions.find(p => p.matchId._id === match._id)}
+                  onPredict={handleLivePrediction}
+                  userPrediction={livePredictions.find(p => p.matchId?._id === match._id)}
                 />
               ))
             ) : (
-              <p>No old matches currently available</p>
+              <p>No live matches currently available</p>
             )}
           </div>
 
@@ -263,8 +318,8 @@ const PredictionGamePage = () => {
         </div>
 
         <div className="sidebar">
-          {currentUser && <UserStats user={currentUser} />}
-          <Leaderboard users={leaderboard} currentUserId={currentUser?._id || currentUser?.id} />
+          {(currentUser || predictionUser) && <UserStats user={currentUser} predictionUser={predictionUser} />}
+          <Leaderboard users={leaderboard} currentUserId={predictionUser?._id || currentUser?._id || currentUser?.id} />
         </div>
       </div>
     </div>

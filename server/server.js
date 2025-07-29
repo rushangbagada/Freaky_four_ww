@@ -7,21 +7,17 @@ const app=express();
 const mongoose=require('mongoose');
 const dotenv=require('dotenv');
 const path=require('path');
-const port=process.env.PORT || 5000;
 const cors=require('cors');
-dotenv.config();
 
-const jwt = require("jsonwebtoken"); 
-// Add this line with the other imports at the top
-// Add this line
-// const connectDB = require("./config/db");
-// const authRoutes = require("./routes/authRoutes");
-// const adminRoutes = require("./routes/adminRoutes");
+// Load environment variables from .env file
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+const port=process.env.PORT || 5000;
+
+const jwt = require("jsonwebtoken"); // Add this line
 const connectDB = require("./config/db");
-const { protect } = require('./middlewares/authMiddleware');
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const gameRoutes = require("./routes/gameRoutes");
 
 const Gallery=require('./models/gallery');
 const User=require('./models/User');
@@ -76,21 +72,76 @@ main()
 });
 
 async function main() {
-  await mongoose.connect(process.env.MONGO_URI);
-  
+  try {
+    console.log('🔄 Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log('✅ Connected to MongoDB successfully');
+    
+    // Handle connection events
+    mongoose.connection.on('error', (err) => {
+      console.error('❌ MongoDB connection error:', err);
+    });
+    
+    mongoose.connection.on('disconnected', () => {
+      console.log('⚠️ MongoDB disconnected');
+    });
+    
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB reconnected');
+    });
+    
+  } catch (error) {
+    console.error('❌ Failed to connect to MongoDB:', error.message);
+    throw error;
+  }
 }
 
 
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/game", gameRoutes);
 
 
 
 
 app.get("/", async (req, res) => {
     res.send("Hello");
+})
+
+// Health check endpoint
+app.get("/api/health", async (req, res) => {
+  try {
+    // Test database connection
+    const dbState = mongoose.connection.readyState;
+    const dbStates = {
+      0: 'disconnected',
+      1: 'connected',
+      2: 'connecting',
+      3: 'disconnecting'
+    };
+    
+    res.json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      database: {
+        state: dbStates[dbState],
+        connected: dbState === 1
+      },
+      server: {
+        port: process.env.PORT || 5000,
+        nodeEnv: process.env.NODE_ENV || 'development'
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'ERROR',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 })
 
 app.get("/api/gallery", async (req, res) => {
@@ -378,24 +429,55 @@ app.get("/api/prediction_match", (req, res) => {
     });
 })
 
-app.get("/api/user", (req, res) => {
+app.get("/api/user", async (req, res) => {
   const { email } = req.query;
 
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
 
-  Prediction_user.findOne({ email })
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+  try {
+    // First try to find existing prediction user
+    let predictionUser = await Prediction_user.findOne({ email });
+    
+    if (!predictionUser) {
+      console.log(`No prediction user found for email: ${email}, checking main User collection...`);
+      
+      // Check if user exists in main User collection
+      const mainUser = await User.findOne({ email });
+      
+      if (!mainUser) {
+        return res.status(404).json({ message: "User not found in system" });
       }
-      res.json(user);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ message: "Server error", error: err });
-    });
+      
+      console.log(`Found main user, creating prediction user for: ${email}`);
+      
+      // Get the highest existing ID to generate next ID
+      const highestUser = await Prediction_user.findOne().sort({ id: -1 }).limit(1);
+      const nextId = highestUser ? highestUser.id + 1 : 1001;
+      
+      // Create new prediction user based on main user data
+      predictionUser = new Prediction_user({
+        id: nextId,
+        name: mainUser.name,
+        email: mainUser.email,
+        total_point: 0,
+        prediction: "0",
+        accuracy: 0,
+        wins: 0,
+        streak: 0,
+        badges: []
+      });
+      
+      await predictionUser.save();
+      console.log(`Created new prediction user with ID: ${nextId}`);
+    }
+    
+    res.json(predictionUser);
+  } catch (err) {
+    console.error("Error in /api/user endpoint:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
 app.get("/api/leader", (req, res) => {
@@ -531,13 +613,12 @@ app.get("/api/upcoming_matches/:name", async (req, res) => {
   }
 });
 
-// Import the OldMatchPrediction model
-const OldMatchPrediction = require('./models/old_match_prediction');
-const Old_match = require('./models/old_match');
+// Import the LiveMatchPrediction model
+const LiveMatchPrediction = require('./models/live_match_prediction');
 
-// Get all old matches for the game page
-app.get("/api/game/old-matches", (req, res) => {
-  Old_match.find()
+// Get all live matches for the game page
+app.get("/api/game/live-matches", (req, res) => {
+  Live_Match.find()
     .then(matches => res.json(matches))
     .catch(err => {
       console.error(err);
@@ -545,66 +626,132 @@ app.get("/api/game/old-matches", (req, res) => {
     });
 });
 
-// Submit a prediction for an old match - add the protect middleware
-app.post("/api/user/old-match-prediction", protect, async (req, res) => {
+// Submit a prediction for a live match
+app.post("/api/user/live-match-prediction", async (req, res) => {
   try {
+    console.log('Live match prediction request received:', {
+      body: req.body,
+      headers: req.headers,
+      timestamp: new Date().toISOString()
+    });
+    
     const { userId, matchId, team1Score, team2Score } = req.body;
     
-    // Verify that the userId in the request matches the authenticated user
-    if (userId !== req.userId) {
-      return res.status(403).json({ message: "You can only submit predictions for your own account" });
-    }
-    
+    // Validate required fields
     if (!userId || !matchId || team1Score === undefined || team2Score === undefined) {
-      return res.status(400).json({ message: "Missing required fields" });
+      console.log('Missing required fields:', { userId: !!userId, matchId: !!matchId, team1Score, team2Score });
+      return res.status(400).json({ 
+        message: "Missing required fields",
+        details: {
+          userId: !userId ? 'Missing' : 'Present',
+          matchId: !matchId ? 'Missing' : 'Present',
+          team1Score: team1Score === undefined ? 'Missing' : 'Present',
+          team2Score: team2Score === undefined ? 'Missing' : 'Present'
+        }
+      });
     }
     
-    // Check if user exists
-    const user = await Prediction_user.findById(userId);
+    // Validate score values
+    if (typeof team1Score !== 'number' || typeof team2Score !== 'number' || team1Score < 0 || team2Score < 0) {
+      console.log('Invalid score values:', { team1Score, team2Score, team1Type: typeof team1Score, team2Type: typeof team2Score });
+      return res.status(400).json({ 
+        message: "Invalid score values. Scores must be non-negative numbers",
+        received: { team1Score, team2Score }
+      });
+    }
+    
+    console.log('Checking if user exists:', userId);
+    // Check if user exists - try both _id and custom id field
+    let user;
+    try {
+      // First try with MongoDB _id
+      user = await Prediction_user.findById(userId);
+    } catch (error) {
+      console.log('Failed to find user by _id, error:', error.message);
+    }
+    
+    // If not found by _id, try by custom id field
     if (!user) {
+      try {
+        user = await Prediction_user.findOne({ id: userId });
+        console.log('Tried finding user by custom id field:', userId);
+      } catch (error) {
+        console.log('Failed to find user by custom id, error:', error.message);
+      }
+    }
+    
+    if (!user) {
+      console.log('User not found with either _id or custom id:', userId);
       return res.status(404).json({ message: "User not found" });
     }
+    console.log('User found:', { _id: user._id, customId: user.id, name: user.name || user.username });
     
+    console.log('Checking if match exists:', matchId);
     // Check if match exists
-    const match = await Old_match.findById(matchId);
+    const match = await Live_Match.findById(matchId);
     if (!match) {
+      console.log('Match not found:', matchId);
       return res.status(404).json({ message: "Match not found" });
     }
+    console.log('Match found:', { id: match._id, status: match.status, teams: `${match.team1} vs ${match.team2}` });
     
-    // Create or update prediction
-    const prediction = await OldMatchPrediction.findOneAndUpdate(
-      { userId, matchId },
-      { 
-        userId,
-        matchId,
-        predictedTeam1Score: team1Score,
-        predictedTeam2Score: team2Score,
-        isProcessed: false
-      },
-      { upsert: true, new: true }
-    );
+    // Check if match is still open for predictions (not finished)
+    if (match.status === "finished") {
+      console.log('Match already finished:', { matchId, status: match.status });
+      return res.status(400).json({ message: "Match is already finished, predictions closed" });
+    }
+    
+    // Check if user has already made a prediction for this match
+    console.log('Checking for existing prediction:', { userId: user._id, matchId });
+    const existingPrediction = await LiveMatchPrediction.findOne({ userId: user._id, matchId });
+    
+    if (existingPrediction) {
+      console.log('User has already made a prediction for this match:', existingPrediction._id);
+      return res.status(400).json({ 
+        message: "You have already made a prediction for this match. Each user can predict only once per match.",
+        existingPrediction: {
+          predictedTeam1Score: existingPrediction.predictedTeam1Score,
+          predictedTeam2Score: existingPrediction.predictedTeam2Score,
+          createdAt: existingPrediction.createdAt
+        }
+      });
+    }
+    
+    console.log('Creating new prediction:', { userId: user._id, matchId, team1Score, team2Score });
+    // Create new prediction - always use the MongoDB _id for the relationship
+    const prediction = new LiveMatchPrediction({
+      userId: user._id,
+      matchId,
+      predictedTeam1Score: team1Score,
+      predictedTeam2Score: team2Score,
+      isProcessed: false
+    });
+    
+    await prediction.save();
+    
+    console.log('Prediction saved successfully:', prediction);
     
     res.status(201).json({
       message: "Prediction submitted successfully",
       prediction
     });
   } catch (error) {
-    console.error("Error submitting prediction:", error);
+    console.error("Error submitting prediction:", {
+      error: error.message,
+      stack: error.stack,
+      body: req.body,
+      timestamp: new Date().toISOString()
+    });
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-// Also protect the endpoint for fetching user predictions
-app.get("/api/user/:userId/old-match-predictions", protect, async (req, res) => {
+// Get user's predictions for live matches
+app.get("/api/user/:userId/live-match-predictions", async (req, res) => {
   try {
     const { userId } = req.params;
     
-    // Verify that the userId in the request matches the authenticated user
-    if (userId !== req.userId) {
-      return res.status(403).json({ message: "You can only view your own predictions" });
-    }
-    
-    const predictions = await OldMatchPrediction.find({ userId })
+    const predictions = await LiveMatchPrediction.find({ userId })
       .populate('matchId')
       .sort({ createdAt: -1 });
     
@@ -615,16 +762,16 @@ app.get("/api/user/:userId/old-match-predictions", protect, async (req, res) => 
   }
 });
 
-// Admin endpoint to update old match scores and calculate points
-app.post("/api/admin/old-matches/:matchId/update-scores", async (req, res) => {
+// Admin endpoint to update match scores and calculate points
+app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
   try {
     const { matchId } = req.params;
-    const { team1_score, team2_score } = req.body;
+    const { team1_score, team2_score, status } = req.body;
     
     // Update the match scores
-    const updatedMatch = await Old_match.findByIdAndUpdate(
+    const updatedMatch = await Live_Match.findByIdAndUpdate(
       matchId,
-      { team1_score, team2_score },
+      { team1_score, team2_score, status },
       { new: true }
     );
     
@@ -632,47 +779,73 @@ app.post("/api/admin/old-matches/:matchId/update-scores", async (req, res) => {
       return res.status(404).json({ message: "Match not found" });
     }
     
-    // Find all predictions for this match
-    const predictions = await OldMatchPrediction.find({ matchId, isProcessed: false });
-    
-    // Process each prediction
-    for (const prediction of predictions) {
-      let points = 0;
+    // If match is finished, calculate points for all predictions
+    if (status === "finished") {
+      // Find all predictions for this match
+      const predictions = await LiveMatchPrediction.find({ matchId, isProcessed: false });
       
-      // Exact score match (correct prediction) - 10 points
-      if (prediction.predictedTeam1Score === team1_score && 
-          prediction.predictedTeam2Score === team2_score) {
-        points = 10;
+      // Process each prediction
+      for (const prediction of predictions) {
+        let points = 0;
+        
+        // Exact score match (10 points)
+        if (prediction.predictedTeam1Score === team1_score && 
+            prediction.predictedTeam2Score === team2_score) {
+          points = 10;
+        }
+        // Correct winner or draw prediction (5 points)
+        else if (
+          (team1_score > team2_score && prediction.predictedTeam1Score > prediction.predictedTeam2Score) ||
+          (team1_score < team2_score && prediction.predictedTeam1Score < prediction.predictedTeam2Score) ||
+          (team1_score === team2_score && prediction.predictedTeam1Score === prediction.predictedTeam2Score)
+        ) {
+          points = 5;
+
+          // Partial score match: correct team score (2 points each)
+          if (prediction.predictedTeam1Score === team1_score) {
+            points += 2;
+          }
+          if (prediction.predictedTeam2Score === team2_score) {
+            points += 2;
+          }
+        }
+
+        // Update prediction with points
+        prediction.points = points;
+        prediction.isProcessed = true;
+        await prediction.save();
+
+        // Update user's total points and stats
+        const user = await Prediction_user.findById(prediction.userId);
+        if (user) {
+          // Increment total points
+          user.total_point = (user.total_point || 0) + points;
+          
+          // Update prediction count
+          const currentPredictions = parseInt(user.prediction || "0");
+          user.prediction = (currentPredictions + 1).toString();
+          
+          // Update wins if user scored points
+          if (points > 0) {
+            user.wins = (user.wins || 0) + 1;
+          }
+          
+          // Calculate accuracy (wins / total predictions * 100)
+          const totalPredictions = currentPredictions + 1;
+          const totalWins = user.wins || 0;
+          user.accuracy = totalPredictions > 0 ? Math.round((totalWins / totalPredictions) * 100) : 0;
+          
+          await user.save();
+        }
       }
-      // Partial correct prediction (correct winner/draw) - 5 points
-      else if (
-        (team1_score > team2_score && prediction.predictedTeam1Score > prediction.predictedTeam2Score) ||
-        (team1_score < team2_score && prediction.predictedTeam1Score < prediction.predictedTeam2Score) ||
-        (team1_score === team2_score && prediction.predictedTeam1Score === prediction.predictedTeam2Score)
-      ) {
-        points = 5;
-      }
-      
-      // Update prediction with points
-      await OldMatchPrediction.findByIdAndUpdate(
-        prediction._id,
-        { points, isProcessed: true }
-      );
-      
-      // Update user's total points
-      await Prediction_user.findByIdAndUpdate(
-        prediction.userId,
-        { $inc: { total_point: points } }
-      );
     }
     
     res.json({
-      message: "Match scores updated and predictions processed",
-      match: updatedMatch,
-      predictionsProcessed: predictions.length
+      message: "Match scores updated successfully",
+      match: updatedMatch
     });
   } catch (error) {
-    console.error("Error updating match scores:", error);
+    console.error("Error updating scores:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -719,5 +892,8 @@ app.post("/api/booking", async (req, res) => {
 
 const { exec } = require('child_process');
 // const path = require('path');
+// Import the game routes module
+const gameRoutes = require('./routes/gameRoutes');
 
-// Game routes are already registered above
+// Use the game routes for the /api endpoint
+app.use('/api', gameRoutes);
