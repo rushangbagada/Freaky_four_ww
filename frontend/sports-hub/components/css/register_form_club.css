@@ -1,4 +1,6 @@
-/* Basic Resets */
+/*
+
+/* Basic Resets * /
 * {
   box-sizing: border-box;
   margin: 0;
@@ -13,7 +15,7 @@ body {
   padding: 20px;
 }
 
-/* Header Section */
+/* Header Section * /
 .header-section {
   text-align: center;
   padding: 40px 20px;
@@ -28,7 +30,7 @@ body {
   margin-bottom: 10px;
 }
 
-/* Main Form */
+/* Main Form * /
 .form-container {
   background-color: white;
   max-width: 600px;
@@ -80,7 +82,7 @@ input:focus, select:focus {
   outline: none;
 }
 
-/* Social Login Buttons */
+/* Social Login Buttons * /
 .social-login {
   display: flex;
   flex-direction: column;
@@ -113,7 +115,7 @@ input:focus, select:focus {
   color: white;
 }
 
-/* Submit Button */
+/* Submit Button * /
 .submit-btn {
   background-color: #1e88e5;
   color: white;
@@ -129,3 +131,5 @@ input:focus, select:focus {
 .submit-btn:hover {
   background-color: #1565c0;
 }
+
+*/

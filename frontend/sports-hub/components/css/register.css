@@ -1,22 +1,18 @@
-/* Basic Resets */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
+/* Dark Mode Register Page */
+/* body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f9;
-  color: #333;
+  background: linear-gradient(135deg, #181c23 0%, #23272f 100%);
+  color: #e5e7eb;
   line-height: 1.6;
   padding: 20px;
-}
+} */
 
 /* Register Container */
 .register-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /*  linear-gradient(135deg, #23272f 0%, #181c23 100%); */
+  /* background: linear-gradient(135deg, #181c23 0%, #23272f 100%) */
+  background: #121212;
   padding: 20px;
 }
 
@@ -24,7 +20,7 @@ body {
 .header-section {
   text-align: center;
   padding: 40px 20px;
-  color: white;
+  color: #60a5fa;
 }
 
 .header-icon {
@@ -36,21 +32,23 @@ body {
   font-size: 32px;
   margin-bottom: 10px;
   font-weight: 600;
+  color: #e3e8ee;
 }
 
 .header-section p {
   font-size: 18px;
   opacity: 0.9;
+  color: #bfc6d1;
 }
 
 /* Form Container */
 .form-container {
   max-width: 600px;
   margin: 0 auto;
-  background: white;
+  background: #181c23;
   border-radius: 15px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.10);
   margin-bottom: 40px;
 }
 
@@ -58,11 +56,12 @@ body {
   font-size: 48px;
   text-align: center;
   margin-bottom: 20px;
+  color: #60a5fa;
 }
 
 .form-container h2 {
   text-align: center;
-  color: #333;
+  color: #e3e8ee;
   margin-bottom: 10px;
   font-size: 24px;
   font-weight: 600;
@@ -70,7 +69,7 @@ body {
 
 .form-subtitle {
   text-align: center;
-  color: #666;
+  color: #bfc6d1;
   margin-bottom: 30px;
   font-size: 16px;
 }
@@ -89,7 +88,7 @@ body {
 
 .form-group label {
   margin-bottom: 8px;
-  color: #555;
+  color: white;
   font-weight: 500;
   font-size: 14px;
 }
@@ -97,22 +96,23 @@ body {
 .form-group input,
 .form-group select {
   padding: 12px 15px;
-  border: 2px solid #e1e5e9;
+  border: 2px solid #23272f;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s ease;
-  background: white;
+  background: #23272f;
+  color: #e5e7eb;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .error-text {
-  color: #dc3545;
+  color: #f87171;
   font-size: 12px;
   margin-top: 5px;
   display: block;
@@ -120,7 +120,7 @@ body {
 
 /* Submit Button */
 .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
   color: white;
   padding: 14px 20px;
   border: none;
@@ -130,11 +130,12 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.18);
 }
 
 .submit-btn:disabled {
@@ -158,10 +159,10 @@ body {
   justify-content: center;
   gap: 10px;
   padding: 12px 20px;
-  border: 2px solid #e1e5e9;
+  border: 2px solid #23272f;
   border-radius: 8px;
-  background: white;
-  color: #333;
+  background: #23272f;
+  color: #e5e7eb;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
@@ -170,12 +171,14 @@ body {
 
 .google-btn:hover {
   border-color: #4285f4;
-  background: #f8f9fa;
+  background: #1a2233;
+  color: #fff;
 }
 
 .facebook-btn:hover {
   border-color: #1877f2;
-  background: #f8f9fa;
+  background: #1a2233;
+  color: #fff;
 }
 
 .google-btn img,
@@ -189,52 +192,53 @@ body {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
-  color: #666;
+  color: #bfc6d1;
 }
 
 .login-link a {
-  color: #667eea;
+  color: #60a5fa;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .login-link a:hover {
-  color: #764ba2;
+  color: #2563eb;
 }
 
 /* OTP Verification Card */
 .register-card {
   max-width: 400px;
   margin: 0 auto;
-  background: white;
+  background: #181c23;
   border-radius: 15px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.10);
   text-align: center;
 }
 
 .register-icon {
   font-size: 48px;
   margin-bottom: 20px;
+  color: #60a5fa;
 }
 
 .register-card h2 {
-  color: #333;
+  color: #e3e8ee;
   margin-bottom: 15px;
   font-size: 24px;
   font-weight: 600;
 }
 
 .register-card p {
-  color: #666;
+  color: #bfc6d1;
   margin-bottom: 30px;
   font-size: 14px;
   line-height: 1.5;
 }
 
 .register-card strong {
-  color: #333;
+  color: #e3e8ee;
   font-weight: 600;
 }
 
@@ -252,6 +256,8 @@ body {
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 2px;
+  background: #23272f;
+  color: #e5e7eb;
 }
 
 /* Resend OTP */
@@ -259,19 +265,19 @@ body {
   margin-top: 20px;
   text-align: center;
   padding-top: 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #23272f;
 }
 
 .resend-otp p {
-  color: #666;
+  color: #bfc6d1;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
 .resend-btn {
   background: none;
-  border: 1px solid #667eea;
-  color: #667eea;
+  border: 1px solid #2563eb;
+  color: #60a5fa;
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 14px;
@@ -280,7 +286,7 @@ body {
 }
 
 .resend-btn:hover:not(:disabled) {
-  background: #667eea;
+  background: #2563eb;
   color: white;
 }
 
@@ -295,23 +301,18 @@ body {
     margin: 20px;
     padding: 30px 20px;
   }
-  
   .header-section {
     padding: 30px 20px;
   }
-  
   .header-section h1 {
     font-size: 28px;
   }
-  
   .header-section p {
     font-size: 16px;
   }
-  
   .social-login {
     flex-direction: column;
   }
-  
   .google-btn,
   .facebook-btn {
     width: 100%;
@@ -322,20 +323,16 @@ body {
   .form-container {
     padding: 20px 15px;
   }
-  
   .header-section h1 {
     font-size: 24px;
   }
-  
   .form-container h2 {
     font-size: 20px;
   }
-  
   .form-group input,
   .form-group select {
     font-size: 14px;
   }
-  
   .submit-btn {
     font-size: 14px;
     padding: 12px 16px;

@@ -3,7 +3,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   background-color: #f9fafb;
-  color: #1f2937;
+  /* color: #1f2937; */
 }
 
 /* Hero Section */
@@ -124,7 +124,8 @@
 .form-group label {
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: #374151;
+  /* color: #374151; */
+  color: white;
 }
 
 .form-group input,

@@ -73,7 +73,7 @@ export default function Gallery() {
   const sportOptions = ['All', 'Football', 'Basketball', 'Cricket', 'Badminton', 'Volleyball', 'Tennis'];
 
   return (
-    <>
+    <div className="gallery-container">
       <header className="hero">
         <div className="hero-content">
           <h1>Photo Gallery</h1>
@@ -127,7 +127,7 @@ export default function Gallery() {
           ))}
         </section>
       </main>
-    </>
+    </div>
   );
 }
 

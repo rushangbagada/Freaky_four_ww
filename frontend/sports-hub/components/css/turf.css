@@ -1,4 +1,4 @@
-.turf-page {
+/* .turf-page {
   min-height: 100vh;
   padding: 20px;
   background-color: #f8f9fa;
@@ -116,8 +116,8 @@
   color: #999;
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
+
+/* @media (max-width: 768px) {
   .turf-page {
     padding: 10px;
   }
@@ -162,4 +162,102 @@
   .turf-filters {
     padding: 15px;
   }
+} */ 
+
+
+.turf-card {
+  border: 1px solid #23272f;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #181c23;
+  margin: 16px;
+  width: 300px;
+}
+
+.turf-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 25px rgba(0,0,0,0.85);
+}
+
+.turf-image {
+  height: 200px;
+  overflow: hidden;
+  background: #23272f;
+}
+
+.turf-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  filter: brightness(0.92) contrast(1.08);
+}
+
+.turf-card:hover .turf-image img {
+  transform: scale(1.05);
+}
+
+.turf-details {
+  padding: 16px;
+}
+
+.turf-details h3 {
+  margin: 0 0 8px 0;
+  color: #e3e8ee;
+  font-size: 1.2rem;
+}
+
+.location {
+  color: #a1a7b3;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.location-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="%23a1a7b3" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.price {
+  font-weight: bold;
+  color: #4ade80;
+  margin-bottom: 8px;
+}
+
+.availability {
+  margin-bottom: 16px;
+  font-weight: 500;
+  color: #bfc6d1;
+}
+
+.book-button {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+}
+
+.book-button:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.book-button:disabled {
+  background-color: #374151;
+  color: #888;
+  cursor: not-allowed;
 }

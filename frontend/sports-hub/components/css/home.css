@@ -4,12 +4,17 @@
   margin: 0;
   padding: 0;
 }
-body {
+body,html {
   font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background: linear-gradient(120deg, #e0e7ff 0%, #f0fdf4 100%);
-  color: #222;
+  /* background: linear-gradient(120deg, #181c23 0%, #23272f 100%); */
+  background: #121212; 
+  color: #e5e7eb;
   min-height: 100vh;
   letter-spacing: 0.01em;
+}
+.home-container{
+  background: #121212; 
+  padding: 40px 0px;
 }
 
 /* Typography */
@@ -30,34 +35,37 @@ h3 {
 }
 
 /* Hero Section */
-.hero {
+ .hero {
   top: -20px;
   position: relative;
   min-height: 60vh;
   width: 100%;
-  background: linear-gradient(120deg, #38bdf8 0%, #6366f1 100%);
+  /* background: linear-gradient(120deg, #23272f 0%, #2563eb 100%); */
+  /* background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); */
+background: #121212; 
+
   display: flex;
   align-items: center;
-
   justify-content: center;
   text-align: center;
   color: #fff;
   padding: 120px 20px 80px 20px;
   border-radius: 0 0 32px 32px;
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08);
+  /* box-shadow: 0 8px 32px rgba(37, 99, 235, 0.12); */
   overflow: hidden;
 }
-.hero-overlay {
+/* .hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(56, 189, 248, 0.7) 0%,
-    rgba(99, 102, 241, 0.6) 100%
+    rgba(37, 99, 235, 0.7) 0%,
+    rgba(56, 189, 248, 0.6) 100%
   );
   z-index: 0;
   border-radius: 0 0 32px 32px;
-}
+} */
+
 .hero-content {
   position: relative;
   z-index: 1;
@@ -82,7 +90,7 @@ h3 {
   font-size: 1.25em;
   margin-bottom: 32px;
   opacity: 0.96;
-  text-shadow: 0 1px 8px rgba(99, 102, 241, 0.08);
+  text-shadow: 0 1px 8px rgba(37, 99, 235, 0.08);
 }
 .hero-buttons {
   display: flex;
@@ -103,21 +111,19 @@ h3 {
   cursor: pointer;
 }
 .btn.primary {
-  background: linear-gradient(90deg, #fbbf24, #f59e42);
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
   background-size: 200%;
   background-position: left center;
   color: #fff;
   box-shadow: 0 2px 12px rgba(99, 102, 241, 0.12);
   transition: all 0.4s ease;
 }
-
 .btn.primary:hover {
   background-position: right center;
 }
-
 .btn.secondary {
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid #2563eb;
+  color: #60a5fa;
   background: transparent;
 }
 .btn:hover {
@@ -127,21 +133,18 @@ h3 {
 
 /* Section */
 .sports-section {
-  background: whitesmoke;
-   background: linear-gradient(120deg, #f0fdf4 60%, #e0e7ff 100%);
-  /* background: linear-gradient(120deg, #f0fdf4 60%, #e0e7ff 100%); */
+  background: linear-gradient(120deg, #23272f 60%, #181c23 100%);
   margin: 40px auto;
   padding: 36px 28px;
   text-align: center;
   border-radius: 24px;
   width: 75%;
-  box-shadow: 0 2px 16px rgba(56, 189, 248, 0.08);
+  box-shadow: 0 2px 16px rgba(37, 99, 235, 0.08);
   transition: box-shadow 0.2s;
 }
 .sports-section:hover {
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.1);
 }
-
 .sports-section .section-header {
   margin-bottom: 32px;
 }
@@ -149,12 +152,11 @@ h3 {
   font-size: 2.2em;
   font-weight: 800;
   margin-bottom: 10px;
-  color: #000000;
+  color: #e3e8ee;
 }
 .sports-section .section-header p{
-  color: #222;
+  color: #bfc6d1;
 }
-
 
 /* Cards */
 .cards {
@@ -167,21 +169,22 @@ h3 {
 .card,
 .upcoming .match-card,
 .result-card {
-  background: #fff;
-  /* background: rgb(237, 242, 239); */
-  color: #000000;
+  background: #181c23;
+  color: #e5e7eb;
   border-radius: 16px;
   padding: 28px 20px;
-  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.08);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
   text-align: center;
   transition: transform 0.18s, box-shadow 0.18s;
   position: relative;
+  border: 1px solid #23272f;
 }
 .card:hover,
 .match-card:hover,
 .result-card:hover {
   transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.14);
+  box-shadow: 0 8px 32px rgba(56, 189, 248, 0.14);
+  border-color: #2563eb;
 }
 .card .icon {
   font-size: 2.4em;
@@ -192,17 +195,17 @@ h3 {
   display: flex;
   justify-content: space-between;
   font-size: 1em;
-  color: #555;
+  color: #60a5fa;
   margin-top: 12px;
 }
 
 /* Matches */
 .upcoming.match-card {
-  background: linear-gradient(120deg, #e0e7ff 60%, #f0fdf4 100%);
-  border: 1px solid #c7d2fe;
+  background: linear-gradient(120deg, #23272f 60%, #181c23 100%);
+  border: 1px solid #2563eb;
 }
 .match-card .badge {
-  background: #6366f1;
+  background: #2563eb;
   padding: 6px 16px;
   border-radius: 14px;
   font-size: 0.95em;
@@ -211,61 +214,60 @@ h3 {
   color: #fff;
   font-weight: 600;
   letter-spacing: 0.02em;
-  box-shadow: 0 1px 6px rgba(99, 102, 241, 0.08);
+  box-shadow: 0 1px 6px rgba(56, 189, 248, 0.08);
 }
 .match-card .time {
   font-weight: bold;
-  color: #2563eb;
+  color: #38bdf8;
   font-size: 1.08em;
 }
 
 /* Upcoming Matches */
 .upcoming {
-  
   margin: 40px auto;
   padding: 36px 28px;
   text-align: center;
   border-radius: 24px;
   width: 75%;
-  background: linear-gradient(120deg, #f0fdf4 60%, #e0e7ff 100%);
+  background: linear-gradient(120deg, #23272f 60%, #181c23 100%);
   box-shadow: 0 2px 16px rgba(56, 189, 248, 0.08);
 }
 .upcoming .section-header{
-  color: #000000;
+  color: #e3e8ee;
 }
 
 /* Results */
 .results {
-  background: linear-gradient(120deg, #6366f1 60%, #38bdf8 100%);
+  /* background: linear-gradient(120deg, #2563eb 60%, #38bdf8 100%); */
+  background: linear-gradient(120deg, #23272f 60%, #181c23 100%);
   margin: 40px auto;
   padding: 36px 28px;
   text-align: center;
   border-radius: 24px;
   width: 75%;
-  box-shadow: 0 2px 16px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 2px 16px rgba(56, 189, 248, 0.1);
 }
 .result-card .star {
   color: #fbbf24;
   font-size: 3em;
-  /* margin-bottom: 10px; */
 }
 .score {
   font-size: 1.6em;
-  color: #f97316;
+  color: #fbbf24;
   font-weight: 700;
   margin-bottom: 8px;
 }
 .opponent {
-  color: #64748b;
+  color: #60a5fa;
   font-size: 1.05em;
 }
 
 .status.win {
   background-image: linear-gradient(
     to right,
-    #1fa2ff 0%,
-    #12d8fa 51%,
-    #1fa2ff 100%
+    #2563eb 0%,
+    #38bdf8 51%,
+    #2563eb 100%
   );
   margin: 10px;
   padding: 15px 45px;
@@ -274,19 +276,19 @@ h3 {
   transition: 0.5s;
   background-size: 200% auto;
   color: white;
-  box-shadow: 0 0 20px #eee;
+  box-shadow: 0 0 20px #23272f;
   border-radius: 10px;
   display: block;
 }
 
 .status.win:hover {
-  background-position: right center; /* change the direction of the change here */
+  background-position: right center;
   color: #fff;
   text-decoration: none;
 }
 
 .status.loss {
-  background: linear-gradient(90deg, #fca5a5 60%, #f87171 100%);
+  background: linear-gradient(90deg, #f87171 60%, #ef4444 100%);
   color: #fff;
   display: inline-block;
   padding: 10px 32px;
@@ -297,12 +299,233 @@ h3 {
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
 }
 
+/* Blog Promo Section */
+.blog-promo-section {
+  padding: 4rem 2rem;
+  background: #121212;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blog-promo-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.blog-promo-image {
+  flex: 1;
+  text-align: center;
+}
+
+.blog-promo-img-3d {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
+}
+
+.blog-promo-img-3d:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.blog-promo-text {
+  flex: 1;
+  text-align: left;
+}
+
+.blog-promo-gradient-text {
+  background: linear-gradient(90deg, #ff8a00, #e52e71);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.blog-promo-btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 12px 28px;
+  background: #e52e71;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: background 0.3s ease;
+}
+
+.blog-promo-btn:hover {
+  background: #ff8a00;
+}
+.blog-promo-content {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Calendar Promo Section */
+/* Calendar Promo Section */
+.calendar-promo-section {
+  padding: 4rem 2rem;
+  /* background: #0f0f0f; */
+  background: #121212; 
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-promo-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.calendar-promo-text {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.calendar-promo-gradient-text {
+  background: linear-gradient(90deg, #38bdf8, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-size: 2rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.calendar-promo-text h2 {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.calendar-promo-text p {
+  color: #bfc6d1;
+  font-size: 1.15rem;
+  margin-bottom: 18px;
+  margin-top: 0;
+}
+
+.calendar-promo-btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 12px 28px;
+  background: linear-gradient(90deg, #38bdf8, #fbbf24);
+  color: #181c23;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 12px rgba(56, 189, 248, 0.10);
+}
+
+.calendar-promo-btn:hover {
+  background: linear-gradient(90deg, #fbbf24, #38bdf8);
+  color: #23272f;
+  transform: scale(1.06);
+}
+
+.calendar-promo-image {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-promo-img-3d {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
+  /* animation: calendar-promo-pulse 2s infinite alternate; */
+}
+
+.calendar-promo-img-3d:hover {
+  transform: scale(1.05) rotate(-1deg);
+}
+
+@keyframes calendar-promo-pulse {
+  0% { transform: scale(1);}
+  100% { transform: scale(1.06);}
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .calendar-promo-content {
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 12px;
+  }
+  .calendar-promo-img-3d {
+    max-width: 200px;
+    border-radius: 14px;
+  }
+  .calendar-promo-gradient-text,
+  .calendar-promo-text h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .calendar-promo-section {
+    padding: 32px 2px;
+  }
+  .calendar-promo-content {
+    padding: 18px 2px;
+    border-radius: 16px;
+  }
+  .calendar-promo-img-3d {
+    max-width: 100px;
+    border-radius: 8px;
+  }
+  .calendar-promo-gradient-text,
+  .calendar-promo-text h2 {
+    font-size: 1.1rem;
+  }
+  .calendar-promo-btn {
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+}
+
 /* CTA */
 .cta {
-  background-image: linear-gradient(135deg, #fbbf24 10%, #f59e42 100%);
-  color: #fff;
+  background-image: linear-gradient(135deg, #23272f 10%, #181c23 100%);
+  color: #fbbf24;
   padding: 80px 40px;
   text-align: center;
+  /* margin: 40px auto; */
   margin: 40px auto;
   border-radius: 28px;
   width: 85%;
@@ -314,31 +537,32 @@ h3 {
   margin-bottom: 24px;
   font-weight: 900;
   letter-spacing: 0.02em;
+  color: #fff;
 }
 .cta p {
   font-size: 1.25em;
   margin-bottom: 32px;
   opacity: 0.97;
+  color: #bfc6d1;
 }
 .cta .cta-btn {
-  background: #fff;
-  color: #f59e42;
+  background: #2563eb;
+  color: #fff;
   padding: 16px 40px;
   border-radius: 32px;
   font-size: 1.18em;
   text-decoration: none;
   font-weight: 700;
   transition: all 0.4s;
-  box-shadow: 0 2px 12px rgba(251, 191, 36, 0.08);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
   border: none;
   cursor: pointer;
   display: inline-block;
 }
 .cta .cta-btn:hover {
   transform: scale(1.09);
-  box-shadow: 0 8px 32px rgba(251, 191, 36, 0.16);
-  /* color: #fff; */
-  /* background: linear-gradient(90deg, #f59e42 60%, #fbbf24 100%); */
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.16);
+  background: linear-gradient(90deg, #2563eb 60%, #38bdf8 100%);
 }
 
 /* Responsive improvements */
@@ -346,18 +570,17 @@ h3 {
   .sports,
   .results,
   .upcoming,
-  .cta,.sports-section {
+  .cta, .sports-section {
     width: 95%;
     padding: 24px 8px;
   }
   .cards {
     display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  max-width: 90%;
-  margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    max-width: 90%;
+    margin: 0 auto;
   }
-  
 }
 @media (max-width: 700px) {
   .hero {

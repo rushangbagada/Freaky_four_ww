@@ -1,4 +1,4 @@
-/* gamepage.css */
+/* gamepage.css * /
 
 body {
   margin: 0;
@@ -6,7 +6,7 @@ body {
   background-color: #f2f4f8;
 }
 
-/* Hero Section */
+/* Hero Section * /
 .hero-section {
   background-color: #1e2a38;
   color: #fff;
@@ -24,7 +24,7 @@ body {
   color: #d9e2ec;
 }
 
-/* Game Container Layout */
+/* Game Container Layout * /
 .game-container {
   display: flex;
   flex-direction: row;
@@ -40,7 +40,7 @@ body {
   flex: 1;
 }
 
-/* Section Titles */
+/* Section Titles * /
 .matches-section h2 {
   font-size: 1.5rem;
   margin-bottom: 15px;
@@ -49,7 +49,7 @@ body {
   color: #333;
 }
 
-/* Match Cards Grid */
+/* Match Cards Grid * /
 .matches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -57,7 +57,7 @@ body {
   margin-bottom: 30px;
 }
 
-/* Match Card Styling */
+/* Match Card Styling * /
 .match-card {
   background-color: #fff;
   border-radius: 12px;
@@ -82,7 +82,7 @@ body {
   color: #555;
 }
 
-/* Prediction Inputs */
+/* Prediction Inputs * /
 .match-card input {
   width: 45%;
   padding: 6px 10px;
@@ -107,79 +107,7 @@ body {
   background-color: #0056b3;
 }
 
-/* User Stats Styling */
-.user-stats {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-  margin-bottom: 20px;
-}
-
-.user-stats h3 {
-  color: #1e2a38;
-  margin: 0 0 15px 0;
-  font-size: 1.3rem;
-  border-bottom: 2px solid #007bff;
-  padding-bottom: 8px;
-}
-
-.stats-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.stats-content p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #555;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.stats-content strong {
-  color: #1e2a38;
-  font-weight: 600;
-}
-
-/* Leaderboard Styling Enhancement */
-.leaderboard .name {
-  font-weight: 500;
-  flex-grow: 1;
-  margin: 0 10px;
-}
-
-.leaderboard .rank {
-  font-weight: bold;
-  color: #007bff;
-  margin-right: 10px;
-}
-
-.leaderboard .points {
-  font-weight: 600;
-  color: #28a745;
-}
-
-.leaderboard .accuracy {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-left: 5px;
-}
-
-/* Top 3 positions special styling */
-.leaderboard li.top-three {
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  color: #333;
-  font-weight: 600;
-}
-
-.leaderboard li.top-three .rank {
-  color: #b8860b;
-}
-
-/* Responsive */
+/* Responsive * /
 @media (max-width: 768px) {
   .game-container {
     flex-direction: column;
@@ -188,8 +116,6 @@ body {
   .matches-grid {
     grid-template-columns: 1fr;
   }
-
-  .stats-content p {
-    font-size: 0.9rem;
-  }
 }
+
+*/

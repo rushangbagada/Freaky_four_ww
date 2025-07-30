@@ -1,13 +1,15 @@
-body {
+ /* body {
   font-family: Arial, sans-serif;
   margin: 0;
+  padding: 0;
   background-color: #f9f9f9;
-}
-
+} */
+/*
 .hero {
   position: relative;
   height: 320px;
-  background: linear-gradient(to right, #2563eb, #16a34a);
+ 
+  background-image: linear-gradient( 135deg, #0095ff 10%, #72c3fd 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -19,10 +21,10 @@ body {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background-image: url('https://images.pexels.com/photos/209952/pexels-photo-209952.jpeg?auto=compress&cs=tinysrgb&w=1200');
+ 
   background-size: cover;
   background-position: center;
-  opacity: 0.3;
+  opacity: 0;
 }
 
 .hero-content {
@@ -54,7 +56,7 @@ body {
   gap: 2rem;
   padding: 2rem;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .main-content {
@@ -220,10 +222,9 @@ body {
 }
 
 .cta {
-  background: linear-gradient(to bottom right, #16a34a, #2563eb);
+  background-image: linear-gradient( 135deg, #0095ff 10%, #72c3fd 100%);
   color: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
+  margin: auto;
   text-align: center;
 }
 
@@ -236,4 +237,4 @@ body {
   font-weight: bold;
   text-decoration: none;
   margin-top: 1rem;
-}
+} */

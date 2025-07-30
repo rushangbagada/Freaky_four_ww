@@ -26,22 +26,53 @@ export default function AdminDashboard() {
 
   const fetchDashboardStats = async () => {
     try {
+      console.log('Fetching dashboard stats...');
+      const token = localStorage.getItem('token');
+      console.log('Token available:', !!token);
+      
       const response = await fetch('http://localhost:5000/api/admin/dashboard', {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
+      
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Dashboard data received:', data);
+        
         setStats({
-          totalUsers: data.stats.totalUsers || 0,
-          totalClubs: data.stats.totalClubs || 0,
-          totalMatches: data.stats.totalMatches || 0,
+          totalUsers: data.stats?.totalUsers || 0,
+          totalClubs: data.stats?.totalClubs || 0,
+          totalMatches: data.stats?.totalMatches || 0,
           activeLeaders: data.recentUsers?.filter(user => user.role === 'club_leader')?.length || 0
+        });
+      } else {
+        const errorText = await response.text();
+        console.error('Error response:', response.status, errorText);
+        
+        // Set default stats if API fails
+        setStats({
+          totalUsers: 0,
+          totalClubs: 0,
+          totalMatches: 0,
+          activeLeaders: 0
         });
       }
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      console.error('Error fetching dashboard stats:', error);
+      
+      // Set default stats if request fails
+      setStats({
+        totalUsers: 0,
+        totalClubs: 0,
+        totalMatches: 0,
+        activeLeaders: 0
+      });
     }
   };
 

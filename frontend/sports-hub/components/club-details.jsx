@@ -153,7 +153,7 @@ export default function ClubDetails() {
   if (!club) return <p>No club data found. <Link to="/sports-clubs">Return to clubs list</Link></p>;
 
   return (
-    <>
+    <div>
       <header className="hero">
         <div className="hero-overlay"></div>
         <div className="hero-content">
@@ -249,6 +249,6 @@ export default function ClubDetails() {
           </div>
         </aside>
       </main>
-    </>
+    </div>
   );
 }

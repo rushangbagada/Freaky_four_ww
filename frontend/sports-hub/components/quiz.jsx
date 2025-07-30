@@ -9,16 +9,6 @@ const Quiz = ({ onPointsEarned }) => {
   const [timer, setTimer] = useState(20);
   const [answered, setAnswered] = useState(false);
 
-  // Don't show quiz if user is not authenticated
-  if (!isAuthenticated() || !user) {
-    return (
-      <div className="quiz-container">
-        <h3>Quiz Time!</h3>
-        <p>Please log in to participate in the quiz.</p>
-      </div>
-    );
-  }
-
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
@@ -80,6 +70,16 @@ const Quiz = ({ onPointsEarned }) => {
       console.error('Error submitting answer:', error);
     }
   };
+
+  // Don't show quiz if user is not authenticated
+  if (!isAuthenticated() || !user) {
+    return (
+      <div className="quiz-container">
+        <h3>Quiz Time!</h3>
+        <p>Please log in to participate in the quiz.</p>
+      </div>
+    );
+  }
 
   if (!question) {
     return <div>Loading quiz...</div>;

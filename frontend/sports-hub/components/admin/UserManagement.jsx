@@ -28,21 +28,25 @@ export default function UserManagement() {
 
   const fetchUsers = async () => {
     try {
+      console.log('Fetching users...');
+      const token = localStorage.getItem('token');
+      
       const response = await fetch('http://localhost:5000/api/admin/users', {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
+      
       if (response.ok) {
         const data = await response.json();
-        // Fix: Check if data.users exists and is an array
-        if (data.users && Array.isArray(data.users)) {
-          setUsers(data.users);
-        } else {
-          // Fallback if the response format is different
-          setUsers(Array.isArray(data) ? data : []);
-        }
+        console.log('Users data received:', data);
+        
+        setUsers(data.users || []);
       } else {
+        const errorText = await response.text();
+        console.error('Error response:', response.status, errorText);
         setUsers([]);
       }
     } catch (error) {

@@ -4,30 +4,30 @@
   align-items: center;
   min-height: 80vh;
   padding: 2rem;
-  background-color: #f5f7fa;
+  background: linear-gradient(135deg, #181c23 0%, #23272f 100%);
 }
 
 .profile-card {
   width: 100%;
   max-width: 600px;
-  background-color: white;
+  background: #181c23;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.10);
   overflow: hidden;
 }
 
 .profile-header {
   padding: 2rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
+  color: #fff;
 }
 
 .profile-avatar {
   width: 100px;
   height: 100px;
-  background-color: white;
-  color: #764ba2;
+  background: #23272f;
+  color: #60a5fa;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin: 0 auto 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.10);
 }
 
 .profile-details {
@@ -46,7 +46,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #23272f;
 }
 
 .profile-info-item:last-child {
@@ -55,11 +55,11 @@
 
 .profile-info-item .label {
   font-weight: 600;
-  color: #555;
+  color: #bfc6d1;
 }
 
 .profile-info-item .value {
-  color: #333;
+  color: #e5e7eb;
 }
 
 .profile-actions {
@@ -82,23 +82,23 @@
 }
 
 .admin-button {
-  background-color: #667eea;
+  background: linear-gradient(90deg, #2563eb 60%, #38bdf8 100%);
   color: white;
   border: none;
 }
 
 .admin-button:hover {
-  background-color: #5a6edb;
+  background: #2563eb;
 }
 
 .logout-button {
-  background-color: transparent;
-  color: #f43f5e;
-  border: 1px solid #f43f5e;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
 }
 
 .logout-button:hover {
-  background-color: #f43f5e;
+  background: #f87171;
   color: white;
 }
 
@@ -106,7 +106,6 @@
   .profile-container {
     padding: 1rem;
   }
-  
   .profile-card {
     max-width: 100%;
   }

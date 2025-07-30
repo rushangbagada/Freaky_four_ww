@@ -2,16 +2,18 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
+  background: #111827;
+  color: #e5e7eb;
 }
 
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(24,28,35,0.95);
   backdrop-filter: blur(9px);
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  border-bottom: 1px solid #23272f;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
   border-radius: 0 0 20px 20px;
   width: 100%;
 }
@@ -36,8 +38,7 @@ body {
 }
 
 .icon-bg {
-  /* background: linear-gradient(to right, #2563EB, #00C853); */
-  background-image: linear-gradient( 135deg, #0095ff 10%, #72c3fd 100%);
+  background-image: linear-gradient(135deg, #2563eb 10%, #38bdf8 100%);
   padding: 8px;
   border-radius: 10px;
   font-size: 16px;
@@ -52,12 +53,12 @@ body {
 .brand-main {
   font-size: 18px;
   font-weight: bold;
-  color: #111827;
+  color: #e5e7eb;
 }
 
 .brand-sub {
   font-size: 20px;
-  color: #60A5FA;
+  color: #60a5fa;
   font-weight: 700;
 }
 
@@ -66,36 +67,28 @@ body {
   gap: 10px;
 }
 
-
-
-.nav-link:hover {
-  background-color: #f3f4f6;
-  /* color: #2563EB; */
-}
-
-.nav-link.active {
-  background-color: #00a6ff85;
-  /* color: #1d4ed8; */
-  font-weight: 600;
-
-  /* background-color: #5eacff60; your blue */
-  color: white;
-  border-radius: 6px;
-  transition: all 0.5s ease;
-}
-
 .nav-link {
   border-radius: 6px;
   font-size: 14px;
   transition: background 0.2s, color 0.2s;
   text-decoration: none;
   padding: 8px 15px;
-  color: #333;
-
+  color: #e5e7eb;
   position: relative;
   padding: 0.5rem 1rem;
   transition: background-color 0.3s ease, color 0.3s ease;
-  
+}
+
+.nav-link:hover {
+  background-color: #23272f;
+}
+
+.nav-link.active {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.5s ease;
 }
 
 .nav-item {
@@ -117,10 +110,8 @@ body {
 }
 
 .nav-link.active .nav-label {
-  /* color: #007bff; */
-  color: #333;
+  color: #fff;
 }
-
 
 .menu-toggle {
   display: none;
@@ -128,7 +119,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: #374151;
+  color: #e5e7eb;
 }
 
 .nav-mobile {
@@ -136,7 +127,9 @@ body {
   flex-direction: column;
   gap: 5px;
   padding: 10px 0;
-  color: #333;
+  color: #e5e7eb;
+  background: #181c23;
+  border-radius: 0 0 12px 12px;
 }
 
 .nav-mobile.show {

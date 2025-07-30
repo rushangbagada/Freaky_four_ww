@@ -18,7 +18,7 @@ export default function SportsClubs() {
 
 
   return (
-    <>
+    <div className="sports-clubs-container">
       {/* Header */}
       <section className="hero">
         <div className="hero-content">
@@ -81,6 +81,6 @@ export default function SportsClubs() {
         <p>Join our community of dedicated athletes and start your journey today.</p>
         <Link to="/register" className="register-btn">Register Now</Link>
       </section>
-    </>
+    </div>
   );
 }

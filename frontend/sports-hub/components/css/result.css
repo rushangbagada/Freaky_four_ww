@@ -1,28 +1,36 @@
-
-
 /* results.css */
 
 /* Reset and background */
 body {
-  background: #f2fbff;
+  /* background: linear-gradient(120deg, #181c23 0%, #23272f 100%); */
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
+  color: #e5e7eb;
+  background: #121212; 
+}
+.result-container {
+  background: #121212;
+  min-height: 100vh;
 }
 
 .hero .icon{
   font-size: 100px;
 }
 /* Container */
+
 .container {
   max-width: 1100px;
   margin: 40px auto 0 auto;
   padding: 0 16px;
+  
 }
 
 /* Filter Box */
+
 .filter-box {
-  background: #fff;
+  background: #23272f;
+  
   border-radius: 16px;
   box-shadow: 0 2px 16px 0 rgba(16,30,54,0.06);
   padding: 20px 32px;
@@ -41,7 +49,7 @@ body {
 .filter-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #222;
+  color: #e3e8ee;
   margin-right: 24px;
 }
 
@@ -52,12 +60,12 @@ body {
 }
 
 .filter-controls select {
-  border: 1px solid #e5e7eb;
+  border: 1px solid #374151;
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 1rem;
-  background: #f9fafb;
-  color: #222;
+  background: #181c23;
+  color: #e5e7eb;
   outline: none;
   transition: border 0.2s;
 }
@@ -67,6 +75,7 @@ body {
 }
 
 /* Main Section Layout */
+
 .main-section {
   display: grid;
   grid-template-columns: 3fr 1.2fr;
@@ -83,6 +92,7 @@ body {
 }
 
 /* Stats Cards */
+
 .stats-cards {
   display: flex;
   gap: 20px;
@@ -91,7 +101,6 @@ body {
 
 .card {
   flex: 1;
-  /* background-color: #111827; */
   border-radius: 12px;
   padding: 20px 24px;
   color: #fff;
@@ -128,18 +137,18 @@ body {
 }
 
 /* Match List & Card */
+
 .match-list {
   margin-bottom: 24px;
 }
 
 .match-card {
-  /* background: */
   border-radius: 16px;
   box-shadow: 0 2px 16px 0 rgba(16,30,54,0.06);
   padding: 32px 32px 24px 32px;
   transition: all 0.4s;
   margin-bottom: 16px;
-  background-color: #ffffff;
+  background: #23272f;
 }
 
 .match-info {
@@ -163,14 +172,14 @@ body {
 }
 
 .label.result {
-  background: #dcfce7;
-  color: #16a34a;
+  background: #022c22;
+  color: #4ade80;
   text-transform: uppercase;
 }
 
 .label.sport {
-  background: #dbeafe;
-  color: #2563eb;
+  background: #1e293b;
+  color: #60a5fa;
   text-transform: capitalize;
 }
 
@@ -178,17 +187,15 @@ body {
   display: flex;
   gap: 18px;
   font-size: 0.98rem;
-  color: #6b7280;
+  color: #bfc6d1;
   align-items: center;
 }
 
 .teams {
-  
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  /* justify-content: center; */
   margin : 42px;
 }
 
@@ -196,7 +203,7 @@ body {
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 6px;
-  color: #222;
+  color: #e5e7eb;
 }
 
 .score {
@@ -206,11 +213,11 @@ body {
 }
 
 .score.blue {
-  color: #2563eb;
+  color: #38bdf8;
 }
 
 .score.gray {
-  color: #6b7280;
+  color: #bfc6d1;
 }
 
 .versus {
@@ -222,8 +229,8 @@ body {
 .mvp {
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
-  color: #ca8a04;
+  border-top: 1px solid #23272f;
+  color: #fbbf24;
   text-align: center;
   font-size: 1.08rem;
   font-weight: 500;
@@ -231,6 +238,7 @@ body {
 }
 
 /* Sidebar */
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -238,7 +246,7 @@ body {
 }
 
 .sidebar-box {
-  background: #fff;
+  background: #181c23;
   border-radius: 16px;
   box-shadow: 0 2px 16px 0 rgba(16,30,54,0.06);
   padding: 24px 24px 18px 24px;
@@ -248,7 +256,7 @@ body {
 .sidebar-title {
   font-size: 1.18rem;
   font-weight: 700;
-  color: #222;
+  color: #e3e8ee;
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -256,6 +264,7 @@ body {
 }
 
 /* Top Performers */
+
 .performers {
   list-style: none;
   padding: 0;
@@ -277,41 +286,44 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: white;
+  color: #181c23;
   margin-right: 0.75rem;
   font-size: 1.1rem;
-  background: #f59e0b;
+  background: #fbbf24;
 }
 
 .name {
   font-weight: 500;
-  color: #111827;
+  color: #e5e7eb;
   flex: 1;
 }
 
 .mvp-count {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: #bfc6d1;
   font-weight: 600;
 }
 
 /* Season Highlights */
+
 .sidebar-box[style*="background: #f0fff4"] {
-  background: #f0fff4 !important;
-  border: 1px solid #bbf7d0;
+  background: #1e293b !important;
+  border: 1px solid #22c55e;
 }
 
 .sidebar-box[style*="background: #f0fff4"] .sidebar-title {
-  color: #16a34a !important;
+  color: #4ade80 !important;
 }
 
 .sidebar-box[style*="background: #f0fff4"] ul li {
   font-size: 1.01rem;
   font-weight: 500;
   margin-bottom: 6px;
+  color: #e5e7eb;
 }
 
 /* Quick Stats */
+
 .quick-stats-bar {
   display: flex;
   justify-content: space-between;
@@ -321,11 +333,12 @@ body {
 }
 
 .bar-1 { color: #22c55e; font-weight: 700; }
-.bar-2 { color: #2563eb; font-weight: 700; }
-.bar-3 { color: #f59e0b; font-weight: 700; }
+.bar-2 { color: #38bdf8; font-weight: 700; }
+.bar-3 { color: #fbbf24; font-weight: 700; }
 .bar-4 { color: #f97316; font-weight: 700; }
 
 /* Responsive tweaks */
+
 @media (max-width: 700px) {
   .container {
     padding: 0 4px;
