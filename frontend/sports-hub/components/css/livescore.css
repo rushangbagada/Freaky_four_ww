@@ -1,18 +1,39 @@
+/* Main Card Container */
 .score-card {
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(145deg, #2a3441 0%, #3d4a58 50%, #2f3b46 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(245, 180, 1, 0.15);
   padding: 1.2rem 1.5rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  backdrop-filter: blur(10px);
 }
 
 .score-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 48px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(245, 180, 1, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(245, 180, 1, 0.4);
+}
+
+.score-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f5b401, #ffcc33, #f5b401);
+  border-radius: 20px 20px 0 0;
 }
 
 /* Header Section */
@@ -26,7 +47,7 @@
 
 .sport-type {
   font-size: 1rem;
-  color: #444;
+color: #e0e4e7;
   text-transform: uppercase;
 }
 
@@ -39,8 +60,23 @@
 
 /* Status Colors */
 .status-live {
-  background-color: #ff1744;
+background: #22c55e;
+  border: none;
   color: white;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+  animation: liveBadgePulse 2s infinite;
+  text-shadow: none;
+}
+
+@keyframes liveBadgePulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+    transform: scale(1.05);
+  }
 }
 
 .status-upcoming {
@@ -71,20 +107,31 @@
 .team-name {
   font-weight: 600;
   font-size: 1.1rem;
-  color: #333;
+  color: #e0e4e7;
+  text-align: center;
+  margin-bottom: 0.3rem;
 }
 
 .team-score {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #111;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f5b401;
   margin-top: 0.4rem;
+  text-shadow: 0 0 8px rgba(245, 180, 1, 0.4);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.team-score:hover {
+  color: #ffcc33;
+  text-shadow: 0 0 16px rgba(245, 180, 1, 0.8);
+  transform: scale(1.05);
 }
 
 .vs-divider {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #888;
+color: #f5b401;
 }
 
 /* Match Info */
@@ -92,8 +139,9 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  color: #666;
+color: #e0e4e7;
   margin-top: 1rem;
+  text-align: center;
 }
 
 .match-time, .match-venue {
@@ -110,29 +158,33 @@
 .pulse-dot {
   width: 12px;
   height: 12px;
-  background-color: #ff1744;
+  background-color: #2196f3;
   border-radius: 50%;
-  box-shadow: 0 0 0 rgba(255, 23, 68, 0.7);
+  box-shadow: 0 0 0 rgba(33, 150, 243, 0.7);
   animation: pulse 1.2s infinite;
 }
 
 @keyframes pulse {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7);
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7);
   }
   70% {
     transform: scale(1.1);
-    box-shadow: 0 0 0 10px rgba(255, 23, 68, 0);
+    box-shadow: 0 0 0 10px rgba(33, 150, 243, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 23, 68, 0);
+    box-shadow: 0 0 0 0 rgba(33, 150, 243, 0);
   }
 }
 
 /* Responsive */
 @media screen and (max-width: 600px) {
+  /* Add responsive slate gradient background */
+  .score-card {
+    background: linear-gradient(#2f3b46, #3a4a58);
+  }
   .score-card {
     padding: 1rem;
   }

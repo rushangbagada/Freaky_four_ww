@@ -1,4 +1,5 @@
 import React from 'react';
+import './css/userStates.css';
 
 const UserStats = ({ user, predictionUser }) => {
   // Use predictionUser data if available, fallback to user data

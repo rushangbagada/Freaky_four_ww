@@ -4,28 +4,12 @@ import './css/liveMatchCard.css';
 const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
   const [team1Score, setTeam1Score] = useState('');
   const [team2Score, setTeam2Score] = useState('');
-  const [timeRemaining, setTimeRemaining] = useState('');
-
   // Format the prediction object for display
   const formattedPrediction = userPrediction ? {
     team1Score: userPrediction.predictedTeam1Score,
     team2Score: userPrediction.predictedTeam2Score,
     points: userPrediction.points
   } : null;
-
-  // Calculate time remaining for prediction (if match is upcoming or live)
-  useEffect(() => {
-    if (match.status !== 'finished') {
-      const interval = setInterval(() => {
-        // For demo purposes, just show a countdown
-        const minutes = Math.floor(Math.random() * 45);
-        const seconds = Math.floor(Math.random() * 60);
-        setTimeRemaining(`${minutes}:${seconds < 10 ? '0' + seconds : seconds}`);
-      }, 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [match.status]);
 
   const handleSubmit = () => {
     if (team1Score !== '' && team2Score !== '') {
@@ -50,14 +34,14 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
         )}
       </div>
 
-      <h3>{match.team1} vs {match.team2}</h3>
+      <h3 className="team-names">{match.team1} vs {match.team2}</h3>
       <p className="match-details">{match.sport} - {match.venue}</p>
       
       {match.status === 'live' && (
         <div className="live-score">
           <span className="team">{match.team1}</span>
           <span className="score">{match.team1_score}</span>
-          <span className="time">{timeRemaining}</span>
+          <span className="vs">VS</span>
           <span className="score">{match.team2_score}</span>
           <span className="team">{match.team2}</span>
         </div>

@@ -82,22 +82,11 @@ const LiveSports = () => {
           )} */}
           
             
-        {liveMatches.map((match) => (
-  <div key={match.id}>
-    <h2>{match.team1} vs {match.team2} ({match.sport})</h2>
-    <iframe 
-      src={match.url}
-      title={`Live match: ${match.team1} vs ${match.team2}`}
-      width="100%" 
-      height="500"
-      style={{ border: 'none' }}
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowFullScreen
-      loading="lazy"
-      referrerPolicy="strict-origin-when-cross-origin"
-    />
-  </div>
-))}
+          {liveMatches.length === 0 && (
+            <div className="no-matches">
+              <p>No live matches at the moment</p>
+            </div>
+          )}
 
 
         </div>

@@ -123,13 +123,6 @@ export default function Header() {
     </div>
   </Link>
 
-  <Link to="/calender" className={`nav-link ${isActive('/calender')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">📅</div>
-      <div className="nav-label">Calendar</div>
-    </div>
-  </Link>
-
   <Link to="/result" className={`nav-link ${isActive('/result')}`}>
     <div className="nav-item">
       <div className="nav-icon">🏆</div>
@@ -137,13 +130,7 @@ export default function Header() {
     </div>
   </Link>
 
-  <Link to="/gallery" className={`nav-link ${isActive('/gallery')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">🖼️</div>
-      <div className="nav-label">Gallery</div>
-    </div>
-  </Link>
-
+ 
 
   <Link to="/aboutus" className={`nav-link ${isActive('/aboutus')}`}>
     <div className="nav-item">
@@ -159,12 +146,7 @@ export default function Header() {
     </div>
   </Link>
 
-  <Link to="/blog" className={`nav-link ${isActive('/blog')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">📰</div>
-      <div className="nav-label">Blog</div>
-    </div>
-  </Link>
+  
 
   <Link to="/livesports" className={`nav-link ${isActive('/livesports')}`}>
     <div className="nav-item">
@@ -180,10 +162,10 @@ export default function Header() {
     </div>
   </Link>
 
-  <Link to="/TurfCard" className={`nav-link ${isActive('/TurfCard')}`}>
+  <Link to="/Turf" className={`nav-link ${isActive('/TurfCard')}`}>
     <div className="nav-item">
       <div className="nav-icon">🏏</div>
-      <div className="nav-label">Turf Card</div>
+      <div className="nav-label">Turf</div>
     </div>
   </Link>
 

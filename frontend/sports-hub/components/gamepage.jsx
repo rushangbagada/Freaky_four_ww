@@ -265,8 +265,12 @@ const PredictionGamePage = () => {
   return (
     <div className="prediction-game">
       <div className="hero-section">
-        <h1>Campus Sports Prediction Game</h1>
-        <p>Predict match outcomes and climb the leaderboard!</p>
+        <div className="hero-content">
+          <h1 className="hero-title">Campus Sports Prediction Game</h1>
+          <p className="hero-subtitle">
+            Join the excitement and predict match outcomes to climb the <span className="accent-word">leaderboard</span>!
+          </p>
+        </div>
       </div>
 
       <div className="game-container">
@@ -288,33 +292,6 @@ const PredictionGamePage = () => {
             )}
           </div>
 
-          <h2>Upcoming Matches</h2>
-          <div className="matches-grid">
-            {matches
-              .filter(match => match.date && new Date(match.date).getTime() > now.getTime())
-              .map(match => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  onPredict={handlePrediction}
-                  userPrediction={predictions.find(p => p.matchId === match.id)}
-                />
-              ))}
-          </div>
-
-          <h2>Recent Results</h2>
-          <div className="matches-grid">
-            {matches
-              .filter(match => match.date && new Date(match.date).getTime() <= now.getTime())
-              .map(match => (
-                <MatchCard
-                  key={match.id}
-                  match={match}
-                  onPredict={handlePrediction}
-                  userPrediction={predictions.find(p => p.matchId === match.id)}
-                />
-              ))}
-          </div>
         </div>
 
         <div className="sidebar">
