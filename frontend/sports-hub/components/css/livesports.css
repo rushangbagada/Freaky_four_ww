@@ -27,22 +27,25 @@
 }
 
 .live-match-card {
-  background: linear-gradient(135deg, #3a4a58 0%, #2f3b46 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(245, 180, 1, 0.1);
+  background: linear-gradient(145deg, #1e293b 0%, #334155 50%, #475569 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(245, 180, 1, 0.15);
   margin-bottom: 30px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
 }
 
 .match-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: rgba(47, 59, 70, 0.7);
-  border-bottom: 1px solid rgba(245, 180, 1, 0.1);
+  padding: 20px 24px;
+  background: rgba(30, 41, 59, 0.6);
+  border-bottom: 1px solid rgba(245, 180, 1, 0.15);
 }
 
 .match-title {
@@ -55,13 +58,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(45deg, #4caf50, #66bb6a);
-  color: white;
+  background: linear-gradient(45deg, #f5b401, #ffcc33);
+  color: #1a2332;
   padding: 8px 16px;
   border-radius: 25px;
   font-size: 0.9rem;
   font-weight: bold;
-  box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 0 15px rgba(245, 180, 1, 0.4);
   animation: pulse 2s infinite;
 }
 
@@ -127,10 +130,9 @@
 .match-details {
   display: flex;
   justify-content: space-between;
-  padding: 15px 20px;
-  background: rgba(47, 59, 70, 0.5);
-  border-top: 1px solid rgba(245, 180, 1, 0.1);
-  border-bottom: 1px solid rgba(245, 180, 1, 0.1);
+  padding: 18px 24px;
+  background: rgba(30, 41, 59, 0.4);
+  border-top: 1px solid rgba(245, 180, 1, 0.15);
 }
 
 .match-time {
