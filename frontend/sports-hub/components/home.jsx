@@ -169,26 +169,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Upcoming Matches */}
-      <section className="section upcoming">
-        <div className="section-header">
-          <h2>Upcoming Matches</h2>
-          <p>Don't miss our next exciting games</p>
-        </div>
-        <div className="cards">
-          {upcomingMatches.map((item, index) => (
-            <div className="match-card" key={index}>
-              <span className="badge">{item.category}</span>
-              <span className="match-date">
-                {new Date(item.date).toLocaleDateString()}
-              </span>
-              <h3>{item.team1} vs {item.team2}</h3>
-              <p>{item.venue}</p>
-              <p className="time">{item.time}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Recent Results */}
       <section className="section results">
@@ -245,7 +225,7 @@ export default function Home() {
       <p>
         Get a centralized view of all upcoming college events — plan your week in seconds.
       </p>
-      <a href="/calendar" className="calendar-promo-btn">
+      <a href="/calender" className="calendar-promo-btn">
         View Calendar
       </a>
     </div>
