@@ -18,6 +18,7 @@ const jwt = require("jsonwebtoken"); // Add this line
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const quizRoutes = require("./routes/quizRoutes");
 
 const Gallery=require('./models/gallery');
 const User=require('./models/User');
@@ -103,6 +104,7 @@ async function main() {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/quiz", quizRoutes);
 
 
 

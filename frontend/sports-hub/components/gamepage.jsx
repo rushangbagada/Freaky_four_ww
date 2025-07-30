@@ -3,6 +3,7 @@ import MatchCard from './matchcard.jsx';
 import LiveMatchCard from './liveMatchCard.jsx'; // New component for live matches
 import Leaderboard from './leader.jsx';
 import UserStats from './userStates.jsx';
+import Quiz from './quiz.jsx';
 import { useAuth } from '../src/AuthContext';
 import './css/gamepage.css';
 
@@ -58,6 +59,17 @@ const PredictionGamePage = () => {
     }
   };
 
+  // Function to refresh leaderboard
+  const refreshLeaderboard = () => {
+    fetch("/api/leader")
+      .then(res => res.json())
+      .then(data => {
+        data.sort((a, b) => b.total_point - a.total_point);
+        setLeaderboard(data.slice(0, 7));
+      })
+      .catch(err => console.error("Error fetching leaderboard:", err));
+  };
+
   // Fetch matches, live matches, and leaderboard
   useEffect(() => {
     // Fetch regular matches
@@ -72,14 +84,8 @@ const PredictionGamePage = () => {
       .then(data => setLiveMatches(data))
       .catch(err => console.error("Error fetching live matches:", err));
 
-    // Fetch leaderboard
-    fetch("/api/leader")
-      .then(res => res.json())
-      .then(data => {
-        data.sort((a, b) => b.total_point - a.total_point);
-        setLeaderboard(data.slice(0, 7));
-      })
-      .catch(err => console.error("Error fetching leaderboard:", err));
+    // Initial leaderboard fetch
+    refreshLeaderboard();
   }, []);
 
   // Fetch user's predictions if user is logged in
@@ -235,13 +241,7 @@ const PredictionGamePage = () => {
         }
         
         // Refresh leaderboard to show updated rankings
-        fetch("/api/leader")
-          .then(res => res.json())
-          .then(data => {
-            data.sort((a, b) => b.total_point - a.total_point);
-            setLeaderboard(data.slice(0, 7));
-          })
-          .catch(err => console.error("Error refreshing leaderboard:", err));
+        refreshLeaderboard();
 
         alert("Prediction submitted successfully!");
       })
@@ -319,6 +319,7 @@ const PredictionGamePage = () => {
 
         <div className="sidebar">
           {(currentUser || predictionUser) && <UserStats user={currentUser} predictionUser={predictionUser} />}
+          <Quiz onPointsEarned={refreshLeaderboard} />
           <Leaderboard users={leaderboard} currentUserId={predictionUser?._id || currentUser?._id || currentUser?.id} />
         </div>
       </div>
