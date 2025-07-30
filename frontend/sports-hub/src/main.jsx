@@ -25,6 +25,7 @@ import PaymentSuccess from '../components/payment/PaymentSuccess';
 import PaymentFailed from '../components/payment/PaymentFailed';
 import Turf from '../components/turf';
 import Minigames from '../components/minigames';
+import SportsBot from '../components/SportsBot'
 
 
 const router = createBrowserRouter([
@@ -131,9 +132,14 @@ const router = createBrowserRouter([
         element: <div>Candy Crush - Coming Soon!</div>
       },
       {
+        path:'/chatbot',
+        element:<SportsBot/>
+      },
+      {
         path: '*',
         element: <NotFound />
       }
+
     ]
   },
 ])

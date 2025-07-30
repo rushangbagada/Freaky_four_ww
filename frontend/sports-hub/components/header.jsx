@@ -187,6 +187,13 @@ export default function Header() {
     </div>
   </Link>
 
+  <Link to="/chatbot" className={`nav-link ${isActive('/chatbot')}`}>
+    <div className="nav-item">
+      <div className="nav-icon">🤖</div>
+      <div className="nav-label">Sports Bot</div>
+    </div>
+  </Link>
+
   {!isAuthenticated() ? (
     <Link to="/login" className={`nav-link ${isActive('/login')}`}>
       <div className="nav-item">
@@ -219,6 +226,7 @@ export default function Header() {
             <Link to="/gamepage" className={`nav-link ${isActive('/gamepage')}`}>🎮 Game Page</Link>
             <Link to="/blog" className={`nav-link ${isActive('/blog')}`}>📰 Blog</Link>
             <Link to="/livesports" className={`nav-link ${isActive('/livesports')}`}>📺 Live Sports</Link>
+            <Link to="/chatbot" className={`nav-link ${isActive('/chatbot')}`}>🤖 Sports Bot</Link>
             {!isAuthenticated() ? (
               <Link to="/login" className={`nav-link ${isActive('/login')}`}>🔐 Login</Link>
             ) : (

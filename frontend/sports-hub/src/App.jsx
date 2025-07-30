@@ -16,6 +16,13 @@ import Profile from '../components/profile';
 import PaymentSuccess from '../components/payment/PaymentSuccess';
 import PaymentFailed from '../components/payment/PaymentFailed';
 import Turf from '../components/turf';
+import FloatingChatbot from '../components/FloatingChatbot';
+import SportsBot from '../components/SportsBot';
+import GamePage from '../components/gamepage';
+import Blog from '../components/blog';
+import LiveSports from '../components/livesports';
+import MiniGames from '../components/minigames';
+import TurfCard from '../components/payment/TurfCard';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -43,13 +50,21 @@ function AppRoutes() {
         <Route path="/club-details/:id" element={<ClubDetails />} />
         <Route path="/calender" element={<Calendar />} />
         <Route path="/turf" element={<Turf />} />
+        <Route path="/chatbot" element={<SportsBot />} />
+        <Route path="/gamepage" element={<GamePage />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/livesports" element={<LiveSports />} />
+        <Route path="/minigames" element={<MiniGames />} />
+        <Route path="/TurfCard" element={<TurfCard />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
-        {/* Add more protected routes here as needed */}
+        {/* Catch-all route for 404 pages - temporarily disabled for debugging */}
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
       <Footer />
+      <FloatingChatbot />
     </Router>
   );
 }
