@@ -2,6 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './css/club-details.css';
 
+const sportsEmojis = {
+  'football': '⚽',
+  'basketball': '🏀',
+  'cricket': '🏏',
+  'tennis': '🎾',
+  'volleyball': '🏐',
+  'badminton': '🏸',
+  'swimming': '🏊',
+  'athletics': '🏃',
+  'boxing': '🥊',
+  'wrestling': '🤼',
+  'hockey': '🏒',
+  'default': '🏆'
+};
+
+const getRandomGradient = () => {
+  const gradients = [
+    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+    'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+    'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+    'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
+  ];
+  return gradients[Math.floor(Math.random() * gradients.length)];
+};
+
 export default function ClubDetails() {
   const { name } = useParams();
 
@@ -9,6 +38,8 @@ export default function ClubDetails() {
   const [players, setPlayers] = useState([]);
   const [recentMatches, setRecentMatches] = useState([]);
   const [upcomingMatches, setUpcomingMatches] = useState([]);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -148,107 +179,279 @@ export default function ClubDetails() {
     fetchAllClubs();
   }, [name]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <div className="error-message">Error: {error}. <Link to="/sports-clubs">Return to clubs list</Link></div>;
-  if (!club) return <p>No club data found. <Link to="/sports-clubs">Return to clubs list</Link></p>;
+  const getSportEmoji = (clubName) => {
+    const name = clubName?.toLowerCase() || '';
+    for (const [sport, emoji] of Object.entries(sportsEmojis)) {
+      if (name.includes(sport)) return emoji;
+    }
+    return sportsEmojis.default;
+  };
+
+  if (loading) {
+    return (
+      <div className="club-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading club details...</p>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="club-error">
+        <div className="error-icon">⚠️</div>
+        <h2>Oops! Something went wrong</h2>
+        <p>Error: {error}</p>
+        <Link to="/sports-clubs" className="error-back-btn">← Return to clubs list</Link>
+      </div>
+    );
+  }
+  
+  if (!club) {
+    return (
+      <div className="club-not-found">
+        <div className="not-found-icon">🔍</div>
+        <h2>Club not found</h2>
+        <p>We couldn't find the club you're looking for.</p>
+        <Link to="/sports-clubs" className="error-back-btn">← Return to clubs list</Link>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <header className="hero">
-        <div className="hero-overlay"></div>
+    <div className="club-details-container">
+      {/* Modern Hero Section */}
+      <section className="club-hero">
+        <div className="hero-background" style={{ background: getRandomGradient() }}></div>
+        <div className="hero-3d-elements">
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
+        </div>
         <div className="hero-content">
-          <Link to="/sports-clubs" className="back-link">&larr; Back to Sports Clubs</Link>
-          <h1 className="hero-title">{club.name}</h1>
-          <p className="hero-description">{club.description}</p>
-        </div>
-      </header>
-
-      <main className="container">
-        <div className="main-content">
-          {/* Players */}
-          <section className="section">
-            <h2 className="section-title">Team Players</h2>
-            <div className="grid">
-              {players.map((player) => (
-                <div className="card player-card" key={player._id}>
-                  <div className="player-info">
-                    <img src={player.photo || '/default-avatar.png'} alt={player.name} className="avatar" />
-                    <div>
-                      <h3 className="player-name">{player.name}</h3>
-                      <p className="player-position">{player.position}</p>
-                      <p className="player-meta">{player.year} • {player.department}</p>
-                    </div>
-                  </div>
-                  <div className="player-stats">
-                    <div><strong>{player.matches}</strong><span>Matches</span></div>
-                    <div><strong className="green">{player.wins}</strong><span>Wins</span></div>
-                    <div><strong className="red">{player.losses}</strong><span>Losses</span></div>
-                  </div>
-                  {/* <Link to={`/player/${player._id}`} className="button">View Full Profile</Link> */}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Recent Matches */}
-          <section className="section">
-            <h2 className="section-title">Recent Results</h2>
-            <div className="match-list">
-              {recentMatches.map((match) => (
-                <div className="match" key={match._id}>
-                  <div className="match-teams">
-                    <div>
-                      <div className="team-name">{match.team1}</div>
-                      <div className="score blue">{match.team1_score}</div>
-                    </div>
-                    <div className="vs">vs</div>
-                    <div>
-                      <div className="team-name">{match.team2}</div>
-                      <div className="score gray">{match.team2_score}</div>
-                    </div>
-                  </div>
-                  <div className="match-meta">
-                    <p>{new Date(match.date).toLocaleDateString()} | {match.venue}</p>
-                    <p className="mvp">MVP: {match.mvp}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        <aside className="sidebar">
-          {/* Club Stats */}
-          <div className="card">
-            <h3 className="sidebar-title">Club Statistics</h3>
-            <ul>
-              <li><span>Active Players:</span> <strong>{club.active_players}</strong></li>
-              <li><span>Upcoming Matches:</span> <strong>{club.upcoming_matches}</strong></li>
-              <li><span>Win Rate:</span> <strong>{club.win_rate || "N/A"}%</strong></li>
-            </ul>
+          <Link to="/sports-clubs" className="modern-back-link">
+            <span className="back-icon">←</span>
+            Back to Sports Clubs
+          </Link>
+          <div className="club-title-section">
+            <div className="club-emoji">{getSportEmoji(club.name)}</div>
+            <h1 className="club-title">{club.name}</h1>
+            <p className="club-subtitle">{club.description}</p>
           </div>
+          <div className="hero-stats">
+            <div className="stat-item">
+              <span className="stat-number">{club.active_players || 0}</span>
+              <span className="stat-label">Active Players</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{club.upcoming_matches || 0}</span>
+              <span className="stat-label">Upcoming Matches</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{club.win_rate || 'N/A'}%</span>
+              <span className="stat-label">Win Rate</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          {/* Upcoming Matches */}
-          <div className="card">
-            <h3 className="sidebar-title">Next Matches</h3>
-            {upcomingMatches.map(match => (
-              <div className="upcoming-match" key={match._id}>
-                <strong>{match.team1}</strong>
-                <strong>vs {match.team2}</strong>
-                <p>{new Date(match.date).toLocaleDateString()} at {match.time}</p>
-                <p>{match.venue}</p>
+      {/* Navigation Tabs */}
+      <section className="club-navigation">
+        <div className="nav-tabs">
+          <button 
+            className={`nav-tab ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            <span className="tab-icon">📊</span>
+            Overview
+          </button>
+          <button 
+            className={`nav-tab ${activeTab === 'players' ? 'active' : ''}`}
+            onClick={() => setActiveTab('players')}
+          >
+            <span className="tab-icon">👥</span>
+            Players
+          </button>
+          <button 
+            className={`nav-tab ${activeTab === 'matches' ? 'active' : ''}`}
+            onClick={() => setActiveTab('matches')}
+          >
+            <span className="tab-icon">⚽</span>
+            Matches
+          </button>
+        </div>
+      </section>
+
+      {/* Tab Content */}
+      <main className="club-main-content">
+        {activeTab === 'overview' && (
+          <div className="tab-content overview-content">
+            <div className="overview-grid">
+              <div className="overview-card club-info-card">
+                <div className="card-header">
+                  <h3>Club Information</h3>
+                  <span className="card-icon">ℹ️</span>
+                </div>
+                <div className="card-content">
+                  <div className="info-row">
+                    <span className="info-label">Sport:</span>
+                    <span className="info-value">{club.name}</span>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-label">Founded:</span>
+                    <span className="info-value">{club.founded || '2020'}</span>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-label">Category:</span>
+                    <span className="info-value">{club.category || 'Sports Club'}</span>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
 
-          {/* Join CTA */}
-          <div className="cta">
-            <h3>Ready to Join?</h3>
-            <p>Take your athletic journey to the next level with our team.</p>
-            <Link to="/register" className="cta-button">Register Now</Link>
+              <div className="overview-card achievements-card">
+                <div className="card-header">
+                  <h3>Recent Achievements</h3>
+                  <span className="card-icon">🏆</span>
+                </div>
+                <div className="card-content">
+                  <div className="achievement-item">
+                    <span className="achievement-medal">🥇</span>
+                    <span>Inter-College Championship 2024</span>
+                  </div>
+                  <div className="achievement-item">
+                    <span className="achievement-medal">🥈</span>
+                    <span>Regional Tournament 2023</span>
+                  </div>
+                  <div className="achievement-item">
+                    <span className="achievement-medal">🏅</span>
+                    <span>Best Sportsmanship Award</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="overview-card upcoming-events-card">
+                <div className="card-header">
+                  <h3>Upcoming Events</h3>
+                  <span className="card-icon">📅</span>
+                </div>
+                <div className="card-content">
+                  {upcomingMatches.slice(0, 3).map(match => (
+                    <div className="event-item" key={match._id}>
+                      <div className="event-date">
+                        {new Date(match.date).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </div>
+                      <div className="event-details">
+                        <div className="event-title">{match.team1} vs {match.team2}</div>
+                        <div className="event-venue">{match.venue}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        </aside>
+        )}
+
+        {activeTab === 'players' && (
+          <div className="tab-content players-content">
+            <div className="players-header">
+              <h2>Team Roster</h2>
+              <p>Meet our talented athletes</p>
+            </div>
+            <div className="players-grid">
+              {players.map((player, index) => (
+                <div className="modern-player-card" key={player._id} style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div className="player-card-header" style={{ background: getRandomGradient() }}>
+                    <img 
+                      src={player.photo || `https://ui-avatars.com/api/?name=${player.name}&background=random&size=120`} 
+                      alt={player.name} 
+                      className="player-avatar" 
+                    />
+                    <div className="player-rank">#{index + 1}</div>
+                  </div>
+                  <div className="player-card-body">
+                    <h3 className="player-name">{player.name}</h3>
+                    <p className="player-position">{player.position}</p>
+                    <p className="player-details">{player.year} • {player.department}</p>
+                    
+                    <div className="player-stats-modern">
+                      <div className="stat-circle">
+                        <div className="stat-value">{player.matches || 0}</div>
+                        <div className="stat-label">Matches</div>
+                      </div>
+                      <div className="stat-circle wins">
+                        <div className="stat-value">{player.wins || 0}</div>
+                        <div className="stat-label">Wins</div>
+                      </div>
+                      <div className="stat-circle losses">
+                        <div className="stat-value">{player.losses || 0}</div>
+                        <div className="stat-label">Losses</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'matches' && (
+          <div className="tab-content matches-content">
+            <div className="matches-section">
+              <h2>Recent Results</h2>
+              <div className="modern-matches-grid">
+                {recentMatches.map((match, index) => (
+                  <div className="modern-match-card" key={match._id} style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className="match-date">
+                      {new Date(match.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                    <div className="match-teams-modern">
+                      <div className="team-section home">
+                        <div className="team-name">{match.team1}</div>
+                        <div className="team-score">{match.team1_score}</div>
+                      </div>
+                      <div className="match-vs">
+                        <span>VS</span>
+                      </div>
+                      <div className="team-section away">
+                        <div className="team-name">{match.team2}</div>
+                        <div className="team-score">{match.team2_score}</div>
+                      </div>
+                    </div>
+                    <div className="match-details">
+                      <div className="match-venue">
+                        <span className="venue-icon">📍</span>
+                        {match.venue}
+                      </div>
+                      {match.mvp && (
+                        <div className="match-mvp">
+                          <span className="mvp-icon">⭐</span>
+                          MVP: {match.mvp}
+                        </div>
+                      )}
+                    </div>
+                    <div className={`match-result ${match.team1_score > match.team2_score ? 'win' : 'loss'}`}>
+                      {match.team1_score > match.team2_score ? '🏆 WIN' : '😞 LOSS'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
+
+      {/* Call to Action Section */}
+      <section className="club-cta-section">
+        
+      </section>
     </div>
   );
 }

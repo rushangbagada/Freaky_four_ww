@@ -96,7 +96,16 @@ export default function AdminDashboard() {
       {/* Header */}
       <header className="admin-header">
         <div className="admin-header-content">
-          <h1>Admin Dashboard</h1>
+          <div className="admin-header-left">
+            <button 
+              className="back-btn" 
+              onClick={() => window.location.href = '/'}
+              title="Back to Main Site"
+            >
+              ← Back to Site
+            </button>
+            <h1>Admin Dashboard</h1>
+          </div>
           <div className="admin-user-info">
             <span>Welcome, {user.name}</span>
             <span className="role-badge">{user.role}</span>

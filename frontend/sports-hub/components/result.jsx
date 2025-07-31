@@ -52,16 +52,13 @@ export default function Result() {
     .catch(err => console.error('Failed to fetch data:', err));
   }, [sport, time, sortBy]);
  return(
-  <>
+  <div className="result-container">
 
-  {/* <!-- Header --> */}
-  <section className="header-section">
-    <div className="container">
-      <div className="header-content">
-        <div className="icon">🏆</div>
-        <h1 className="header-title">Results & Scores</h1>
-      </div>
-      <p className="header-subtitle">Celebrate our victories and track our athletic achievements</p>
+  {/* Hero Section */}
+  <section className="hero">
+    <div className="hero-content">
+      <h1>Results & Scores</h1>
+      <p>Celebrate our victories and track our athletic achievements</p>
     </div>
   </section>
 
@@ -168,5 +165,5 @@ export default function Result() {
     </div>
   </div>
 
-</>)
+</div>)
 }

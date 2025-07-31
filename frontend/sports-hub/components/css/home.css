@@ -54,6 +54,8 @@
   opacity: 0;
   transform: translateY(-20px);
   animation: button-fade-in 1s ease 1.4s forwards;
+  margin-top: 3rem;
+  padding-top: 2rem;
 }
 
 .hero-btn {
