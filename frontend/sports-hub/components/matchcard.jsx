@@ -15,33 +15,41 @@ const MatchCard = ({ match, onPredict, userPrediction }) => {
   const isUpcoming = matchDate > now;
 
   return (
-    <div className="match-card">
-      <h4>{match.team1} vs {match.team2}</h4>
-      <p>{match.category} - {matchDate.toLocaleDateString()} @ {match.time}</p>
-      <p>Venue: {match.venue}</p>
+    <div className={`match-card ${isUpcoming ? 'upcoming' : 'finished'}`}>
+      <h4 className="team-names">{match.team1} vs {match.team2}</h4>
+      <p className="match-details">{match.category} - {matchDate.toLocaleDateString()} @ {match.time}</p>
+      <p className="match-details">Venue: {match.venue}</p>
       
       {isUpcoming ? (
-        <>
-          <input
-            type="number"
-            value={homeScore}
-            onChange={e => setHomeScore(e.target.value)}
-            placeholder={`${match.homeTeam} score`}
-          />
-          <input
-            type="number"
-            value={awayScore}
-            onChange={e => setAwayScore(e.target.value)}
-            placeholder={`${match.awayTeam} score`}
-          />
+        <div className="prediction-form">
+          <div className="score-inputs">
+            <input
+              type="number"
+              value={homeScore}
+              onChange={e => setHomeScore(e.target.value)}
+              placeholder={`${match.team1} score`}
+            />
+            <input
+              type="number"
+              value={awayScore}
+              onChange={e => setAwayScore(e.target.value)}
+              placeholder={`${match.team2} score`}
+            />
+          </div>
           <button onClick={handleSubmit}>Submit Prediction</button>
-        </>
+        </div>
       ) : (
-        <p>Final Score: {match.homeScore} - {match.awayScore}</p>
+        <div className="final-score">
+          <p className="final-score-label">Final Score: 
+            <span className="score">{match.homeScore} - {match.awayScore}</span>
+          </p>
+        </div>
       )}
 
       {userPrediction && (
-        <p>Your Prediction: {userPrediction.homeScore} - {userPrediction.awayScore}</p>
+        <div className="user-prediction">
+          <p>Your Prediction: {userPrediction.homeScore} - {userPrediction.awayScore}</p>
+        </div>
       )}
     </div>
   );

@@ -73,7 +73,14 @@ const TurfCard = ({ id, name, location, price, imageUrl, availability }) => {
   return (
     <div className="turf-card">
       <div className="turf-image">
-        <img src={imageUrl || 'https://via.placeholder.com/300x200?text=Turf+Ground'} alt={name} />
+        <img 
+          src={imageUrl || 'https://via.placeholder.com/300x200?text=Turf+Ground'} 
+          alt={name}
+          loading="lazy"
+          onError={(e) => {
+            e.target.src = 'https://via.placeholder.com/300x200?text=Turf+Ground';
+          }}
+        />
       </div>
       <div className="turf-details">
         <h3>{name}</h3>

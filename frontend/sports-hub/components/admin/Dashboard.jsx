@@ -96,7 +96,16 @@ export default function AdminDashboard() {
       {/* Header */}
       <header className="admin-header">
         <div className="admin-header-content">
-          <h1>Admin Dashboard</h1>
+          <div className="admin-header-left">
+            <button 
+              className="back-btn" 
+              onClick={() => window.location.href = '/'}
+              title="Back to Main Site"
+            >
+              ← Back to Site
+            </button>
+            <h1>Admin Dashboard</h1>
+          </div>
           <div className="admin-user-info">
             <span>Welcome, {user.name}</span>
             <span className="role-badge">{user.role}</span>
@@ -268,16 +277,34 @@ export default function AdminDashboard() {
               <h3>Recent Activity</h3>
               <div className="activity-list">
                 <div className="activity-item">
-                  <span className="activity-time">2 hours ago</span>
-                  <span className="activity-text">New user registered: john@example.com</span>
+                  <div className="activity-icon">
+                    👥
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-time">2 hours ago</div>
+                    <div className="activity-text">New user registered</div>
+                    <div className="activity-subtext">john@example.com joined the platform</div>
+                  </div>
                 </div>
                 <div className="activity-item">
-                  <span className="activity-time">4 hours ago</span>
-                  <span className="activity-text">Football match scheduled for tomorrow</span>
+                  <div className="activity-icon">
+                    ⚽
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-time">4 hours ago</div>
+                    <div className="activity-text">Match scheduled</div>
+                    <div className="activity-subtext">Football match scheduled for tomorrow</div>
+                  </div>
                 </div>
                 <div className="activity-item">
-                  <span className="activity-time">1 day ago</span>
-                  <span className="activity-text">Basketball club leader assigned</span>
+                  <div className="activity-icon">
+                    👑
+                  </div>
+                  <div className="activity-content">
+                    <div className="activity-time">1 day ago</div>
+                    <div className="activity-text">Leader assigned</div>
+                    <div className="activity-subtext">Basketball club leader assigned</div>
+                  </div>
                 </div>
               </div>
             </div>

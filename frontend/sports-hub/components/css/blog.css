@@ -113,18 +113,20 @@
 
 .campus-sports-page {
   min-height: 100vh;
-  /* background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); */
-  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #1a2332 0%, #2f3b46 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  padding-top: 80px;
 }
 
 .main-header {
   position: relative;
-  background: linear-gradient(45deg, #ff6b35, #f7931e);
-  color: white;
+  background: linear-gradient(45deg, #1e3a8a, #3b82f6, #2f3b46);
+  color: #ffffff;
   padding: 3rem 2rem;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .header-content {
@@ -136,14 +138,17 @@
   font-size: 3.5rem;
   font-weight: bold;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   animation: slideInDown 1s ease-out;
 }
 
 .site-subtitle {
   font-size: 1.3rem;
   margin: 1rem 0 0 0;
-  opacity: 0.9;
+  opacity: 0.95;
+  color: #e1f5fe;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   animation: slideInUp 1s ease-out 0.5s both;
 }
 
@@ -154,8 +159,9 @@
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245, 180, 1, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 40%, rgba(30, 58, 138, 0.2) 0%, transparent 60%);
   animation: float 6s ease-in-out infinite;
 }
 

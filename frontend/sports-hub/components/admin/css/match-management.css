@@ -1,9 +1,11 @@
-/* Match Management Styles */
+/* Match Management Styles - Dark Theme */
 .match-management {
-  background: white;
+  background: #0f172a;
+  border: 1px solid #374151;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  color: #f3f4f6;
 }
 
 .match-management-header {
@@ -14,15 +16,18 @@
 }
 
 .match-management-header h2 {
-  color: #2c3e50;
+  background: linear-gradient(135deg, #3b82f6, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
 }
 
 .add-match-btn {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
@@ -30,11 +35,13 @@
   font-weight: 600;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
 }
 
 .add-match-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
 }
 
 /* Search and Filter */
@@ -49,30 +56,47 @@
   flex: 1;
   min-width: 250px;
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #1f2937;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 .filter-select {
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
-  background: white;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.filter-select option {
+  background: #1f2937;
+  color: #f3f4f6;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #1f2937;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 /* Matches List */
@@ -83,17 +107,17 @@
 }
 
 .match-card {
-  background: white;
+  background: #111827;
+  border: 1px solid #374151;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f1f3f4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 }
 
 .match-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
 .match-header {
@@ -104,7 +128,7 @@
 }
 
 .match-header h3 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.3rem;
   font-weight: 700;
   margin: 0;
@@ -119,23 +143,23 @@
 }
 
 .status-badge.scheduled {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: #1e40af;
+  color: #bfdbfe;
 }
 
 .status-badge.ongoing {
-  background: #fff3e0;
-  color: #f57c00;
+  background: #ea580c;
+  color: #fed7aa;
 }
 
 .status-badge.completed {
-  background: #e8f5e8;
-  color: #2e7d32;
+  background: #15803d;
+  color: #bbf7d0;
 }
 
 .status-badge.cancelled {
-  background: #ffebee;
-  color: #c62828;
+  background: #dc2626;
+  color: #fecaca;
 }
 
 .match-details {
@@ -163,12 +187,12 @@
 .team-name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: #f3f4f6;
 }
 
 .vs {
   font-size: 0.9rem;
-  color: #6c757d;
+  color: #9ca3af;
   font-weight: 500;
 }
 
@@ -183,7 +207,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f1f3f4;
+  border-bottom: 1px solid #374151;
 }
 
 .info-item:last-child {
@@ -192,12 +216,12 @@
 
 .label {
   font-weight: 600;
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.9rem;
 }
 
 .value {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-weight: 500;
   font-size: 0.9rem;
 }
@@ -219,18 +243,18 @@
 }
 
 .edit-btn {
-  background: #2196f3;
-  color: white;
+  background: #3b82f6;
+  color: #fff;
 }
 
 .edit-btn:hover {
-  background: #1976d2;
+  background: #2563eb;
   transform: translateY(-2px);
 }
 
 .delete-btn {
-  background: #f44336;
-  color: white;
+  background: #ef4444;
+  color: #fff;
 }
 
 .delete-btn:hover {
@@ -254,7 +278,7 @@
 }
 
 .modal {
-  background: white;
+  background: #1f2937;
   border-radius: 20px;
   padding: 2rem;
   max-width: 600px;
@@ -262,6 +286,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid #374151;
 }
 
 .modal-header {
@@ -272,7 +297,7 @@
 }
 
 .modal-header h3 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
@@ -283,15 +308,15 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #6c757d;
+  color: #9ca3af;
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-  background: #f8f9fa;
-  color: #2c3e50;
+  background: #374151;
+  color: #f3f4f6;
 }
 
 /* Form Styles */
@@ -309,7 +334,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 0.9rem;
 }
 
@@ -317,7 +342,9 @@
 .form-group select,
 .form-group textarea {
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #111827;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
   transition: border-color 0.3s ease;
@@ -327,7 +354,8 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #111827;
 }
 
 .form-group textarea {
