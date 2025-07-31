@@ -1,9 +1,11 @@
-/* Club Management Styles */
+/* Club Management Styles - Dark Theme */
 .club-management {
-  background: white;
+  background: #0f172a;
+  border: 1px solid #374151;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  color: #f3f4f6;
 }
 
 .club-management-header {
@@ -14,15 +16,18 @@
 }
 
 .club-management-header h2 {
-  color: #2c3e50;
+  background: linear-gradient(135deg, #3b82f6, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
 }
 
 .add-club-btn {
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
@@ -30,11 +35,13 @@
   font-weight: 600;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
 }
 
 .add-club-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4);
 }
 
 /* Search and Filter */
@@ -49,30 +56,47 @@
   flex: 1;
   min-width: 250px;
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #1f2937;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 .filter-select {
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
-  background: white;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.filter-select option {
+  background: #1f2937;
+  color: #f3f4f6;
 }
 
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #1f2937;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 /* Clubs Grid */
@@ -83,17 +107,19 @@
 }
 
 .club-card {
-  background: white;
+  background: #111827;
+  border: 1px solid #374151;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  border: 1px solid #f1f3f4;
+  padding: 0;
 }
 
 .club-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .club-image {
@@ -117,12 +143,13 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
+  backdrop-filter: blur(10px);
 }
 
 .club-content {
@@ -130,14 +157,14 @@
 }
 
 .club-content h3 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.3rem;
   font-weight: 700;
   margin: 0 0 0.75rem 0;
 }
 
 .club-content p {
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0 0 1.5rem 0;
@@ -153,14 +180,15 @@
 .stat {
   text-align: center;
   padding: 0.75rem;
-  background: #f8f9fa;
-  border-radius: 12px;
+  background: #1e293b;
+  border: 1px solid #374151;
+  border-radius: 10px;
 }
 
 .stat-label {
   display: block;
   font-size: 0.75rem;
-  color: #6c757d;
+  color: #9ca3af;
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
@@ -168,7 +196,7 @@
 .stat-value {
   display: block;
   font-size: 1rem;
-  color: #2c3e50;
+  color: #f3f4f6;
   font-weight: 700;
 }
 
@@ -177,7 +205,7 @@
   gap: 0.75rem;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn, .delete-btn, .manage-players-btn {
   flex: 1;
   padding: 0.75rem 1rem;
   border: none;
@@ -189,22 +217,33 @@
 }
 
 .edit-btn {
-  background: #2196f3;
-  color: white;
+  background: #3b82f6;
+  color: #fff;
 }
 
 .edit-btn:hover {
-  background: #1976d2;
+  background: #2563eb;
   transform: translateY(-2px);
 }
 
 .delete-btn {
-  background: #f44336;
-  color: white;
+  background: #ef4444;
+  color: #fff;
 }
 
 .delete-btn:hover {
-  background: #d32f2f;
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.manage-players-btn {
+  background: #6366f1;
+  color: #fff;
+  margin-right: 0.5rem;
+}
+
+.manage-players-btn:hover {
+  background: #4f46e5;
   transform: translateY(-2px);
 }
 
@@ -224,7 +263,7 @@
 }
 
 .modal {
-  background: white;
+  background: #1f2937;
   border-radius: 20px;
   padding: 2rem;
   max-width: 600px;
@@ -232,6 +271,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid #374151;
 }
 
 .modal-header {
@@ -242,7 +282,7 @@
 }
 
 .modal-header h3 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
@@ -253,15 +293,15 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #6c757d;
+  color: #9ca3af;
   padding: 0.5rem;
   border-radius: 50%;
   transition: all 0.3s ease;
 }
 
 .close-btn:hover {
-  background: #f8f9fa;
-  color: #2c3e50;
+  background: #374151;
+  color: #f3f4f6;
 }
 
 /* Form Styles */
@@ -279,7 +319,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 0.9rem;
 }
 
@@ -287,7 +327,9 @@
 .form-group select,
 .form-group textarea {
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #111827;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
   transition: border-color 0.3s ease;
@@ -297,7 +339,8 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  background: #111827;
 }
 
 .form-group textarea {
@@ -441,9 +484,10 @@
 
 .add-player-section,
 .current-players-section {
-  background-color: #f8f9fa;
+  background-color: #1e293b;
   padding: 15px;
   border-radius: 8px;
+  border: 1px solid #374151;
 }
 
 .players-list {
@@ -457,7 +501,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #374151;
+  background: #111827;
+  margin-bottom: 8px;
+  border-radius: 6px;
 }
 
 .player-item:last-child {
@@ -471,11 +518,12 @@
 
 .player-name {
   font-weight: bold;
+  color: #f3f4f6;
 }
 
 .player-email {
   font-size: 0.9em;
-  color: #666;
+  color: #9ca3af;
 }
 
 .remove-btn {

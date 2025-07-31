@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -28,10 +28,26 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated() ? children : <Navigate to="/login" replace />;
 };
 
+// Component to conditionally render Header based on current route
+const ConditionalHeader = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  
+  return !isAdminRoute ? <Header /> : null;
+};
+
+// Component to conditionally render Footer based on current route
+const ConditionalFooter = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  
+  return !isAdminRoute ? <Footer /> : null;
+};
+
 function AppRoutes() {
   return (
     <Router>
-      <Header />
+      <ConditionalHeader />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -49,7 +65,7 @@ function AppRoutes() {
         <Route path="/payment-failed" element={<PaymentFailed />} />
         {/* Add more protected routes here as needed */}
       </Routes>
-      <Footer />
+      <ConditionalFooter />
     </Router>
   );
 }

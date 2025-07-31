@@ -1,9 +1,11 @@
-/* Analytics Styles */
+/* Analytics Styles - Dark Theme */
 .analytics {
-  background: white;
+  background: #0f172a;
+  border: 1px solid #374151;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  color: #f3f4f6;
 }
 
 .analytics-header {
@@ -14,7 +16,10 @@
 }
 
 .analytics-header h2 {
-  color: #2c3e50;
+  background: linear-gradient(135deg, #3b82f6, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
@@ -22,17 +27,24 @@
 
 .time-range-select {
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 1px solid #374151;
+  background: #1f2937;
+  color: #f3f4f6;
   border-radius: 12px;
   font-size: 0.9rem;
-  background: white;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.time-range-select option {
+  background: #1f2937;
+  color: #f3f4f6;
 }
 
 .time-range-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
 /* Metrics Grid */
@@ -100,10 +112,11 @@
 }
 
 .analytics-card {
-  background: #f8f9fa;
+  background: #111827;
+  border: 1px solid #374151;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .analytics-card.full-width {
@@ -111,7 +124,7 @@
 }
 
 .analytics-card h3 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.3rem;
   font-weight: 700;
   margin: 0 0 1.5rem 0;
@@ -129,9 +142,10 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: white;
+  background: #1e293b;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #374151;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .club-rank {
@@ -152,21 +166,21 @@
 }
 
 .club-info h4 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
 }
 
 .club-info p {
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.875rem;
   margin: 0;
 }
 
 .club-score {
-  background: #e8f5e8;
-  color: #2e7d32;
+  background: #15803d;
+  color: #bbf7d0;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-weight: 700;
@@ -185,9 +199,10 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: white;
+  background: #1e293b;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #374151;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .activity-icon {
@@ -207,14 +222,14 @@
 }
 
 .activity-content p {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-weight: 500;
   margin: 0 0 0.25rem 0;
   font-size: 0.9rem;
 }
 
 .activity-time {
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -231,19 +246,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: white;
+  background: #1e293b;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #374151;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .stat-label {
-  color: #6c757d;
+  color: #9ca3af;
   font-weight: 500;
   font-size: 0.9rem;
 }
 
 .stat-value {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-weight: 700;
   font-size: 1.1rem;
 }
@@ -258,7 +274,8 @@
 .growth-chart {
   width: 100px;
   height: 150px;
-  background: #f1f3f4;
+  background: #1e293b;
+  border: 1px solid #374151;
   border-radius: 12px;
   position: relative;
   display: flex;
@@ -288,14 +305,14 @@
 }
 
 .growth-info p {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
 }
 
 .growth-period {
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.875rem;
   font-weight: 500;
 }
@@ -312,9 +329,10 @@
   align-items: center;
   gap: 1rem;
   padding: 1.5rem;
-  background: white;
+  background: #1e293b;
+  border: 1px solid #374151;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
 }
 
@@ -353,14 +371,14 @@
 }
 
 .performer-info h4 {
-  color: #2c3e50;
+  color: #f3f4f6;
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0 0 0.25rem 0;
 }
 
 .performer-info p {
-  color: #6c757d;
+  color: #9ca3af;
   font-size: 0.875rem;
   margin: 0;
 }
@@ -373,8 +391,8 @@
 }
 
 .stat {
-  background: #f8f9fa;
-  color: #2c3e50;
+  background: #374151;
+  color: #f3f4f6;
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-weight: 600;
