@@ -36,6 +36,7 @@ const Prediction_Match = require('./models/prediction_match');
 const Player_user = require('./models/player_user');
 const Club_Details = require('./models/club-detail');
 const Club_player = require('./models/club-player');
+const Turf = require('./models/turf');
 
 // Configure CORS to allow requests from the frontend
 app.use(cors({
@@ -788,6 +789,17 @@ app.get("/api/user/:userId/live-match-predictions", async (req, res) => {
     res.json(predictions);
   } catch (error) {
     console.error("Error fetching predictions:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// API endpoint to fetch turf data
+app.get("/api/turfs", async (req, res) => {
+  try {
+    const turfs = await Turf.find();
+    res.json(turfs);
+  } catch (error) {
+    console.error("Error fetching turfs:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

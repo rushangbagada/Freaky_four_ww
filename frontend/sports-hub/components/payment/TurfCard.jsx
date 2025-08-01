@@ -11,6 +11,12 @@ const TurfCard = ({ id, name, location, price, imageUrl, availability }) => {
     try {
       console.log("Starting booking process for:", { name, location, price });
       
+      // DEMO MODE: Skip Stripe for now
+      if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY.includes('YOUR_KEY_HERE')) {
+        alert(`Demo: Booking ${name} at ${location} for ₹${price}/hour\n\n(Stripe not configured - this is just a demo)`);
+        return;
+      }
+      
       // Check if Stripe publishable key is available
       if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
         console.error("Stripe publishable key is not configured");
