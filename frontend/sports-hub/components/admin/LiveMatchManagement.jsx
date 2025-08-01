@@ -382,30 +382,79 @@ export default function LiveMatchManagement({ user }) {
               </div>
               
               <div className="match-events">
-                <h4>Recent Events</h4>
+                <div className="events-header">
+                  <h4>Recent Events</h4>
+                  <div className="events-counter">
+                    <span className="counter-badge">{match.events?.length || 0}</span>
+                    <span className="counter-text">Events</span>
+                  </div>
+                </div>
+                
                 {match.events && match.events.length > 0 ? (
                   <div className="events-list">
                     {match.events.slice(-3).map((event, index) => (
-                      <div key={index} className={`event ${event.type}`}>
-                        <span className="event-time">{event.time}'</span>
-                        <span className="event-team">{event.team}</span>
-                        <span className="event-player">{event.player}</span>
-                        <span className="event-description">{event.description}</span>
+                      <div key={index} className={`event-item ${event.type}-event`}>
+                        <div className="event-icon-wrapper">
+                          <div className="event-icon">
+                            {event.type === 'goal' && '⚽'}
+                            {event.type === 'yellow-card' && '🟨'}
+                            {event.type === 'red-card' && '🟥'}
+                            {event.type === 'substitution' && '🔄'}
+                            {event.type === 'penalty' && '⚡'}
+                            {!['goal', 'yellow-card', 'red-card', 'substitution', 'penalty'].includes(event.type) && '📝'}
+                          </div>
+                          <div className="event-pulse"></div>
+                        </div>
+                        
+                        <div className="event-content">
+                          <div className="event-header">
+                            <div className="event-time-badge">{event.time}'</div>
+                            <div className="event-type-badge">{event.type.replace('-', ' ').toUpperCase()}</div>
+                          </div>
+                          
+                          <div className="event-details">
+                            <div className="event-team-player">
+                              <span className="event-team">{event.team}</span>
+                              <span className="event-separator">•</span>
+                              <span className="event-player">{event.player}</span>
+                            </div>
+                            <div className="event-description">{event.description}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="event-status">
+                          <div className="event-indicator"></div>
+                        </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="no-events">No events recorded</div>
+                  <div className="no-events">
+                    <div className="no-events-icon">📋</div>
+                    <div className="no-events-text">No events recorded yet</div>
+                    <div className="no-events-subtext">Add match events to track the game progress</div>
+                  </div>
                 )}
-                <button 
-                  className="add-event-button"
-                  onClick={() => {
-                    setCurrentMatchForEvent(match);
-                    setShowAddEvent(true);
-                  }}
-                >
-                  Add Event
-                </button>
+                
+                <div className="events-actions">
+                  <button 
+                    className="add-event-button"
+                    onClick={() => {
+                      setCurrentMatchForEvent(match);
+                      setShowAddEvent(true);
+                    }}
+                  >
+                    <span className="button-icon">➕</span>
+                    <span>Add Event</span>
+                  </button>
+                  
+                  {match.events && match.events.length > 3 && (
+                    <button className="view-all-events-button">
+                      <span>View All ({match.events.length})</span>
+                      <span className="button-arrow">→</span>
+                    </button>
+                  )}
+                </div>
               </div>
               
               <div className="match-stats">
@@ -440,70 +489,92 @@ export default function LiveMatchManagement({ user }) {
                     </div>
                   </div>
                 </div>
-                <button 
-                  className="update-stats-button"
-                  onClick={() => {
-                    setCurrentMatchForStats(match);
-                    setShowUpdateStats(true);
-                  }}
-                >
-                  Update Stats
-                </button>
+                <div className="stats-actions">
+                  <button 
+                    className="action-btn update-stats-btn"
+                    onClick={() => {
+                      setCurrentMatchForStats(match);
+                      setShowUpdateStats(true);
+                    }}
+                    title="Update match statistics"
+                  >
+                    <span className="btn-icon">📈</span>
+                    <span className="btn-text">Update Stats</span>
+                  </button>
+                </div>
               </div>
               
               <div className="match-actions">
-                <button 
-                  className="edit-button"
-                  onClick={() => setEditingMatch(match)}
-                >
-                  Edit Match
-                </button>
-                <button 
-                  className="delete-button"
-                  onClick={() => handleDeleteLiveMatch(match._id)}
-                >
-                  Delete
-                </button>
-                <button 
-                  className="test-update-button"
-                  onClick={async () => {
-                    const newScore1 = match.team1_score + Math.floor(Math.random() * 3) + 1;
-                    const newScore2 = match.team2_score + Math.floor(Math.random() * 3) + 1;
-                    console.log(`🧪 Testing live score update: ${match.team1} ${newScore1} - ${newScore2} ${match.team2}`);
-                    
-                    await handleUpdateLiveScores(match._id, newScore1, newScore2, true);
-                  }}
-                >
-                  🧪 Test Live Score Update
-                </button>
-                <button 
-                  className="manual-update-button"
-                  onClick={() => {
-                    const team1Score = prompt(`Enter new score for ${match.team1}:`, match.team1_score);
-                    const team2Score = prompt(`Enter new score for ${match.team2}:`, match.team2_score);
-                    
-                    if (team1Score !== null && team2Score !== null) {
-                      handleUpdateLiveScores(match._id, team1Score, team2Score, true);
-                    }
-                  }}
-                >
-                  📝 Manual Score Update
-                </button>
-                {match.status !== 'finished' && (
+                <div className="action-section primary-actions">
                   <button 
-                    className="finish-match-button"
+                    className="action-btn edit-btn"
+                    onClick={() => setEditingMatch(match)}
+                    title="Edit match details"
+                  >
+                    <span className="btn-icon">✏️</span>
+                    <span className="btn-text">Edit</span>
+                  </button>
+                  
+                  <button 
+                    className="action-btn score-btn"
                     onClick={() => {
-                      const team1Score = prompt(`Enter final score for ${match.team1}:`, match.team1_score);
-                      const team2Score = prompt(`Enter final score for ${match.team2}:`, match.team2_score);
+                      const team1Score = prompt(`Enter new score for ${match.team1}:`, match.team1_score);
+                      const team2Score = prompt(`Enter new score for ${match.team2}:`, match.team2_score);
                       
                       if (team1Score !== null && team2Score !== null) {
-                        handleFinishMatchAndCalculatePoints(match._id, team1Score, team2Score);
+                        handleUpdateLiveScores(match._id, team1Score, team2Score, true);
                       }
                     }}
+                    title="Update match scores"
                   >
-                    🏁 Finish Match & Calculate Points
+                    <span className="btn-icon">📊</span>
+                    <span className="btn-text">Update Score</span>
                   </button>
-                )}
+                  
+                  {match.status !== 'finished' && (
+                    <button 
+                      className="action-btn finish-btn"
+                      onClick={() => {
+                        const team1Score = prompt(`Enter final score for ${match.team1}:`, match.team1_score);
+                        const team2Score = prompt(`Enter final score for ${match.team2}:`, match.team2_score);
+                        
+                        if (team1Score !== null && team2Score !== null) {
+                          handleFinishMatchAndCalculatePoints(match._id, team1Score, team2Score);
+                        }
+                      }}
+                      title="Finish match and calculate points"
+                    >
+                      <span className="btn-icon">🏁</span>
+                      <span className="btn-text">Finish Match</span>
+                    </button>
+                  )}
+                </div>
+                
+                <div className="action-section secondary-actions">
+                  <button 
+                    className="action-btn test-btn"
+                    onClick={async () => {
+                      const newScore1 = match.team1_score + Math.floor(Math.random() * 3) + 1;
+                      const newScore2 = match.team2_score + Math.floor(Math.random() * 3) + 1;
+                      console.log(`🧪 Testing live score update: ${match.team1} ${newScore1} - ${newScore2} ${match.team2}`);
+                      
+                      await handleUpdateLiveScores(match._id, newScore1, newScore2, true);
+                    }}
+                    title="Test random score update"
+                  >
+                    <span className="btn-icon">🧪</span>
+                    <span className="btn-text">Test Update</span>
+                  </button>
+                  
+                  <button 
+                    className="action-btn delete-btn"
+                    onClick={() => handleDeleteLiveMatch(match._id)}
+                    title="Delete this match"
+                  >
+                    <span className="btn-icon">🗑️</span>
+                    <span className="btn-text">Delete</span>
+                  </button>
+                </div>
               </div>
             </div>
           ))

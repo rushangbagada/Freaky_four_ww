@@ -1,3 +1,81 @@
+/* Additional styling for improved match action buttons */
+.match-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.action-section {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #111827;
+  color: #f3f4f6;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-icon {
+  font-size: 1rem;
+}
+
+.primary-actions .action-btn {
+  background: #2563eb;
+  color: #fff;
+}
+
+.primary-actions .action-btn:hover {
+  background: #3b82f6;
+}
+
+.secondary-actions .action-btn {
+  background: #374151;
+  color: #d1d5db;
+}
+
+.secondary-actions .action-btn:hover {
+  background: #4b5563;
+  color: #fff;
+}
+
+/* Stats Actions Styling */
+.stats-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.update-stats-btn {
+  background: #059669 !important;
+  color: #fff !important;
+  border: 1px solid #059669 !important;
+}
+
+.update-stats-btn:hover {
+  background: #047857 !important;
+  border-color: #047857 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
 /* Live Match Management Styles - Dark Theme */
 .live-match-management {
   padding: 2rem;
@@ -164,6 +242,265 @@
 
 .match-events {
   margin-bottom: 20px;
+  background: #111827;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.events-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #2563eb;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.counter-badge {
+  background: #3b82f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+}
+
+.counter-text {
+  color: #bfdbfe;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #1f2937;
+  border: 1px solid #374151;
+  gap: 0.75rem;
+}
+
+.event-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.event-content {
+  flex: 1;
+  color: #f3f4f6;
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.event-details {
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.event-time-badge {
+  background: #2563eb;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.event-type-badge {
+  background: #6b7280;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.event-team-player {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.event-separator {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.event-status .event-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #059669;
+  box-shadow: 0 0 4px #059669;
+}
+
+.event-description {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.events-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.add-event-button {
+  background: #15803d;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.add-event-button:hover {
+  background: #16a34a;
+}
+
+.view-all-events-button {
+  background: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.view-all-events-button:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.no-events {
+  text-align: center;
+  padding: 2rem;
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.no-events-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.7;
+}
+
+.no-events-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin-bottom: 0.5rem;
+}
+
+.no-events-subtext {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  opacity: 0.8;
+}
+
+.button-icon, .button-arrow {
+  font-size: 0.9rem;
+  margin: 0 0.25rem;
+}
+
+.add-event-button {
+  background: #15803d;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.add-event-button:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.3);
+}
+
+.view-all-events-button {
+  background: transparent;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.view-all-events-button:hover {
+  background: #3b82f6;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Event type specific icon styling */
+.goal-event .event-icon-wrapper {
+  background: #059669;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+}
+
+.yellow-card-event .event-icon-wrapper {
+  background: #d97706;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+}
+
+.red-card-event .event-icon-wrapper {
+  background: #dc2626;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.substitution-event .event-icon-wrapper {
+  background: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.penalty-event .event-icon-wrapper {
+  background: #7c3aed;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.other-event .event-icon-wrapper {
+  background: #6b7280;
+  box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
 }
 
 .match-events h4, .match-stats h4 {
