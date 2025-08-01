@@ -10,7 +10,7 @@
   background: #0f172a !important;
   min-height: 100vh;
   padding: 2rem;
-  padding-top: 120px;
+  padding-top: 150px;
   font-family: 'Inter', sans-serif;
   color: #e5e7eb;
   position: relative;
@@ -29,7 +29,7 @@
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
   border-radius: 16px !important;
   margin-top: 70px !important;
-  margin-bottom: 2rem !important;
+  margin-bottom: 3rem !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
@@ -37,6 +37,7 @@
   position: relative !important;
   overflow: hidden !important;
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   transform: none !important;
