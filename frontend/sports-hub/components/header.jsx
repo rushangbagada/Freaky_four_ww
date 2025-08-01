@@ -155,13 +155,7 @@ export default function Header() {
     </div>
   </Link>
 
-  <Link to="/minigames" className={`nav-link ${isActive('/minigames')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">🕹️</div>
-      <div className="nav-label">Mini Games</div>
-    </div>
-  </Link>
-
+ 
   <Link to="/Turf" className={`nav-link ${isActive('/TurfCard')}`}>
     <div className="nav-item">
       <div className="nav-icon">🏏</div>

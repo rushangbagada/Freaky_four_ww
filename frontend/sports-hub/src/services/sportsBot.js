@@ -1,6 +1,6 @@
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
 
 // Check if API key is available (Vite uses import.meta.env)
@@ -23,7 +23,7 @@ if (API_KEY) {
     ],
   });
 
-  genAI = new GoogleGenAI({apiKey: API_KEY});
+  genAI = new GoogleGenerativeAI({apiKey: API_KEY});
 }
 
 

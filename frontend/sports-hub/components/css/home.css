@@ -630,6 +630,99 @@ h3 {
   border-color: rgba(48, 207, 208, 0.5);
 }
 
+/* Repeat the 6 original colors for cards 7-12 */
+.card:nth-child(7) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(8) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(9) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(10) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(11) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(12) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
+/* Repeat the 6 original colors for cards 13-18 */
+.card:nth-child(13) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(14) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(15) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(16) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(17) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(18) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
+/* For any additional cards beyond 18, use cycling gradients with the original 6 colors */
+.card:nth-child(n+19):nth-child(6n+19) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+20) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+21) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+22) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+23) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+24) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
 .card::before {
   content: '';
   position: absolute;

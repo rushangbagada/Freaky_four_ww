@@ -90,7 +90,37 @@
   margin-bottom: 1rem;
 }
 
+.news-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(245, 180, 1, 0.1);
+  border: 2px solid rgba(245, 180, 1, 0.2);
+}
+
+.news-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.news-image:hover {
+  transform: scale(1.1);
+}
+
 .news-emoji {
+  font-size: 2.5rem;
+  display: inline-block;
+  animation: bounce 2s infinite;
+}
+
+.news-emoji-fallback {
   font-size: 2.5rem;
   display: inline-block;
   animation: bounce 2s infinite;

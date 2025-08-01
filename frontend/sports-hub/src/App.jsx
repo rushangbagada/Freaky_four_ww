@@ -21,7 +21,7 @@ import SportsBot from '../components/SportsBot';
 import GamePage from '../components/gamepage';
 import Blog from '../components/blog';
 import LiveSports from '../components/livesports';
-import MiniGames from '../components/minigames';
+
 import TurfCard from '../components/payment/TurfCard';
 
 // Protected Route Component
@@ -47,8 +47,9 @@ const ConditionalHeader = () => {
 const ConditionalFooter = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isChatbotRoute = location.pathname === '/chatbot';
   
-  return !isAdminRoute ? <Footer /> : null;
+  return !isAdminRoute && !isChatbotRoute ? <Footer /> : null;
 };
 
 function AppRoutes() {
@@ -70,7 +71,7 @@ function AppRoutes() {
         <Route path="/gamepage" element={<GamePage />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/livesports" element={<LiveSports />} />
-        <Route path="/minigames" element={<MiniGames />} />
+       
         <Route path="/TurfCard" element={<TurfCard />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
@@ -79,7 +80,6 @@ function AppRoutes() {
         {/* Catch-all route for 404 pages - temporarily disabled for debugging */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
-      <Footer />
       <FloatingChatbot />
       <ConditionalFooter />
     </Router>

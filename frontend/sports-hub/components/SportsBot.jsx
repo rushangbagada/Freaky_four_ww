@@ -1,14 +1,142 @@
 import React, { useState, useEffect } from 'react';
-import { chatWithSportsBot, analyzeSportsVideo } from '../src/services/sportsBot';
-import { useAuth } from '../src/AuthContext'; // Import useAuth
+import { chatWithSportsBot } from '../src/services/sportsBot';
+import { useAuth } from '../src/AuthContext';
 
 const SportsBot = () => {
+  // Styles
+  const containerStyle = {
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'var(--bg-dark)',
+    display: 'flex',
+    flexDirection: 'row',
+    fontFamily: "'Poppins', 'Inter', sans-serif",
+    paddingTop: '88px'
+  };
+
+  const sidebarStyle = {
+    width: '280px',
+    backgroundColor: 'var(--card-dark)',
+    borderRight: '1px solid var(--card-accent)',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+    overflowY: 'auto'
+  };
+
+  const chatAreaStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'calc(100vh - 88px)'
+  };
+
+  const headerStyle = {
+    background: 'var(--gradient-text)',
+    color: 'transparent',
+    textAlign: 'center',
+    padding: '25px',
+    position: 'relative',
+    WebkitBackgroundClip: 'text'
+  };
+
+  const messagesContainerStyle = {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '20px',
+    backgroundColor: 'var(--bg-medium)',
+    borderBottom: '1px solid var(--card-accent)'
+  };
+
+  const messageStyle = (isUser) => ({
+    display: 'flex',
+    flexDirection: isUser ? 'row-reverse' : 'row',
+    marginBottom: '15px',
+    alignItems: 'flex-start'
+  });
+
+  const messageBubbleStyle = (isUser) => ({
+    maxWidth: '70%',
+    padding: '12px 16px',
+    borderRadius: isUser ? '20px 20px 5px 20px' : '20px 20px 20px 5px',
+    backgroundColor: isUser ? 'var(--accent-blue-deep)' : 'var(--card-accent)',
+    color: 'var(--text-primary)',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    wordWrap: 'break-word'
+  });
+
+  const inputContainerStyle = {
+    display: 'flex',
+    padding: '20px',
+    backgroundColor: 'var(--card-dark)',
+    borderTop: '1px solid var(--card-accent)',
+    gap: '12px'
+  };
+
+  const inputStyle = {
+    flex: 1,
+    padding: '12px 16px',
+    borderRadius: '25px',
+    border: '2px solid var(--card-accent)',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'border-color 0.3s ease'
+  };
+
+  const buttonStyle = {
+    background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-blue-deep))',
+    color: 'white',
+    border: 'none',
+    borderRadius: '25px',
+    padding: '12px 24px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    transition: 'all 0.3s ease',
+    minWidth: '80px'
+  };
+
+  const welcomeStyle = {
+    textAlign: 'center',
+    color: 'var(--text-secondary)',
+    padding: '40px 20px',
+    fontSize: '16px'
+  };
+
+  const sidebarButtonStyle = {
+    background: 'var(--card-accent)',
+    color: 'var(--text-primary)',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '12px 16px',
+    margin: '8px 0',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '500',
+    transition: 'all 0.3s ease',
+    textAlign: 'left',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  };
+
+  const sidebarTitleStyle = {
+    color: 'var(--text-primary)',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+    textAlign: 'center'
+  };
+
+
+  // State
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('');
   const [username, setUsername] = useState('');
-  const { user } = useAuth(); // Get user from AuthContext
+  const [chatHistory, setChatHistory] = useState([]);
+  const [currentChatId, setCurrentChatId] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (user && user.name) {
@@ -25,6 +153,19 @@ const SportsBot = () => {
       const response = await chatWithSportsBot(userMessages, username);
       setMessages([...userMessages, response]);
       setInputMessage('');
+      
+      // Save to chat history if it's a new conversation
+      if (messages.length === 0) {
+        const newChatId = Date.now();
+        const newChat = {
+          id: newChatId,
+          title: inputMessage.substring(0, 30) + (inputMessage.length > 30 ? '...' : ''),
+          messages: [...userMessages, response],
+          timestamp: new Date().toLocaleString()
+        };
+        setChatHistory([newChat, ...chatHistory]);
+        setCurrentChatId(newChatId);
+      }
     } catch (error) {
       console.error('Error:', error);
       alert(error.message);
@@ -33,166 +174,169 @@ const SportsBot = () => {
     }
   };
 
-  // const handleVideoAnalysis = async () => {
-  //   if (!videoUrl.trim()) return;
+  const startNewChat = () => {
+    setMessages([]);
+    setCurrentChatId(null);
+  };
 
-  //   setLoading(true);
-  //   try {
-  //     const response = await analyzeSportsVideo(videoUrl, username);
-  //     setMessages([...messages, `Video Analysis: ${response}`]);
-  //     setVideoUrl('');
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     alert(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const loadChatHistory = (chat) => {
+    setMessages(chat.messages);
+    setCurrentChatId(chat.id);
+  };
+
+  const clearAllHistory = () => {
+    setChatHistory([]);
+    setMessages([]);
+    setCurrentChatId(null);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleChatMessage();
+    }
+  };
 
   return (
-    <div className="sports-bot-container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h2>🏆 Sports Bot - AI Sports Coach</h2>
-      
-      {/* Username Input - only show if user is not logged in */}
-      {!user && (
+    <div style={containerStyle}>
+      {/* Sidebar */}
+      <div style={sidebarStyle}>
+        <div style={sidebarTitleStyle}>
+          🏆 Sports Bot
+        </div>
+        
+        <button 
+          onClick={startNewChat}
+          style={{
+            ...sidebarButtonStyle,
+            background: 'linear-gradient(90deg, var(--accent-blue), var(--accent-blue-deep))',
+            marginBottom: '20px'
+          }}
+        >
+          <span>➕</span> New Chat
+        </button>
+
         <div style={{ marginBottom: '20px' }}>
+          <h4 style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '10px' }}>Chat History</h4>
+          {chatHistory.length === 0 ? (
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12px', fontStyle: 'italic' }}>No chat history yet</p>
+          ) : (
+            chatHistory.map((chat) => (
+              <button
+                key={chat.id}
+                onClick={() => loadChatHistory(chat)}
+                style={{
+                  ...sidebarButtonStyle,
+                  backgroundColor: currentChatId === chat.id ? 'var(--accent-blue-deep)' : 'var(--card-accent)',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  padding: '10px 12px'
+                }}
+              >
+                <div style={{ fontSize: '13px', fontWeight: 'bold' }}>{chat.title}</div>
+                <div style={{ fontSize: '11px', opacity: 0.7 }}>{chat.timestamp}</div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {chatHistory.length > 0 && (
+          <button 
+            onClick={clearAllHistory}
+            style={{
+              ...sidebarButtonStyle,
+              background: 'var(--accent-live)',
+              marginTop: 'auto'
+            }}
+          >
+            <span>🗑️</span> Clear History
+          </button>
+        )}
+
+        <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid var(--card-accent)' }}>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '12px', textAlign: 'center' }}>
+            {user ? `Welcome, ${user.name}!` : 'AI Sports Coach'}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div style={chatAreaStyle}>
+        {/* Header */}
+        <div style={headerStyle}>
+          <h1 style={{ margin: '0 0 10px 0', fontSize: '28px', fontWeight: 'bold' }}>
+            🏆 Sports Bot
+          </h1>
+          <p style={{ margin: 0, fontSize: '16px', opacity: 0.9 }}>
+            Your Personal AI Sports Coach & Training Assistant
+          </p>
+        </div>
+
+        {/* Messages Container */}
+        <div style={messagesContainerStyle}>
+          {messages.length === 0 ? (
+            <div style={welcomeStyle}>
+              <div style={{ fontSize: '48px', marginBottom: '20px' }}>🤖</div>
+              <h3 style={{ color: '#495057', marginBottom: '15px' }}>
+                Welcome to Sports Bot{user ? `, ${user.name}` : ''}! 👋
+              </h3>
+              <p style={{ marginBottom: '20px', lineHeight: '1.6' }}>
+                I'm your AI sports coach ready to help you with:
+              </p>
+              <div style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
+                <p>🏃‍♂️ Training techniques and tips</p>
+                <p>⚽ Sport-specific strategies</p>
+                <p>💪 Workout recommendations</p>
+                <p>🎯 Performance improvement advice</p>
+              </div>
+            </div>
+          ) : (
+            messages.map((msg, index) => (
+              <div key={index} style={messageStyle(index % 2 === 0)}>
+                <div style={messageBubbleStyle(index % 2 === 0)}>
+                  <div style={{ 
+                    fontSize: '12px', 
+                    marginBottom: '4px', 
+                    opacity: 0.8,
+                    fontWeight: 'bold'
+                  }}>
+                    {index % 2 === 0 ? '🏃‍♂️ You' : '🤖 Sports Bot'}
+                  </div>
+                  <div style={{ lineHeight: '1.4' }}>{msg}</div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Input Container */}
+        <div style={inputContainerStyle}>
           <input
             type="text"
-            placeholder="Enter your name (optional)"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{ padding: '10px', marginRight: '10px', width: '200px', borderRadius: '5px', border: '1px solid #ccc' }}
+            placeholder="Ask me about sports training, techniques, strategies..."
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            style={inputStyle}
+            disabled={loading}
           />
+          <button 
+            onClick={handleChatMessage} 
+            disabled={loading || !inputMessage.trim()}
+            style={{
+              ...buttonStyle,
+              opacity: loading || !inputMessage.trim() ? 0.6 : 1,
+              cursor: loading || !inputMessage.trim() ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {loading ? '⏳' : '📤'}
+          </button>
         </div>
-      )}
-
-      {/* Chat Messages Display */}
-      <div style={{ 
-        border: '2px solid #4CAF50', 
-        height: '400px', 
-        overflowY: 'scroll', 
-        padding: '15px', 
-        marginBottom: '20px',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '10px'
-      }}>
-        {messages.length === 0 && (
-          <div style={{ color: '#666', textAlign: 'center', marginTop: '150px' }}>
-            <p>👋 Welcome to Sports Bot{user ? `, ${user.name}` : ''}!</p>
-            <p>Ask me about sports training, techniques, strategies, or analyze your game videos!</p>
-          </div>
-        )}
-        {messages.map((msg, index) => (
-          <div key={index} style={{ 
-            marginBottom: '15px', 
-            padding: '10px', 
-            backgroundColor: index % 2 === 0 ? '#e3f2fd' : '#f1f8e9',
-            borderRadius: '8px',
-            borderLeft: `4px solid ${index % 2 === 0 ? '#2196F3' : '#4CAF50'}`
-          }}>
-            <strong style={{ color: index % 2 === 0 ? '#1976D2' : '#388E3C' }}>
-              {index % 2 === 0 ? '🏃‍♂️ You: ' : '🤖 Sports Bot: '}
-            </strong>
-            <div style={{ marginTop: '5px' }}>{msg}</div>
-          </div>
-        ))}
       </div>
 
-      {/* Chat Input */}
-      <div style={{ marginBottom: '30px' }}>
-        <input
-          type="text"
-          placeholder="Ask about sports training, techniques, strategies..."
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          style={{ 
-            padding: '12px', 
-            width: '400px', 
-            marginRight: '10px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '14px'
-          }}
-          onKeyPress={(e) => e.key === 'Enter' && handleChatMessage()}
-        />
-        <button 
-          onClick={handleChatMessage} 
-          disabled={loading}
-          style={{ 
-            padding: '12px 20px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          {loading ? '⏳ Sending...' : '📤 Send'}
-        </button>
-      </div>
-
-      {/* Video Analysis Section */}
-      {/* <div style={{ 
-        backgroundColor: '#fff3e0', 
-        padding: '20px', 
-        borderRadius: '10px',
-        border: '2px solid #ff9800'
-      }}>
-        <h3 style={{ color: '#f57c00', marginBottom: '15px' }}>🎥 Analyze Sports Video</h3>
-        <p style={{ color: '#666', marginBottom: '15px', fontSize: '14px' }}>
-          Upload a sports video URL to get professional analysis of technique, performance, and coaching tips!
-        </p>
-        <input
-          type="text"
-          placeholder="Enter sports video URL (e.g., training video, game footage)..."
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          style={{ 
-            padding: '12px', 
-            width: '400px', 
-            marginRight: '10px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            fontSize: '14px'
-          }}
-        />
-        <button 
-          onClick={handleVideoAnalysis} 
-          disabled={loading}
-          style={{ 
-            padding: '12px 20px',
-            backgroundColor: '#ff9800',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          {loading ? '⏳ Analyzing...' : '🔍 Analyze Video'}
-        </button>
-      </div> */}
-
-      {/* Sports Tips */}
-      <div style={{ 
-        marginTop: '20px', 
-        padding: '15px', 
-        backgroundColor: '#e8f5e8', 
-        borderRadius: '8px',
-        fontSize: '13px',
-        color: '#2e7d32'
-      }}>
-        <strong>💡 Pro Tips:</strong>
-        <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
-          <li>Ask about specific sports techniques (e.g., "How to improve my basketball shooting form?")</li>
-          <li>Get workout recommendations for your sport</li>
-          <li>Analyze game strategies and tactics</li>
-          <li>Upload training videos for personalized coaching feedback</li>
-        </ul>
-      </div>
     </div>
   );
 };
 
 export default SportsBot;
+
