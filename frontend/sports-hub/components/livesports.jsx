@@ -2,46 +2,56 @@
 import React, { useState, useEffect } from 'react';
 import LiveScore from './livescore';
 import MatchViewer from './matchviewer';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 import './css/livesports.css';
 
 const LiveSports = () => {
   const [matches, setMatches] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/live_matches")
-      .then(res => res.json())
-      .then(data => 
-        {
-            // console.log(data);
-            setMatches(data)
-        })
-      .catch(err => console.error(err));
-  }, []);
-
+  const [loading, setLoading] = useState(true);
   const [selectedMatch, setSelectedMatch] = useState(null);
 
-  // Simulate live score updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMatches((prevMatches) => 
-        prevMatches.map(match => {
-          if (match.status === 'live' && Math.random() > 0.7) {
-            const isHomeScore = Math.random() > 0.5;
-            return {
-              ...match,
-              team1_score: isHomeScore ? match.team1_score + 1 : match.team1_score,
-              team2_score: !isHomeScore ? match.team2_score + 1 : match.team2_score,
-            };
-          }
-          return match;
-        })
-      );
-    }, 5000);
+  // Function to fetch live matches from the backend
+  const fetchLiveMatches = async () => {
+    try {
+      console.log('🔄 Fetching live matches for public view...');
+      const response = await fetch('http://localhost:5000/api/live_matches');
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Fetched live matches:', data);
+        const matchArray = Array.isArray(data) ? data : [];
+        setMatches(matchArray);
+      } else {
+        console.error('❌ Failed to fetch live matches:', response.status);
+        setMatches([]);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching live matches:', error);
+      setMatches([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return () => clearInterval(interval);
-  }, []);
+  // Use the real-time database change detection hook
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchLiveMatches,
+    []
+  );
 
   const liveMatches = matches.filter(match => match.status === 'live');
+  const otherMatches = matches.filter(match => match.status !== 'live');
+
+  if (loading) {
+    return (
+      <div className="live-sports-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading live sports data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="live-sports-container">
@@ -53,33 +63,34 @@ const LiveSports = () => {
         </div>
       </header>
 
+
       <div className="sports-content">
         <div className="scores-section">
           <h2>Live Scores</h2>
           <div className="live-scores-grid">
             {liveMatches.map(match => (
               <LiveScore 
-                key={match.id}
+                key={match._id || match.id}
                 match={match}
                 onMatchSelect={setSelectedMatch}
               />
             ))}
           </div>
 
-          {/* {otherMatches.length > 0 && (
+          {otherMatches.length > 0 && (
             <>
               <h3>Recent & Upcoming</h3>
               <div className="other-scores-grid">
-                {otherMatches.map(match => (
+                {otherMatches.slice(0, 6).map(match => (
                   <LiveScore 
-                    key={match.id}
+                    key={match._id || match.id}
                     match={match}
                     onMatchSelect={setSelectedMatch}
                   />
                 ))}
               </div>
             </>
-          )} */}
+          )}
           
             
           {liveMatches.length === 0 && (

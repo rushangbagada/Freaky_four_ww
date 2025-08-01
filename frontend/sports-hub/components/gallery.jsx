@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/gallery.css';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 export default function Gallery() {
   const [allData, setAllData] = useState([]);
@@ -10,106 +12,108 @@ export default function Gallery() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchGalleryData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Try the backend API first
-        const response = await fetch('http://localhost:5000/api/gallery');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        if (data && data.length > 0) {
-          setAllData(data);
-          setFilteredData(data);
-          setLikedArray(Array(data.length).fill(false));
-          setViewArray(Array(data.length).fill(false));
-        } else {
-          // Use mock data if no data from API
-          useMockData();
-        }
-      } catch (err) {
-        console.error('Failed to fetch gallery data:', err);
-        setError(err.message);
-        // Fallback to mock data on error
-        useMockData();
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    const useMockData = () => {
-      const mockData = [
-        {
-          id: 1,
-          title: "Football Championship",
-          image: "https://images.unsplash.com/photo-1606851095339-98c0e88e5071?auto=format&fit=crop&w=800&q=80",
-          description: "Exciting football match moment",
-          category: "Football",
-          likes: 12,
-          views: 45
-        },
-        {
-          id: 2,
-          title: "Basketball Finals",
-          image: "https://images.unsplash.com/photo-1599058917212-dc596dbe5396?auto=format&fit=crop&w=800&q=80",
-          description: "High-flying slam dunk",
-          category: "Basketball",
-          likes: 8,
-          views: 32
-        },
-        {
-          id: 3,
-          title: "Tennis Tournament",
-          image: "https://images.unsplash.com/photo-1599058916791-57c42a5e15cb?auto=format&fit=crop&w=800&q=80",
-          description: "Tennis court action",
-          category: "Tennis",
-          likes: 15,
-          views: 28
-        },
-        {
-          id: 4,
-          title: "Volleyball Match",
-          image: "https://images.unsplash.com/photo-1613482180640-1706ae24f648?auto=format&fit=crop&w=800&q=80",
-          description: "Teamwork at the net",
-          category: "Volleyball",
-          likes: 6,
-          views: 19
-        },
-        {
-          id: 5,
-          title: "Cricket Championship",
-          image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80",
-          description: "Perfect batting stance",
-          category: "Cricket",
-          likes: 22,
-          views: 67
-        },
-        {
-          id: 6,
-          title: "Badminton Finals",
-          image: "https://images.unsplash.com/photo-1606851096394-6b2b0f3329c2?auto=format&fit=crop&w=800&q=80",
-          description: "Smash shot in action",
-          category: "Badminton",
-          likes: 9,
-          views: 23
-        }
-      ];
+  const fetchGalleryData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
       
-      setAllData(mockData);
-      setFilteredData(mockData);
-      setLikedArray(Array(mockData.length).fill(false));
-      setViewArray(Array(mockData.length).fill(false));
-    };
+      // Try the backend API first
+      const response = await fetch('http://localhost:5000/api/gallery');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        setAllData(data);
+        setFilteredData(data);
+        setLikedArray(Array(data.length).fill(false));
+        setViewArray(Array(data.length).fill(false));
+      } else {
+        // Use mock data if no data from API
+        useMockData();
+      }
+    } catch (err) {
+      console.error('Failed to fetch gallery data:', err);
+      setError(err.message);
+      // Fallback to mock data on error
+      useMockData();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Use the custom hook for real-time updates
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchGalleryData,
+    []
+  );
+
+  const useMockData = () => {
+    const mockData = [
+      {
+        id: 1,
+        title: "Football Championship",
+        image: "https://images.unsplash.com/photo-1606851095339-98c0e88e5071?auto=format&fit=crop&w=800&q=80",
+        description: "Exciting football match moment",
+        category: "Football",
+        likes: 12,
+        views: 45
+      },
+      {
+        id: 2,
+        title: "Basketball Finals",
+        image: "https://images.unsplash.com/photo-1599058917212-dc596dbe5396?auto=format&fit=crop&w=800&q=80",
+        description: "High-flying slam dunk",
+        category: "Basketball",
+        likes: 8,
+        views: 32
+      },
+      {
+        id: 3,
+        title: "Tennis Tournament",
+        image: "https://images.unsplash.com/photo-1599058916791-57c42a5e15cb?auto=format&fit=crop&w=800&q=80",
+        description: "Tennis court action",
+        category: "Tennis",
+        likes: 15,
+        views: 28
+      },
+      {
+        id: 4,
+        title: "Volleyball Match",
+        image: "https://images.unsplash.com/photo-1613482180640-1706ae24f648?auto=format&fit=crop&w=800&q=80",
+        description: "Teamwork at the net",
+        category: "Volleyball",
+        likes: 6,
+        views: 19
+      },
+      {
+        id: 5,
+        title: "Cricket Championship",
+        image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80",
+        description: "Perfect batting stance",
+        category: "Cricket",
+        likes: 22,
+        views: 67
+      },
+      {
+        id: 6,
+        title: "Badminton Finals",
+        image: "https://images.unsplash.com/photo-1606851096394-6b2b0f3329c2?auto=format&fit=crop&w=800&q=80",
+        description: "Smash shot in action",
+        category: "Badminton",
+        likes: 9,
+        views: 23
+      }
+    ];
     
-    fetchGalleryData();
-  }, []);
+    setAllData(mockData);
+    setFilteredData(mockData);
+    setLikedArray(Array(mockData.length).fill(false));
+    setViewArray(Array(mockData.length).fill(false));
+  };
 
   const handleLike = (index, id) => {
     const updated = [...filteredData];
@@ -192,6 +196,13 @@ export default function Gallery() {
             </select>
           </div>
         </section>
+
+        {/* Real-time Status Indicator */}
+        <RealTimeStatusIndicator 
+          isPolling={isPolling}
+          hasChanges={hasChanges}
+          lastUpdated={lastUpdated}
+        />
 
         <section className="gallery-grid">
           {loading ? (

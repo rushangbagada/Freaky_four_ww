@@ -5,6 +5,8 @@ import Leaderboard from './leader.jsx';
 import UserStats from './userStates.jsx';
 import Quiz from './quiz.jsx';
 import { useAuth } from '../src/AuthContext';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
@@ -70,23 +72,31 @@ const PredictionGamePage = () => {
       .catch(err => console.error("Error fetching leaderboard:", err));
   };
 
-  // Fetch matches, live matches, and leaderboard
-  useEffect(() => {
-    // Fetch regular matches
-    fetch("/api/prediction_match")
-      .then(res => res.json())
-      .then(data => setMatches(data))
-      .catch(err => console.error("Error fetching prediction matches:", err));
+  // Functions for real-time data fetching
+  const fetchAllMatchData = async () => {
+    try {
+      // Fetch regular matches
+      const predictionRes = await fetch("/api/prediction_match");
+      const predictionData = await predictionRes.json();
+      setMatches(predictionData);
 
-    // Fetch live matches
-    fetch("/api/game/live-matches")
-      .then(res => res.json())
-      .then(data => setLiveMatches(data))
-      .catch(err => console.error("Error fetching live matches:", err));
+      // Fetch live matches
+      const liveRes = await fetch("/api/game/live-matches");
+      const liveData = await liveRes.json();
+      setLiveMatches(liveData);
 
-    // Initial leaderboard fetch
-    refreshLeaderboard();
-  }, []);
+      // Refresh leaderboard
+      refreshLeaderboard();
+    } catch (err) {
+      console.error("Error fetching match data:", err);
+    }
+  };
+
+  // Use the custom hook for real-time updates
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchAllMatchData,
+    []
+  );
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
@@ -275,6 +285,13 @@ const PredictionGamePage = () => {
 
       <div className="game-container">
         <div className="matches-section">
+          {/* Real-time Status Indicator */}
+          <RealTimeStatusIndicator 
+            isPolling={isPolling}
+            hasChanges={hasChanges}
+            lastUpdated={lastUpdated}
+          />
+          
           {/* Live Matches Section */}
           <h2>Live Matches</h2>
           <div className="matches-grid">

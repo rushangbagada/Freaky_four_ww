@@ -1,19 +1,29 @@
 
 import React, { useState, useEffect } from 'react';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 const MatchViewer = ({ match, onClose }) => {
   const [events, setEvents] = useState([]);
   const [stats, setStats] = useState({});
 
-  useEffect(() => {
-  fetch(`/api/match/${match.id}`)
-    .then(res => res.json())
-    .then(data => {
+  // Function for real-time data fetching
+  const fetchMatchData = async () => {
+    try {
+      const response = await fetch(`/api/match/${match.id}`);
+      const data = await response.json();
       setEvents(data.events || []);
-      setStats(data.stats || {}); // assuming setStats is defined
-    })
-    .catch(err => console.error(err));
-}, [match.id]);
+      setStats(data.stats || {});
+    } catch (err) {
+      console.error("Error fetching match data:", err);
+    }
+  };
+
+  // Use the custom hook for real-time updates
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchMatchData,
+    [match.id]
+  );
 
 
 //   const [stats] = useState({
@@ -23,25 +33,6 @@ const MatchViewer = ({ match, onClose }) => {
 //     fouls: { home: 7, away: 11 },
 //   });
 
-  // Simulate new events for live matches
-  useEffect(() => {
-    if (match.status === 'live') {
-      const interval = setInterval(() => {
-        if (Math.random() > 0.8) {
-          const newEvent = {
-            time: match.time,
-            type: Math.random() > 0.7 ? 'goal' : 'card',
-            team: Math.random() > 0.5 ? match.team1 : match.team2,
-            player: 'Player ' + Math.floor(Math.random() * 20 + 1),
-            description: Math.random() > 0.7 ? 'Goal scored!' : 'Booking received'
-          };
-          setEvents(prev => [newEvent, ...prev]);
-        }
-      }, 10000);
-
-      return () => clearInterval(interval);
-    }
-  }, [match]);
 
   const getEventIcon = (type) => {
     switch (type) {
@@ -68,6 +59,13 @@ const MatchViewer = ({ match, onClose }) => {
         </div>
 
         <div className="viewer-content">
+          {/* Real-time Status Indicator */}
+          <RealTimeStatusIndicator 
+            isPolling={isPolling}
+            hasChanges={hasChanges}
+            lastUpdated={lastUpdated}
+          />
+          
           <div className="match-scoreboard">
             <div className="team-section">
               <div className="team-name">{match.team1}</div>

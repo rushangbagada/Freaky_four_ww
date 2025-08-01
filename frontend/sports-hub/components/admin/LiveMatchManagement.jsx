@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
 import './css/live-match-management.css';
 
 export default function LiveMatchManagement({ user }) {
@@ -42,13 +43,9 @@ export default function LiveMatchManagement({ user }) {
 
   const isAdmin = user.role === 'admin';
 
-  useEffect(() => {
-    fetchLiveMatches();
-    fetchClubs();
-  }, []);
-
   const fetchLiveMatches = async () => {
     try {
+      console.log('🔄 Fetching live matches from admin API...');
       const response = await fetch('http://localhost:5000/api/admin/live-matches', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -57,17 +54,31 @@ export default function LiveMatchManagement({ user }) {
       
       if (response.ok) {
         const data = await response.json();
-        setLiveMatches(Array.isArray(data) ? data : []);
+        console.log('✅ Fetched live matches data:', data);
+        const matchArray = Array.isArray(data) ? data : [];
+        console.log('📊 Setting live matches:', matchArray);
+        setLiveMatches(matchArray);
       } else {
+        console.error('❌ Failed to fetch live matches:', response.status, response.statusText);
         setLiveMatches([]);
       }
     } catch (error) {
-      console.error('Error fetching live matches:', error);
+      console.error('❌ Error fetching live matches:', error);
       setLiveMatches([]);
     } finally {
       setLoading(false);
     }
   };
+
+  // Use the custom hook for real-time updates
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchLiveMatches,
+    []
+  );
+
+  useEffect(() => {
+    fetchClubs();
+  }, []);
 
   const fetchClubs = async () => {
     try {
@@ -240,17 +251,55 @@ export default function LiveMatchManagement({ user }) {
     }
   };
 
-  // Add this function to the existing LiveMatchManagement component
+  // Function to update live match scores in real-time without changing status
+  const handleUpdateLiveScores = async (matchId, team1Score, team2Score, preserveStatus = true) => {
+    try {
+      const currentMatch = liveMatches.find(m => m._id === matchId);
+      if (!currentMatch) return;
+
+      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          ...currentMatch,
+          team1_score: parseInt(team1Score),
+          team2_score: parseInt(team2Score),
+          status: preserveStatus ? currentMatch.status : 'finished'
+        })
+      });
   
-  // Inside the LiveMatchManagement component, add this function:
-  const handleUpdateScoresAndCalculatePoints = async (matchId, team1Score, team2Score) => {
+      if (response.ok) {
+        console.log(`✅ Live scores updated: ${team1Score}-${team2Score}`);
+        // Immediately update local state for instant UI feedback
+        setLiveMatches(prevMatches => 
+          prevMatches.map(match => 
+            match._id === matchId ? {
+              ...match,
+              team1_score: parseInt(team1Score),
+              team2_score: parseInt(team2Score)
+            } : match
+          )
+        );
+      } else {
+        console.error('❌ Failed to update live scores');
+      }
+    } catch (error) {
+      console.error('Error updating live scores:', error);
+    }
+  };
+
+  // Function to finish match and calculate points
+  const handleFinishMatchAndCalculatePoints = async (matchId, team1Score, team2Score) => {
     try {
       setLoading(true);
       const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}/update-scores`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
           team1_score: parseInt(team1Score),
@@ -260,11 +309,11 @@ export default function LiveMatchManagement({ user }) {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to update scores and calculate points');
+        throw new Error('Failed to finish match and calculate points');
       }
   
       const data = await response.json();
-      console.log('Scores updated and points calculated:', data);
+      console.log('Match finished and points calculated:', data);
       
       // Update the match in the UI
       setLiveMatches(prevMatches => 
@@ -273,18 +322,14 @@ export default function LiveMatchManagement({ user }) {
         )
       );
   
-      // Show success message
-      alert('Match scores updated and user points calculated successfully!');
+      alert('Match finished and user points calculated successfully!');
     } catch (error) {
-      console.error('Error updating scores:', error);
+      console.error('Error finishing match:', error);
       alert(`Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
-  
-  // Then add a button in your match display UI:
-  // <button onClick={() => handleUpdateScoresAndCalculatePoints(match._id, team1Score, team2Score)}>Update Scores & Calculate Points</button>
   
   if (loading) {
     return <div className="loading">Loading live matches...</div>;
@@ -303,6 +348,7 @@ export default function LiveMatchManagement({ user }) {
           </button>
         </div>
       </div>
+
 
       {/* Live Matches List */}
       <div className="live-matches-list">
@@ -418,6 +464,31 @@ export default function LiveMatchManagement({ user }) {
                 >
                   Delete
                 </button>
+                <button 
+                  className="test-update-button"
+                  onClick={async () => {
+                    const newScore1 = match.team1_score + Math.floor(Math.random() * 3) + 1;
+                    const newScore2 = match.team2_score + Math.floor(Math.random() * 3) + 1;
+                    console.log(`🧪 Testing live score update: ${match.team1} ${newScore1} - ${newScore2} ${match.team2}`);
+                    
+                    await handleUpdateLiveScores(match._id, newScore1, newScore2, true);
+                  }}
+                >
+                  🧪 Test Live Score Update
+                </button>
+                <button 
+                  className="manual-update-button"
+                  onClick={() => {
+                    const team1Score = prompt(`Enter new score for ${match.team1}:`, match.team1_score);
+                    const team2Score = prompt(`Enter new score for ${match.team2}:`, match.team2_score);
+                    
+                    if (team1Score !== null && team2Score !== null) {
+                      handleUpdateLiveScores(match._id, team1Score, team2Score, true);
+                    }
+                  }}
+                >
+                  📝 Manual Score Update
+                </button>
                 {match.status !== 'finished' && (
                   <button 
                     className="finish-match-button"
@@ -426,7 +497,7 @@ export default function LiveMatchManagement({ user }) {
                       const team2Score = prompt(`Enter final score for ${match.team2}:`, match.team2_score);
                       
                       if (team1Score !== null && team2Score !== null) {
-                        handleUpdateScoresAndCalculatePoints(match._id, team1Score, team2Score);
+                        handleFinishMatchAndCalculatePoints(match._id, team1Score, team2Score);
                       }
                     }}
                   >

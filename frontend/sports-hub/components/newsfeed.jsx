@@ -2,17 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import FunFacts from './funfacts.jsx';
 import './css/newsfeed.css';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 const NewsFeed = () => {
   const [activeTab, setActiveTab] = useState('news');
   const [newsItems, setNewsItems] = useState([]);
 
-  useEffect(() => {
-    fetch('/api/news')
-      .then(res => res.json())
-      .then(data => setNewsItems(data))
-      .catch(err => console.error(err));
-  }, []);
+  const fetchNews = async () => {
+    try {
+      const res = await fetch('/api/news');
+      const data = await res.json();
+      setNewsItems(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Use the custom hook for real-time updates
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    fetchNews,
+    []
+  );
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -42,6 +53,13 @@ const NewsFeed = () => {
             <h2>🏆 Campus Sports News</h2>
             <p>Stay updated with the latest happenings in campus sports</p>
           </div>
+          
+          {/* Real-time Status Indicator */}
+          <RealTimeStatusIndicator 
+            isPolling={isPolling}
+            hasChanges={hasChanges}
+            lastUpdated={lastUpdated}
+          />
           
           <div className="news-grid">
             {newsItems.map((item,index) => (

@@ -387,8 +387,26 @@ app.get("/api/stats", async (req, res) => {
 })
 
 app.get("/api/live_matches", (req, res) => {
-  Live_Match.find({ status: "live" })
-    .then(matches => res.json(matches))
+  // Return all matches but prioritize live ones
+  Live_Match.find({})
+    .sort({ 
+      // Sort by status (live first), then by most recent updates
+      status: 1, // This will put 'finished' before 'live' and 'upcoming', so we need custom logic
+      updatedAt: -1 
+    })
+    .then(matches => {
+      // Custom sort to prioritize live matches
+      const sortedMatches = matches.sort((a, b) => {
+        const statusPriority = { 'live': 3, 'upcoming': 2, 'finished': 1 };
+        if (statusPriority[a.status] !== statusPriority[b.status]) {
+          return statusPriority[b.status] - statusPriority[a.status];
+        }
+        // If same status, sort by update time (most recent first)
+        return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt);
+      });
+      
+      res.json(sortedMatches);
+    })
     .catch(err => {
       console.error(err);
       res.status(500).json({ message: "Server error", error: err });
@@ -409,14 +427,23 @@ app.get("/api/match/:id", async (req, res) => {
     const matchId = req.params.id;
 
     // First try live matches
-    let match = await Live_Match.findOne({ id: matchId });
+    let match = await Live_Match.findById(matchId).populate('events stats');
 
     if (!match) {
       return res.status(404).json({ message: "Match not found" });
     }
 
-    // Return full match with stats and events
-    res.json(match);
+    // Return the match with populated stats and events
+    res.json({
+      team1: match.team1,
+      team2: match.team2,
+      team1_score: match.team1_score,
+      team2_score: match.team2_score,
+      status: match.status,
+      time: match.time,
+      events: match.events,
+      stats: match.stats
+    });
   } catch (err) {
     console.error("Error fetching match:", err);
     res.status(500).json({ message: "Server error", error: err });
@@ -782,66 +809,6 @@ app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
       return res.status(404).json({ message: "Match not found" });
     }
     
-    // If match is finished, calculate points for all predictions
-    if (status === "finished") {
-      // Find all predictions for this match
-      const predictions = await LiveMatchPrediction.find({ matchId, isProcessed: false });
-      
-      // Process each prediction
-      for (const prediction of predictions) {
-        let points = 0;
-        
-        // Exact score match (10 points)
-        if (prediction.predictedTeam1Score === team1_score && 
-            prediction.predictedTeam2Score === team2_score) {
-          points = 10;
-        }
-        // Correct winner or draw prediction (5 points)
-        else if (
-          (team1_score > team2_score && prediction.predictedTeam1Score > prediction.predictedTeam2Score) ||
-          (team1_score < team2_score && prediction.predictedTeam1Score < prediction.predictedTeam2Score) ||
-          (team1_score === team2_score && prediction.predictedTeam1Score === prediction.predictedTeam2Score)
-        ) {
-          points = 5;
-
-          // Partial score match: correct team score (2 points each)
-          if (prediction.predictedTeam1Score === team1_score) {
-            points += 2;
-          }
-          if (prediction.predictedTeam2Score === team2_score) {
-            points += 2;
-          }
-        }
-
-        // Update prediction with points
-        prediction.points = points;
-        prediction.isProcessed = true;
-        await prediction.save();
-
-        // Update user's total points and stats
-        const user = await Prediction_user.findById(prediction.userId);
-        if (user) {
-          // Increment total points
-          user.total_point = (user.total_point || 0) + points;
-          
-          // Update prediction count
-          const currentPredictions = parseInt(user.prediction || "0");
-          user.prediction = (currentPredictions + 1).toString();
-          
-          // Update wins if user scored points
-          if (points > 0) {
-            user.wins = (user.wins || 0) + 1;
-          }
-          
-          // Calculate accuracy (wins / total predictions * 100)
-          const totalPredictions = currentPredictions + 1;
-          const totalWins = user.wins || 0;
-          user.accuracy = totalPredictions > 0 ? Math.round((totalWins / totalPredictions) * 100) : 0;
-          
-          await user.save();
-        }
-      }
-    }
     
     res.json({
       message: "Match scores updated successfully",
@@ -893,10 +860,144 @@ app.post("/api/booking", async (req, res) => {
 
 
 
+// Live match score simulation
+let scoreSimulationInterval = null;
+
+// Function to simulate live match score updates
+const simulateLiveMatchScores = async () => {
+  try {
+    // Find all live matches
+    const liveMatches = await Live_Match.find({ status: 'live' });
+    
+    if (liveMatches.length > 0) {
+      console.log(`🎮 Simulating scores for ${liveMatches.length} live matches...`);
+    }
+    
+    for (const match of liveMatches) {
+      let team1_score = match.team1_score || 0;
+      let team2_score = match.team2_score || 0;
+      let hasScoreChanged = false;
+      
+      // Higher chance for score updates (60% chance per interval)
+      if (Math.random() > 0.4) {
+        // Random chance for each team to score (15% chance per team per interval)
+        if (Math.random() > 0.85) {
+          team1_score += 1;
+          hasScoreChanged = true;
+          console.log(`⚽ ${match.team1} SCORED! New score: ${team1_score}-${team2_score}`);
+        }
+        
+        if (Math.random() > 0.85) {
+          team2_score += 1;
+          hasScoreChanged = true;
+          console.log(`⚽ ${match.team2} SCORED! New score: ${team1_score}-${team2_score}`);
+        }
+        
+        // Update match time (simulate match progress)
+        let currentTime = parseInt(match.time?.replace("'", "")) || 0;
+        if (currentTime < 90) {
+          currentTime += Math.floor(Math.random() * 2) + 1; // Increment by 1-2 minutes
+        }
+        
+        // Don't auto-finish matches - let admin control this
+        let status = match.status;
+        
+        // Update the match in database
+        const updatedMatch = await Live_Match.findByIdAndUpdate(
+          match._id,
+          { 
+            team1_score, 
+            team2_score, 
+            time: `${currentTime}'`,
+            status,
+            updatedAt: new Date() // Add timestamp for real-time detection
+          },
+          { new: true }
+        );
+        
+        if (hasScoreChanged) {
+          console.log(`📊 Updated match: ${updatedMatch.team1} ${updatedMatch.team1_score} - ${updatedMatch.team2_score} ${updatedMatch.team2} (${updatedMatch.time})`);
+        }
+        
+        // Add random events (25% chance)
+        if (Math.random() > 0.75) {
+          const events = match.events || [];
+          const eventTypes = ['goal', 'yellow-card', 'substitution', 'foul', 'corner', 'offside'];
+          const players = [
+            'Alex Johnson', 'Mike Smith', 'Sarah Wilson', 'Tom Brown', 'Lisa Davis',
+            'Chris Lee', 'Emma Taylor', 'Jake Miller', 'Anna Garcia', 'Ryan Clark'
+          ];
+          
+          const randomEvent = {
+            time: `${currentTime}'`,
+            type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
+            team: Math.random() > 0.5 ? match.team1 : match.team2,
+            player: players[Math.floor(Math.random() * players.length)],
+            description: hasScoreChanged ? 'Goal scored!' : 'Match event occurred'
+          };
+          
+          events.push(randomEvent);
+          
+          // Keep only last 10 events to avoid too much data
+          const recentEvents = events.slice(-10);
+          
+          // Update events in database
+          await Live_Match.findByIdAndUpdate(
+            match._id,
+            { events: recentEvents, updatedAt: new Date() },
+            { new: true }
+          );
+          
+          console.log(`📝 Added event: ${randomEvent.type} by ${randomEvent.player} (${randomEvent.team})`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error in live match simulation:', error);
+  }
+};
+
+// Start live match simulation when server starts
+const startLiveMatchSimulation = () => {
+  if (scoreSimulationInterval) {
+    clearInterval(scoreSimulationInterval);
+  }
+  
+  console.log('🎮 Starting live match score simulation...');
+  console.log('⚡ Score updates will occur every 3 seconds for live matches');
+  // Run simulation every 3 seconds for real-time updates
+  scoreSimulationInterval = setInterval(simulateLiveMatchScores, 3000);
+};
+
+// Stop live match simulation
+const stopLiveMatchSimulation = () => {
+  if (scoreSimulationInterval) {
+    clearInterval(scoreSimulationInterval);
+    scoreSimulationInterval = null;
+    console.log('⏹️ Live match score simulation stopped.');
+  }
+};
+
+// Start simulation when server is ready
+startLiveMatchSimulation();
+
+// Gracefully stop simulation on server shutdown
+process.on('SIGINT', () => {
+  console.log('\n🛑 Server shutting down...');
+  stopLiveMatchSimulation();
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('\n🛑 Server terminating...');
+  stopLiveMatchSimulation();
+  process.exit(0);
+});
+
 const { exec } = require('child_process');
 // const path = require('path');
 // Import the game routes module
-const gameRoutes = require('./routes/gameRoutes');
+// const gameRoutes = require('./routes/gameRoutes');
 
 // Use the game routes for the /api endpoint
-app.use('/api', gameRoutes);
+// app.use('/api', gameRoutes);

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 import './css/club-details.css';
 
 const sportsEmojis = {
@@ -179,6 +181,66 @@ export default function ClubDetails() {
     fetchAllClubs();
   }, [name]);
 
+  // Consolidated fetch function for real-time updates
+  const fetchClubData = async () => {
+    if (!name) return;
+    
+    try {
+      // Try to get all clubs first
+      const clubsResponse = await fetch('/api/clubs');
+      if (clubsResponse.ok) {
+        const clubs = await clubsResponse.json();
+        const matchedClub = clubs.find(c => 
+          c._id === name || (c.name && c.name.toLowerCase() === name?.toLowerCase())
+        );
+        
+        if (matchedClub) {
+          const formattedClub = {
+            ...matchedClub,
+            active_players: matchedClub.players || 0,
+            upcoming_matches: matchedClub.matches || 0,
+            win_rate: 75
+          };
+          setClub(formattedClub);
+          
+          if (matchedClub.name) {
+            const sport = encodeURIComponent(matchedClub.name.toLowerCase().trim());
+            
+            // Fetch related data in parallel
+            const [playersRes, recentRes, upcomingRes] = await Promise.allSettled([
+              fetch(`/api/club_players/${sport}`),
+              fetch(`/api/recent_matches/${sport}`),
+              fetch(`/api/upcoming_matches/${sport}`)
+            ]);
+            
+            if (playersRes.status === 'fulfilled' && playersRes.value.ok) {
+              const playersData = await playersRes.value.json();
+              setPlayers(playersData);
+            }
+            
+            if (recentRes.status === 'fulfilled' && recentRes.value.ok) {
+              const recentData = await recentRes.value.json();
+              setRecentMatches(recentData);
+            }
+            
+            if (upcomingRes.status === 'fulfilled' && upcomingRes.value.ok) {
+              const upcomingData = await upcomingRes.value.json();
+              setUpcomingMatches(upcomingData);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching club data:", err);
+    }
+  };
+
+  // Use the custom hook for real-time updates (only after initial load)
+  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+    club ? fetchClubData : () => {}, // Only start polling after club is loaded
+    [name]
+  );
+
   const getSportEmoji = (clubName) => {
     const name = clubName?.toLowerCase() || '';
     for (const [sport, emoji] of Object.entries(sportsEmojis)) {
@@ -282,6 +344,13 @@ export default function ClubDetails() {
         </div>
       </section>
 
+      {/* Real-time Status Indicator */}
+      <RealTimeStatusIndicator 
+        isPolling={isPolling}
+        hasChanges={hasChanges}
+        lastUpdated={lastUpdated}
+      />
+      
       {/* Tab Content */}
       <main className="club-main-content">
         {activeTab === 'overview' && (
