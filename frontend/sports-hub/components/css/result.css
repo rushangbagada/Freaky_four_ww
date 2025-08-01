@@ -410,6 +410,36 @@
   left: 100%;
 }
 
+.more-matches-indicator {
+  margin-top: 20px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.indicator-card {
+  padding: 16px 20px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+}
+
+.indicator-content {
+  color: #e5e7eb;
+}
+
+.matches-count {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.indicator-text {
+  font-size: 0.9rem;
+  color: #a5b4fc;
+}
+
 .match-card:hover {
   transform: translateY(-5px);
   border-color: rgba(56, 189, 248, 0.4);

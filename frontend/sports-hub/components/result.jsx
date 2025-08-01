@@ -110,7 +110,7 @@ export default function Result() {
           </div>
         </div> */}
 
-        {dataState.map((item, index) => (
+        {dataState.slice(0, 7).map((item, index) => (
               <div className="match-list" key={index}>
                 <div className="match-card">
                   <div className="match-info">
@@ -142,6 +142,22 @@ export default function Result() {
                 </div>
               </div>
             ))}
+            
+            {/* Show indicator if there are more matches */}
+            {dataState.length > 7 && (
+              <div className="more-matches-indicator">
+                <div className="indicator-card">
+                  <div className="indicator-content">
+                    <span className="matches-count">
+                      Showing 7 of {dataState.length} matches
+                    </span>
+                    <p className="indicator-text">
+                      🔍 Use filters above to refine your search and see specific matches
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
 

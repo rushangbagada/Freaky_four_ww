@@ -9,6 +9,7 @@ import GalleryManagement from './GalleryManagement';
 import NewsManagement from './NewsManagement';
 import LiveMatchManagement from './LiveMatchManagement';
 import PlayerManagement from './PlayerManagement';
+import QuizManagement from './QuizManagement';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -188,6 +189,15 @@ export default function AdminDashboard() {
             🖼️ Gallery Management
           </button>
         )}
+        
+        {isAdmin && (
+          <button 
+            className={`nav-btn ${activeTab === 'quiz' ? 'active' : ''}`}
+            onClick={() => setActiveTab('quiz')}
+          >
+            ❓ Quiz Management
+          </button>
+        )}
       </nav>
 
       {/* Main Content */}
@@ -319,6 +329,7 @@ export default function AdminDashboard() {
         {activeTab === 'news' && isAdmin && <NewsManagement user={user} />}
         {activeTab === 'analytics' && isAdmin && <Analytics />}
         {activeTab === 'gallery' && isAdmin && <GalleryManagement user={user} />}
+        {activeTab === 'quiz' && isAdmin && <QuizManagement user={user} />}
       </main>
     </div>
   );

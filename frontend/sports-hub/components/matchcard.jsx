@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './css/matchcard.css';
 
 const MatchCard = ({ match, onPredict, userPrediction }) => {
   const [homeScore, setHomeScore] = useState('');

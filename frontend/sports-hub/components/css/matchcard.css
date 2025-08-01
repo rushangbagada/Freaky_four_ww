@@ -1,0 +1,138 @@
+/* Match Card Styles */
+.match-card {
+  background-color: var(--card-dark);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  border-left: 4px solid transparent;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+  color: var(--text-primary);
+}
+
+.match-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.match-card.upcoming {
+  border-left-color: var(--accent-blue);
+}
+
+.match-card.finished {
+  border-left-color: var(--accent-finished);
+}
+
+.match-card .team-names {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.match-card .match-details {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+  text-align: center;
+}
+
+/* Prediction form styles */
+.match-card .prediction-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--bg-medium);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.match-card .score-inputs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.match-card .score-inputs input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--bg-light);
+  border-radius: 0.5rem;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.match-card .score-inputs input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.match-card .score-inputs input::placeholder {
+  color: var(--text-secondary);
+}
+
+.match-card .prediction-form button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-deep));
+  color: var(--text-primary);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.match-card .prediction-form button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+}
+
+.match-card .prediction-form button:disabled {
+  background: var(--bg-light);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Final score styles */
+.match-card .final-score {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(34, 197, 94, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  text-align: center;
+}
+
+.match-card .final-score-label {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin: 0;
+}
+
+.match-card .final-score .score {
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* User prediction styles */
+.match-card .user-prediction {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(56, 189, 248, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  text-align: center;
+}
+
+.match-card .user-prediction p {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 500;
+}

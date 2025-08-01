@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 .quiz-container {
-  background: #1e293b;
-  border-radius: 1rem;
-  padding: 1rem;
+  background-color: var(--card-dark);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
   font-family: 'Inter', sans-serif;
-  color: #e5e7eb;
+  color: var(--text-primary);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
 }
 
 .quiz-container h3 {
@@ -13,15 +15,15 @@
   font-weight: 700;
   margin-bottom: 1rem;
   text-align: center;
-  color: #e5e7eb;
-  border-bottom: 1px solid #38bdf830;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.3);
   padding-bottom: 0.5rem;
 }
 
 .quiz-container p {
   margin: 0.75rem 0;
   font-size: 1rem;
-  color: #e5e7eb;
+  color: var(--text-primary);
 }
 
 .options {
@@ -34,8 +36,8 @@
 .options button {
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  background: linear-gradient(90deg, #3b82f6, #2563eb);
-  color: white;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-deep));
+  color: var(--text-primary);
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -49,7 +51,8 @@
 }
 
 .options button:disabled {
-  background: #4b5563;
+  background: var(--bg-light);
+  color: var(--text-secondary);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

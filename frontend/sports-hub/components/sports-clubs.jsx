@@ -69,16 +69,83 @@ export default function SportsClubs() {
 
       {/* Search & Filter */}
       <section className="search-filter">
-        {/* <div className="search-box">
-          <input type="text" placeholder="Search sports..." id="searchInput" onChange={(e)=>{setSearchText(e.target.value)}} />
-        </div> */}
-        <div className="filter-box">
-          <select id="categorySelect" onChange={(e)=>{setType(e.target.value)}}>
-            <option value="All">All</option>
-            <option value="Team Sports">Team Sports</option>
-            <option value="Racket Sports">Racket Sports</option>
-            <option value="Individual Sports">Individual Sports</option>
-          </select>
+        <div className="search-box">
+          <div className="search-input-wrapper">
+            <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Search clubs..." 
+              className="search-input"
+              value={searchtext}
+              onChange={(e) => setSearchText(e.target.value)} 
+            />
+            {searchtext && (
+              <button 
+                className="clear-search"
+                onClick={() => setSearchText('')}
+                title="Clear search"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+        
+        <div className="filter-dropdown">
+          <div className="dropdown-wrapper">
+            <svg className="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+            </svg>
+            <select 
+              id="categorySelect" 
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="modern-select"
+            >
+              <option value="All">All Categories</option>
+              <option value="Team Sports">🏀 Team Sports</option>
+              <option value="Racket Sports">🏸 Racket Sports</option>
+              <option value="Individual Sports">🏃 Individual Sports</option>
+            </select>
+            <svg className="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="6,9 12,15 18,9"></polyline>
+            </svg>
+          </div>
+          
+          {/* Active filter indicator */}
+          {type !== "All" && (
+            <div className="active-filter">
+              <span className="filter-tag">
+                {type}
+                <button 
+                  className="remove-filter"
+                  onClick={() => setType("All")}
+                  title="Remove filter"
+                >
+                  ×
+                </button>
+              </span>
+            </div>
+          )}
+        </div>
+        
+        {/* Results counter */}
+        <div className="results-info">
+          <span className="results-count">
+            {clubs.filter((club) => club.name.toLowerCase().includes(searchtext.toLowerCase())).length} clubs found
+          </span>
+          {(isPolling || hasChanges) && (
+            <div className="live-indicator">
+              <div className={`pulse-dot ${isPolling ? 'pulsing' : hasChanges ? 'updated' : ''}`}></div>
+              <span>{isPolling ? 'Updating...' : hasChanges ? 'Updated!' : 'Live'}</span>
+            </div>
+          )}
         </div>
       </section>
 
