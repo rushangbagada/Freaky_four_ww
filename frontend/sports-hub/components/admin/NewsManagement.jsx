@@ -191,7 +191,9 @@ export default function NewsManagement({ user }) {
               </div>
               
               <div className="news-item-content">
-                <div className="news-item-image">{item.image}</div>
+                <div className="news-item-image">
+                  <img src={item.image} alt={item.title} style={{ width: "100%", height: "auto", maxHeight: "200px", objectFit: "cover" }} />
+                </div>
                 <p className="news-item-description">{item.description}</p>
               </div>
               

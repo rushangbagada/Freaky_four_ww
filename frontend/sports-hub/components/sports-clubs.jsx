@@ -66,40 +66,6 @@ export default function SportsClubs() {
         </div>
       </section>
 
-      {/* Real-time Status */}
-      <section className="realtime-controls" style={{ padding: '10px 20px', backgroundColor: '#f8f9fa', borderRadius: '8px', margin: '20px 0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <span style={{ 
-              width: '10px', 
-              height: '10px', 
-              borderRadius: '50%', 
-              backgroundColor: isPolling ? '#ffc107' : '#28a745',
-              display: 'inline-block'
-            }}></span>
-            <span style={{ fontSize: '14px', color: '#666' }}>
-              {isPolling ? 'Checking for updates...' : 'Live monitoring active'}
-            </span>
-          </div>
-          {hasChanges && (
-            <div style={{ 
-              padding: '4px 8px', 
-              backgroundColor: '#d4edda', 
-              color: '#155724', 
-              borderRadius: '4px', 
-              fontSize: '12px',
-              animation: 'fadeIn 0.3s ease-in'
-            }}>
-              📊 Data updated!
-            </div>
-          )}
-          {lastUpdated && (
-            <span style={{ fontSize: '12px', color: '#888' }}>
-              Last check: {lastUpdated.toLocaleTimeString()}
-            </span>
-          )}
-        </div>
-      </section>
 
       {/* Search & Filter */}
       <section className="search-filter">

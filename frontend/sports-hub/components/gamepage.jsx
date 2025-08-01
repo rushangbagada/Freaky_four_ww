@@ -6,7 +6,6 @@ import UserStats from './userStates.jsx';
 import Quiz from './quiz.jsx';
 import { useAuth } from '../src/AuthContext';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
@@ -285,18 +284,12 @@ const PredictionGamePage = () => {
 
       <div className="game-container">
         <div className="matches-section">
-          {/* Real-time Status Indicator */}
-          <RealTimeStatusIndicator 
-            isPolling={isPolling}
-            hasChanges={hasChanges}
-            lastUpdated={lastUpdated}
-          />
           
           {/* Live Matches Section */}
           <h2>Live Matches</h2>
           <div className="matches-grid">
             {liveMatches.length > 0 ? (
-              liveMatches.map(match => (
+              liveMatches.slice(0, 7).map(match => (
                 <LiveMatchCard
                   key={match._id}
                   match={match}

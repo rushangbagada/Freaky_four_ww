@@ -33,7 +33,7 @@ const ClubDetails = [
     {
         name: "basketball",
         description: "hello",
-        image: "https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=400",
+image: "https://yourdomain.com/path-to-real-basketball-image.jpg",
         upcoming_matches: 5,
         active_players: 10,
         win_rate: 50

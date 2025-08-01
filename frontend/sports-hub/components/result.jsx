@@ -95,7 +95,7 @@ export default function Result() {
     <div className="main-section">
       {/* <!-- Main Section --> */}
       <div className="main-content">
-        <div className="stats-cards">
+        {/* <div className="stats-cards">
           <div className="card green">
             <p>Win Rate</p>
             <p className="value">{(dataState.reduce((total, item) => total + (item.team1_score > item.team2_score ? 1 : 0), 0) / dataState.length * 100).toFixed(2)}%</p>
@@ -108,7 +108,7 @@ export default function Result() {
             <p>Total Goals</p>
             <p className="value">{dataState.reduce((total, item) => total + item.team1_score , 0)}</p>
           </div>
-        </div>
+        </div> */}
 
         {dataState.map((item, index) => (
               <div className="match-list" key={index}>

@@ -330,7 +330,7 @@ export default function Home() {
           <p>Celebrate our latest victories</p>
         </div>
         <div className="cards">
-          {recentMatches.map((item, index) => (
+          {recentMatches.slice(0, 7).map((item, index) => (
             <div className="result-card" key={index}>
               <div className="star">★</div>
               <h3>{item.category}</h3>

@@ -68,7 +68,7 @@ const LiveSports = () => {
         <div className="scores-section">
           <h2>Live Scores</h2>
           <div className="live-scores-grid">
-            {liveMatches.map(match => (
+            {liveMatches.slice(0, 7).map(match => (
               <LiveScore 
                 key={match._id || match.id}
                 match={match}
@@ -81,7 +81,7 @@ const LiveSports = () => {
             <>
               <h3>Recent & Upcoming</h3>
               <div className="other-scores-grid">
-                {otherMatches.slice(0, 6).map(match => (
+                {otherMatches.slice(0, 7).map(match => (
                   <LiveScore 
                     key={match._id || match.id}
                     match={match}

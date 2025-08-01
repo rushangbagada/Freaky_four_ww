@@ -353,7 +353,7 @@ export default function LiveMatchManagement({ user }) {
       {/* Live Matches List */}
       <div className="live-matches-list">
         {liveMatches.length > 0 ? (
-          liveMatches.map((match) => (
+          liveMatches.slice(0, 7).map((match) => (
             <div key={match._id} className="live-match-card">
               <div className="match-header">
                 <h3>{match.sport} Match</h3>

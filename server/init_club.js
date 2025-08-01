@@ -25,7 +25,7 @@ const all_clubs=[
     {
         name:"basketball",
         description:"Description",
-        image:"https://images.unsplash.com/photo-1519389950473-47ba8d0ef82c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+image:"https://yourdomain.com/path-to-real-basketball-image.jpg",
         players:17,
         matches:9,
         type:"Racket Sports"
