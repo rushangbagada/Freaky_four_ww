@@ -623,7 +623,7 @@ const Calendar = ({ onClick }) => {
 
   return (
     <div className="calendar-page">
-      {/* Hero Section */}
+      {/* Hero Section - Result Page Style */}
       <div className="calendar-hero">
         <div className="hero-content">
           <div className="hero-icon">

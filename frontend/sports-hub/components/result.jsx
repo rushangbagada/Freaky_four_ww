@@ -54,13 +54,32 @@ export default function Result() {
  return(
   <div className="result-container">
 
-  {/* Hero Section */}
-  <section className="hero">
+  {/* Hero Section - Calendar Style */}
+  <div className="result-hero">
     <div className="hero-content">
-      <h1>Results & Scores</h1>
-      <p>Celebrate our victories and track our athletic achievements</p>
+      <div className="hero-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <h1 className="hero-title">Results & Scores</h1>
+      <p className="hero-subtitle">Celebrate our victories and track our athletic achievements</p>
     </div>
-  </section>
+    <div className="hero-stats">
+      <div className="stat-card">
+        <span className="stat-number">{dataState.length}</span>
+        <span className="stat-label">Total Matches</span>
+      </div>
+      <div className="stat-card">
+        <span className="stat-number">{dataState.filter(item => item.team1_score > item.team2_score).length}</span>
+        <span className="stat-label">Victories</span>
+      </div>
+      <div className="stat-card">
+        <span className="stat-number">{dataState.reduce((total, item) => total + item.team1_score, 0)}</span>
+        <span className="stat-label">Total Goals</span>
+      </div>
+    </div>
+  </div>
 
   <div className="container">
     {/* <!-- Filters --> */}
