@@ -129,14 +129,11 @@
   }
 }
 
-/* Reset & Base */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ==========================================================================
+   HOME PAGE STYLES
+   ========================================================================== */
 
-.home-container{
+.home-container {
   background: var(--bg-dark-blue); 
   padding: 0;
   margin: 0;
@@ -146,28 +143,9 @@
   overflow-x: hidden;
 }
 
-/* Floating Particles Animation */
-
 .home-container > * {
   position: relative;
   z-index: 1;
-}
-
-/* Typography */
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-  padding: 0;
-  line-height: 1.25;
-}
-h1,
-h2 {
-  font-weight: 800;
-}
-h3 {
-  font-weight: 700;
 }
 
 /* 3D Hero Carousel */
@@ -630,6 +608,99 @@ h3 {
   border-color: rgba(48, 207, 208, 0.5);
 }
 
+/* Repeat the 6 original colors for cards 7-12 */
+.card:nth-child(7) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(8) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(9) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(10) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(11) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(12) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
+/* Repeat the 6 original colors for cards 13-18 */
+.card:nth-child(13) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(14) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(15) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(16) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(17) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(18) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
+/* For any additional cards beyond 18, use cycling gradients with the original 6 colors */
+.card:nth-child(n+19):nth-child(6n+19) {
+  background: linear-gradient(135deg, #5f72be 0%, #9921e8 100%);
+  border-color: rgba(153, 33, 232, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+20) {
+  background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+  border-color: rgba(0, 91, 234, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+21) {
+  background: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  border-color: rgba(149, 153, 226, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+22) {
+  background: linear-gradient(135deg, #2F80ED 0%, #56CCF2 100%);
+  border-color: rgba(86, 204, 242, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+23) {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border-color: rgba(37, 117, 252, 0.5);
+}
+
+.card:nth-child(n+19):nth-child(6n+24) {
+  background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+  border-color: rgba(48, 207, 208, 0.5);
+}
+
 .card::before {
   content: '';
   position: absolute;
@@ -1067,6 +1138,137 @@ h3 {
   }
 }
 
+/* About Promo Section */
+.about-promo-section {
+  background: var(--bg-medium);
+  margin: 2.5rem auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+  border-radius: var(--border-radius);
+  width: 75%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+}
+
+.about-promo-section:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.about-promo-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.about-promo-text {
+  flex: 1;
+  text-align: left;
+}
+.about-promo-text h2 {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+}
+
+.about-promo-text p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.about-promo-gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+}
+
+.about-promo-btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--gradient-text);
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: background 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.about-promo-btn:hover {
+  background: var(--accent-blue-deep);
+}
+
+.about-promo-image {
+  flex: 1;
+  text-align: center;
+}
+
+.about-promo-img-3d {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
+}
+
+.about-promo-img-3d:hover {
+  transform: scale(1.05) rotate(-1deg);
+}
+
+@media (max-width: 900px) {
+  .about-promo-content {
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 12px;
+  }
+  .about-promo-img-3d {
+    max-width: 200px;
+    border-radius: 14px;
+  }
+  .about-promo-gradient-text,
+  .about-promo-text h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .about-promo-section {
+    padding: 32px 2px;
+  }
+  .about-promo-content {
+    padding: 18px 2px;
+    border-radius: 16px;
+  }
+  .about-promo-img-3d {
+    max-width: 100px;
+    border-radius: 8px;
+  }
+  .about-promo-gradient-text,
+  .about-promo-text h2 {
+    font-size: 1.1rem;
+  }
+  .about-promo-btn {
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+}
+
+
 /* CTA */
 .cta {
   background-image: linear-gradient(135deg, #23272f 10%, #181c23 100%);
@@ -1166,6 +1368,9 @@ h3 {
   aspect-ratio: 1;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gallery-item:hover {
@@ -1174,11 +1379,16 @@ h3 {
 }
 
 .gallery-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
   border-radius: 8px;
   transition: all 0.3s ease;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle;
 }
 
 .gallery-item:hover .gallery-img {
@@ -1249,11 +1459,148 @@ h3 {
   background: var(--accent-blue-deep);
 }
 
+/* Reviews Promo Section */
+.reviews-promo-section {
+  background: var(--bg-medium);
+  margin: 2.5rem auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+  border-radius: var(--border-radius);
+  width: 75%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
+}
+
+.reviews-promo-section:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.reviews-promo-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.reviews-promo-image {
+  flex: 1;
+  text-align: center;
+}
+
+.reviews-promo-img-3d {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
+}
+
+.reviews-promo-img-3d:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.reviews-promo-text {
+  flex: 1;
+  text-align: left;
+}
+
+.reviews-promo-text h2 {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+}
+
+.reviews-promo-text p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.reviews-promo-gradient-text {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
+}
+
+.reviews-promo-btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--gradient-text);
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 30px;
+  transition: background 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.reviews-promo-btn:hover {
+  background: var(--accent-blue-deep);
+}
+
+@media (max-width: 900px) {
+  .reviews-promo-content {
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 12px;
+  }
+  .reviews-promo-img-3d {
+    max-width: 200px;
+    border-radius: 14px;
+  }
+  .reviews-promo-gradient-text,
+  .reviews-promo-text h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .reviews-promo-section {
+    padding: 32px 2px;
+  }
+  .reviews-promo-content {
+    padding: 18px 2px;
+    border-radius: 16px;
+  }
+  .reviews-promo-img-3d {
+    max-width: 100px;
+    border-radius: 8px;
+  }
+  .reviews-promo-gradient-text,
+  .reviews-promo-text h2 {
+    font-size: 1.1rem;
+  }
+  .reviews-promo-btn {
+    padding: 10px 18px;
+    font-size: 1rem;
+  }
+}
+
 @media (max-width: 1100px) {
   .sports,
   .results,
   .upcoming,
-  .cta, .sports-section {
+  .cta, 
+  .sports-section,
+  .blog-promo-section,
+  .calendar-promo-section,
+  .gallery-promo-section,
+  .reviews-promo-section,
+  .about-promo-section {
     width: 95%;
     padding: 24px 8px;
   }

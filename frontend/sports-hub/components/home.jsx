@@ -104,14 +104,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import './css/home.css';
-import blogImg from './css/blog.jpg';
-import calendarImage from './css/calendar.jpg';
-import gallery1 from './css/gallery1.jpg';
-import gallery2 from './css/gallery2.jpg';
-import gallery3 from './css/gallery3.jpg';
-import gallery4 from './css/gallery4.jpg';
-import gallery5 from './css/gallery5.jpg';
-import gallery6 from './css/gallery6.jpg';
 
 const slides = [
   {
@@ -328,7 +320,7 @@ export default function Home() {
 <section className="blog-promo-section">
   <div className="blog-promo-content">
     <div className="blog-promo-image">
-      <img src={blogImg} alt="Blog Visual" className="blog-promo-img-3d" />
+<img src="https://images.unsplash.com/photo-1486312338219-ce68e2c4c293?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog Visual" className="blog-promo-img-3d" />
     </div>
     <div className="blog-promo-text">
       <h2>
@@ -361,7 +353,7 @@ export default function Home() {
       </a>
     </div>
     <div className="calendar-promo-image">
-      <img src={calendarImage} alt="Calendar Preview" className="calendar-promo-img-3d" />
+<img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Calendar Preview" className="calendar-promo-img-3d" />
     </div>
   </div>
 </section>
@@ -371,7 +363,7 @@ export default function Home() {
     <div className="gallery-promo-images">
       <div className="gallery-grid">
         <div className="gallery-item">
-          <img src={gallery1} alt="Basketball Game" className="gallery-img" />
+<img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sports Gallery" className="gallery-img" />
         </div>
         
       </div>
@@ -387,6 +379,52 @@ export default function Home() {
       </p>
       <a href="/gallery" className="gallery-promo-btn">
         View Gallery
+      </a>
+    </div>
+  </div>
+</section>
+
+{/* Reviews Promo Section */}
+
+
+      {/* About Us Promo Section */}
+<section className="about-promo-section">
+  <div className="about-promo-content">
+    <div className="about-promo-text">
+      <h2>
+        <span className="about-promo-gradient-text">
+          Discover Our Story
+        </span>
+      </h2>
+      <p>
+        Learn more about our mission, values, and the passionate team behind Campus Sports Hub. Discover what drives us to create the ultimate sports experience for students.
+      </p>
+      <a href="/aboutus" className="about-promo-btn">
+        Learn About Us
+      </a>
+    </div>
+    <div className="about-promo-image">
+<img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="About Us - Team Spirit" className="about-promo-img-3d" />
+    </div>
+  </div>
+</section>
+
+<section className="reviews-promo-section">
+  <div className="reviews-promo-content">
+    <div className="reviews-promo-image">
+      <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Community Reviews" className="reviews-promo-img-3d" />
+    </div>
+    <div className="reviews-promo-text">
+      <h2>
+        <span className="reviews-promo-gradient-text">
+          Community Reviews
+        </span>
+      </h2>
+      <p>
+        Read what our community members have to say about their experiences. Join thousands of satisfied athletes and sports enthusiasts!
+      </p>
+      <a href="/reviews" className="reviews-promo-btn">
+        Read Reviews
       </a>
     </div>
   </div>

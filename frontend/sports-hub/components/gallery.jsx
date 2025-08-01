@@ -174,12 +174,32 @@ export default function Gallery() {
 
   return (
     <div className="gallery-container">
-      <header className="hero">
+      {/* Hero Section - Result Page Style */}
+      <div className="gallery-hero">
         <div className="hero-content">
-          <h1>Photo Gallery</h1>
-          <p>Capturing the spirit, passion, and triumph of campus sports</p>
+          <div className="hero-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </svg>
+          </div>
+          <h1 className="hero-title">Sports Gallery</h1>
+          <p className="hero-subtitle">Capturing the spirit, passion, and triumph of campus sports</p>
         </div>
-      </header>
+        <div className="hero-stats">
+          <div className="stat-card">
+            <span className="stat-number">{allData.length}</span>
+            <span className="stat-label">Total Photos</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{filteredData.length}</span>
+            <span className="stat-label">Showing</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{new Set(allData.map(item => item.category)).size}</span>
+            <span className="stat-label">Categories</span>
+          </div>
+        </div>
+      </div>
 
       <main>
         <section className="gallery-header">
