@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/player-management.css';
 
-export default function PlayerManagement({ user }) {
+export default function PlayerManagement({ user, selectedClubProp }) {
   const [clubs, setClubs] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedClub, setSelectedClub] = useState(null);
@@ -10,6 +10,29 @@ export default function PlayerManagement({ user }) {
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [playerActionLoading, setPlayerActionLoading] = useState(false);
   const [playerActionError, setPlayerActionError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterPosition, setFilterPosition] = useState('all');
+  const [filterYear, setFilterYear] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [showPlayerDetails, setShowPlayerDetails] = useState(false);
+  const [selectedPlayerDetails, setSelectedPlayerDetails] = useState(null);
+  const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
+  const [bulkSelectedPlayers, setBulkSelectedPlayers] = useState([]);
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [playerStats, setPlayerStats] = useState({});
+  const [showEditPlayer, setShowEditPlayer] = useState(false);
+  const [editingPlayer, setEditingPlayer] = useState(null);
+  const [addPlayerMode, setAddPlayerMode] = useState('new'); // 'existing' or 'new'
+  const [newPlayerData, setNewPlayerData] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    year: 'first year',
+    department: '',
+    position: ''
+  });
 
   const isAdmin = user.role === 'admin';
 
@@ -19,6 +42,31 @@ export default function PlayerManagement({ user }) {
       fetchUsers();
     }
   }, [isAdmin]);
+  
+  // Effect to handle selectedClubProp from parent
+  useEffect(() => {
+    if (selectedClubProp) {
+      console.log('Setting selected club from prop:', selectedClubProp);
+      setSelectedClub(selectedClubProp);
+      fetchClubPlayers(selectedClubProp._id);
+    }
+  }, [selectedClubProp, users]);
+  
+  // Effect to auto-select club from localStorage (fallback)
+  useEffect(() => {
+    if (!selectedClubProp) {
+      const selectedClubId = localStorage.getItem('selectedClubId');
+      if (selectedClubId && clubs.length > 0) {
+        const club = clubs.find(c => c._id === selectedClubId);
+        if (club) {
+          setSelectedClub(club);
+          fetchClubPlayers(selectedClubId);
+          // Clear the localStorage after using it
+          localStorage.removeItem('selectedClubId');
+        }
+      }
+    }
+  }, [clubs, selectedClubProp]);
 
   const fetchClubs = async () => {
     try {
@@ -112,8 +160,8 @@ export default function PlayerManagement({ user }) {
     }
   };
 
-  // Add player to club
-  const handleAddPlayer = async (e) => {
+  // Add existing user as player to club
+  const handleAddExistingPlayer = async (e) => {
     if (e) e.preventDefault();
     if (!selectedPlayer) return;
     setPlayerActionLoading(true);
@@ -140,6 +188,49 @@ export default function PlayerManagement({ user }) {
       }
     } catch (error) {
       setPlayerActionError('Error adding player to club');
+    } finally {
+      setPlayerActionLoading(false);
+    }
+  };
+
+  // Add new player to club
+  const handleAddNewPlayer = async (e) => {
+    if (e) e.preventDefault();
+    if (!newPlayerData.name || !newPlayerData.email) {
+      setPlayerActionError('Name and email are required');
+      return;
+    }
+    setPlayerActionLoading(true);
+    setPlayerActionError('');
+    try {
+      const response = await fetch('http://localhost:5000/api/admin/clubs/add-new-player', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          playerData: newPlayerData,
+          clubId: selectedClub._id
+        })
+      });
+      if (response.ok) {
+        fetchClubPlayers(selectedClub._id);
+        setNewPlayerData({
+          name: '',
+          email: '',
+          mobile: '',
+          year: 'first year',
+          department: '',
+          position: ''
+        });
+        fetchClubs();
+      } else {
+        const data = await response.json();
+        setPlayerActionError(data.message || 'Failed to add new player');
+      }
+    } catch (error) {
+      setPlayerActionError('Error adding new player to club');
     } finally {
       setPlayerActionLoading(false);
     }
@@ -240,27 +331,128 @@ export default function PlayerManagement({ user }) {
 
           <div className="add-player-section">
             <h4>Add Player</h4>
-            <form onSubmit={handleAddPlayer} className="add-player-form">
-              <select 
-                value={selectedPlayer} 
-                onChange={e => setSelectedPlayer(e.target.value)} 
-                disabled={playerActionLoading}
-              >
-                <option value="">Select User</option>
-                {availableUsers.map(user => (
-                  <option key={user._id} value={user._id}>
-                    {user.name} ({user.email})
-                  </option>
-                ))}
-              </select>
-              <button 
-                className="add-btn" 
-                type="submit" 
-                disabled={!selectedPlayer || playerActionLoading}
-              >
-                Add Player
-              </button>
-            </form>
+            
+            <div className="add-player-mode-selector">
+              <label className={addPlayerMode === 'new' ? 'active' : ''}>
+                <input 
+                  type="radio" 
+                  value="new" 
+                  checked={addPlayerMode === 'new'} 
+                  onChange={(e) => setAddPlayerMode(e.target.value)}
+                />
+                <span>Add New Player</span>
+              </label>
+              <label className={addPlayerMode === 'existing' ? 'active' : ''}>
+                <input 
+                  type="radio" 
+                  value="existing" 
+                  checked={addPlayerMode === 'existing'} 
+                  onChange={(e) => setAddPlayerMode(e.target.value)}
+                />
+                <span>Add Existing User</span>
+              </label>
+            </div>
+
+            {addPlayerMode === 'new' ? (
+              <form onSubmit={handleAddNewPlayer} className="add-new-player-form">
+                <div className="form-row">
+                  <input
+                    type="text"
+                    placeholder="Player Name *"
+                    value={newPlayerData.name}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, name: e.target.value})}
+                    disabled={playerActionLoading}
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email *"
+                    value={newPlayerData.email}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, email: e.target.value})}
+                    disabled={playerActionLoading}
+                    required
+                  />
+                </div>
+                <div className="form-row">
+                  <input
+                    type="tel"
+                    placeholder="Mobile Number"
+                    value={newPlayerData.mobile}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, mobile: e.target.value})}
+                    disabled={playerActionLoading}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Department"
+                    value={newPlayerData.department}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, department: e.target.value})}
+                    disabled={playerActionLoading}
+                  />
+                </div>
+                <div className="form-row">
+                  <select
+                    value={newPlayerData.year}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, year: e.target.value})}
+                    disabled={playerActionLoading}
+                  >
+                    <option value="first year">First Year</option>
+                    <option value="second year">Second Year</option>
+                    <option value="third year">Third Year</option>
+                    <option value="fourth year">Fourth Year</option>
+                    <option value="alumni">Alumni</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Position (e.g., Forward, Midfielder)"
+                    value={newPlayerData.position}
+                    onChange={(e) => setNewPlayerData({...newPlayerData, position: e.target.value})}
+                    disabled={playerActionLoading}
+                  />
+                </div>
+                <button 
+                  className="add-btn" 
+                  type="submit" 
+                  disabled={!newPlayerData.name || !newPlayerData.email || playerActionLoading}
+                >
+                  {playerActionLoading ? 'Adding...' : 'Add Player'}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleAddExistingPlayer} className="add-player-form">
+                <div className="existing-user-section">
+                  <select 
+                    value={selectedPlayer} 
+                    onChange={e => setSelectedPlayer(e.target.value)} 
+                    disabled={playerActionLoading}
+                    className="user-select"
+                  >
+                    <option value="">Select a registered user</option>
+                    {availableUsers.length === 0 ? (
+                      <option disabled>No available users found</option>
+                    ) : (
+                      availableUsers.map(user => (
+                        <option key={user._id} value={user._id}>
+                          {user.name} ({user.email})
+                        </option>
+                      ))
+                    )}
+                  </select>
+                  <button 
+                    className="add-btn" 
+                    type="submit" 
+                    disabled={!selectedPlayer || playerActionLoading || availableUsers.length === 0}
+                  >
+                    {playerActionLoading ? 'Adding...' : 'Add User'}
+                  </button>
+                </div>
+                {availableUsers.length === 0 && (
+                  <p className="no-users-message">
+                    No available users to add. Users must be registered and not already belong to a club.
+                  </p>
+                )}
+              </form>
+            )}
+            
             {playerActionError && (
               <div className="error-message">{playerActionError}</div>
             )}

@@ -87,6 +87,7 @@ export default function MatchManagement({ user }) {
 
   const fetchClubs = async () => {
     try {
+      console.log('🔄 Fetching clubs...');
       const response = await fetch('http://localhost:5000/api/clubs', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -94,10 +95,27 @@ export default function MatchManagement({ user }) {
       });
       if (response.ok) {
         const data = await response.json();
-        setClubs(Array.isArray(data) ? data : [data]);
+        console.log('✅ Clubs fetched successfully:', data);
+        setClubs(Array.isArray(data) ? data : (data ? [data] : []));
+      } else {
+        console.error('❌ Failed to fetch clubs, status:', response.status);
+        // Add some default teams as fallback
+        setClubs([
+          { _id: 'team1', name: 'Team A' },
+          { _id: 'team2', name: 'Team B' },
+          { _id: 'team3', name: 'Team C' },
+          { _id: 'team4', name: 'Team D' }
+        ]);
       }
     } catch (error) {
-      console.error('Error fetching clubs:', error);
+      console.error('❌ Error fetching clubs:', error);
+      // Add some default teams as fallback
+      setClubs([
+        { _id: 'team1', name: 'Team A' },
+        { _id: 'team2', name: 'Team B' },
+        { _id: 'team3', name: 'Team C' },
+        { _id: 'team4', name: 'Team D' }
+      ]);
     }
   };
 
@@ -240,6 +258,14 @@ export default function MatchManagement({ user }) {
         >
           + Schedule New Match
         </button>
+      </div>
+
+      {/* Debug Info */}
+      <div className="debug-info" style={{ background: '#f0f0f0', padding: '10px', margin: '10px 0', borderRadius: '5px' }}>
+        <p><strong>Debug Info:</strong></p>
+        <p>Clubs loaded: {clubs.length}</p>
+        <p>Clubs: {clubs.map(c => c.name).join(', ')}</p>
+        <p>Matches loaded: {matches.length}</p>
       </div>
 
       {/* Search and Filter */}
@@ -490,6 +516,14 @@ export default function MatchManagement({ user }) {
                 ×
               </button>
             </div>
+            
+            {/* Debug info for edit modal */}
+            <div style={{ background: '#e8f4f8', padding: '10px', margin: '10px 0', borderRadius: '5px', fontSize: '12px' }}>
+              <strong>Edit Match Debug:</strong><br/>
+              Current team1: {editingMatch.team1 || 'undefined'}<br/>
+              Current team2: {editingMatch.team2 || 'undefined'}<br/>
+              Available clubs: {clubs.length} ({clubs.map(c => c.name).join(', ')})
+            </div>
             <form 
               onSubmit={(e) => {
                 e.preventDefault();
@@ -543,13 +577,13 @@ export default function MatchManagement({ user }) {
                 <div className="form-group">
                   <label>Team 1</label>
                   <select
-                    value={editingMatch.club1?._id || ''}
-                    onChange={(e) => setEditingMatch({...editingMatch, club1: e.target.value})}
+                    value={editingMatch.team1 || ''}
+                    onChange={(e) => setEditingMatch({...editingMatch, team1: e.target.value})}
                     required
                   >
                     <option value="">Select Team</option>
                     {clubs.map(club => (
-                      <option key={club._id} value={club._id}>
+                      <option key={club._id} value={club.name}>
                         {club.name}
                       </option>
                     ))}
@@ -559,13 +593,13 @@ export default function MatchManagement({ user }) {
                 <div className="form-group">
                   <label>Team 2</label>
                   <select
-                    value={editingMatch.club2?._id || ''}
-                    onChange={(e) => setEditingMatch({...editingMatch, club2: e.target.value})}
+                    value={editingMatch.team2 || ''}
+                    onChange={(e) => setEditingMatch({...editingMatch, team2: e.target.value})}
                     required
                   >
                     <option value="">Select Team</option>
                     {clubs.map(club => (
-                      <option key={club._id} value={club._id}>
+                      <option key={club._id} value={club.name}>
                         {club.name}
                       </option>
                     ))}

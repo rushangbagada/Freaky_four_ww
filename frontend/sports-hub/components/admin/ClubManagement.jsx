@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/club-management.css';
 
-export default function ClubManagement({ user }) {
+export default function ClubManagement({ user, onManagePlayersClick }) {
   const [clubs, setClubs] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -341,18 +341,21 @@ export default function ClubManagement({ user }) {
                 </button>
                 {isAdmin && (
                   <>
-                    <a 
-                      href="#/player-management"
+                    <button
                       className="manage-players-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // Store the selected club ID in localStorage or use a state management solution
-                        localStorage.setItem('selectedClubId', club._id);
-                        window.location.href = '/admin/player-management';
+                      onClick={() => {
+                        console.log('Manage Players clicked for club:', club);
+                        if (onManagePlayersClick) {
+                          onManagePlayersClick(club);
+                        } else {
+                          // Fallback to localStorage method
+                          localStorage.setItem('selectedClubId', club._id);
+                          window.dispatchEvent(new CustomEvent('switchToPlayerManagement', { detail: { clubId: club._id } }));
+                        }
                       }}
                     >
                       Manage Players
-                    </a>
+                    </button>
                     <button
                       className="delete-btn"
                       onClick={() => handleDeleteClub(club._id)}

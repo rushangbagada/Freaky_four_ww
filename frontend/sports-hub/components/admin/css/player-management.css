@@ -1,20 +1,16 @@
 /* Player Management Styles */
-.player-management {
+.player-management-container {
   background: white;
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.player-management-header {
-  margin-bottom: 2rem;
-}
-
-.player-management-header h2 {
+.player-management-container h2 {
   color: #2c3e50;
   font-size: 1.8rem;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 2rem 0;
 }
 
 .club-selector {
@@ -165,6 +161,114 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.add-player-mode-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid #e1e8ed;
+}
+
+.add-player-mode-selector label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #64748b;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+}
+
+.add-player-mode-selector label.active {
+  background: #667eea;
+  color: white;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.add-player-mode-selector label:hover:not(.active) {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.add-player-mode-selector input[type="radio"] {
+  display: none;
+}
+
+.add-player-mode-selector span {
+  font-size: 0.9rem;
+}
+
+.add-new-player-form {
+  margin-top: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-row input,
+.form-row select {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  background: white;
+  transition: border-color 0.3s ease;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.form-row input::placeholder {
+  color: #94a3b8;
+}
+
+.existing-user-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.user-select {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  background: white;
+  transition: border-color 0.3s ease;
+}
+
+.user-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.no-users-message {
+  color: #64748b;
+  font-style: italic;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 15px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
 }
 
 .error-message {
