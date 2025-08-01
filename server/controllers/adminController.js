@@ -4,6 +4,7 @@ const Old_match = require('../models/old_match');
 const Review = require('../models/review');
 const Gallery = require('../models/gallery');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // Club Management
 const createClub = async (req, res) => {
@@ -526,6 +527,48 @@ const updateUser = async (req, res) => {
   }
 };
 
+// Delete user (admin only)
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if user exists
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // If user is a club leader, remove them from club leadership
+    if (user.role === 'club_leader' && user.club) {
+      await Club.findByIdAndUpdate(user.club, { leader: null });
+    }
+
+    // If user is assigned to a club, decrement the club's player count
+    if (user.club) {
+      await Club.findByIdAndUpdate(
+        user.club, 
+        { $inc: { players: -1 } }
+      );
+    }
+
+    // Delete the user
+    await User.findByIdAndDelete(id);
+
+    res.json({ 
+      message: 'User deleted successfully', 
+      deletedUser: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user', error: error.message });
+  }
+};
+
 // Add this function before the module.exports
 const getAnalytics = async (req, res) => {
   try {
@@ -692,6 +735,7 @@ module.exports = {
   updateUserRole,
   toggleUserStatus,
   updateUser,
+  deleteUser,
   
   // Dashboard
   getDashboardStats,
@@ -701,6 +745,7 @@ module.exports = {
   listClubLeaders,
   listUsers,
   createUser,
+  deleteUser,
   
   // Player Management
   addPlayerToClub: async (req, res) => {

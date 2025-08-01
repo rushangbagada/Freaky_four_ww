@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TurfCard from './payment/TurfCard';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 import './css/turf.css';
 
 const Turf = () => {
@@ -9,6 +10,7 @@ const Turf = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [priceRange, setPriceRange] = useState('');
   const [availabilityFilter, setAvailabilityFilter] = useState('');
+  const [error, setError] = useState(null);
 
   // Filter turfs based on search criteria
   const filteredTurfs = turfs.filter(turf => {
@@ -28,24 +30,32 @@ const Turf = () => {
     return matchesSearch && matchesLocation && matchesPrice && matchesAvailability;
   });
 
-  useEffect(() => {
-    // Fetch turf data from backend API
-    const fetchTurfs = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/turfs");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setTurfs(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching turfs:', error);
-        setLoading(false);
+  // Fetch turf data from backend API
+  const fetchTurfs = async () => {
+    try {
+      console.log('🔄 Fetching turfs data...');
+      const response = await fetch("http://localhost:5000/api/turfs");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      const data = await response.json();
+      console.log('✅ Turfs data fetched successfully:', data.length, 'turfs');
+      setTurfs(data);
+      setError(null);
+      if (loading) setLoading(false);
+    } catch (err) {
+      console.error('❌ Error fetching turfs:', err);
+      setError(err.message);
+      if (loading) setLoading(false);
+    }
+  };
 
-    fetchTurfs();
+  // Use the live data update hook for real-time updates
+  useDatabaseChangeDetection(fetchTurfs, []);
+
+  useEffect(() => {
+    // Initial load will be handled by the hook
+    setLoading(true);
   }, []);
 
   if (loading) {
@@ -54,6 +64,24 @@ const Turf = () => {
         <div className="loading">
           <div className="spinner"></div>
           <p>Loading turfs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="turf-page">
+        <div className="error-section">
+          <h2>⚠️ Error Loading Turfs</h2>
+          <p>{error}</p>
+          <button onClick={() => {
+            setError(null);
+            setLoading(true);
+            fetchTurfs();
+          }} className="retry-btn">
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -109,6 +137,11 @@ const Turf = () => {
           </select>
         </div>
       </section>
+
+      {/* Results Summary */}
+      <div className="results-summary">
+        <h2>Available Turfs ({filteredTurfs.length})</h2>
+      </div>
 
       <div className="turf-grid">
         {filteredTurfs.map(turf => (

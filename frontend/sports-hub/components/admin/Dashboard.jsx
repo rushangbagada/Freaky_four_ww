@@ -10,6 +10,7 @@ import NewsManagement from './NewsManagement';
 import LiveMatchManagement from './LiveMatchManagement';
 import PlayerManagement from './PlayerManagement';
 import QuizManagement from './QuizManagement';
+import TurfManagement from './TurfManagement';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -138,6 +139,13 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('clubs')}
         >
           🏆 Club Management
+        </button>
+
+        <button 
+          className={`nav-btn ${activeTab === 'turf' ? 'active' : ''}`}
+          onClick={() => setActiveTab('turf')}
+        >
+          🌱 Turf Management
         </button>
         
         <button 
@@ -330,6 +338,7 @@ export default function AdminDashboard() {
         {activeTab === 'analytics' && isAdmin && <Analytics />}
         {activeTab === 'gallery' && isAdmin && <GalleryManagement user={user} />}
         {activeTab === 'quiz' && isAdmin && <QuizManagement user={user} />}
+        {activeTab === 'turf' && isAdmin && <TurfManagement />}
       </main>
     </div>
   );

@@ -31,7 +31,7 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
     setLastUpdated(new Date());
     
     // Set up polling interval
-    const intervalId = setInterval(pollAndDetectChanges, 10000); // Poll every 10 seconds
+    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
     
     return () => clearInterval(intervalId);
   }, dependencies);
@@ -140,12 +140,6 @@ export default function SportsClubs() {
           <span className="results-count">
             {clubs.filter((club) => club.name.toLowerCase().includes(searchtext.toLowerCase())).length} clubs found
           </span>
-          {(isPolling || hasChanges) && (
-            <div className="live-indicator">
-              <div className={`pulse-dot ${isPolling ? 'pulsing' : hasChanges ? 'updated' : ''}`}></div>
-              <span>{isPolling ? 'Updating...' : hasChanges ? 'Updated!' : 'Live'}</span>
-            </div>
-          )}
         </div>
       </section>
 

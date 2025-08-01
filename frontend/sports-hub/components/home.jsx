@@ -104,7 +104,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 import './css/home.css';
 import blogImg from './css/blog.jpg';
 import calendarImage from './css/calendar.jpg';
@@ -295,12 +294,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Real-time Status Indicator */}
-      <RealTimeStatusIndicator 
-        isPolling={isPolling}
-        hasChanges={hasChanges}
-        lastUpdated={lastUpdated}
-      />
 
       {/* Popular Sports Clubs */}
       <section className="sports-section">

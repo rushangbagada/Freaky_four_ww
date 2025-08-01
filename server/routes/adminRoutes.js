@@ -146,6 +146,8 @@ router.get('/users', requireAdmin, listUsers);
 router.post('/users', requireAdmin, createUser);
 // Full user update (admin only)
 router.put('/users/:id', requireAdmin, require('./../controllers/adminController').updateUser);
+// Delete user (admin only)
+router.delete('/users/:id', requireAdmin, require('./../controllers/adminController').deleteUser);
 
 // Player Management Routes (admin)
 router.post('/clubs/add-player', requireAdmin, addPlayerToClub);

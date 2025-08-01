@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './css/gallery.css';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 export default function Gallery() {
   const [allData, setAllData] = useState([]);
@@ -197,12 +196,6 @@ export default function Gallery() {
           </div>
         </section>
 
-        {/* Real-time Status Indicator */}
-        <RealTimeStatusIndicator 
-          isPolling={isPolling}
-          hasChanges={hasChanges}
-          lastUpdated={lastUpdated}
-        />
 
         <section className="gallery-grid">
           {loading ? (

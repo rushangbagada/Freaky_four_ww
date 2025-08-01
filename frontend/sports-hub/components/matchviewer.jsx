@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 const MatchViewer = ({ match, onClose }) => {
   const [events, setEvents] = useState([]);
@@ -59,12 +58,6 @@ const MatchViewer = ({ match, onClose }) => {
         </div>
 
         <div className="viewer-content">
-          {/* Real-time Status Indicator */}
-          <RealTimeStatusIndicator 
-            isPolling={isPolling}
-            hasChanges={hasChanges}
-            lastUpdated={lastUpdated}
-          />
           
           <div className="match-scoreboard">
             <div className="team-section">

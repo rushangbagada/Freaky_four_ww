@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 import './css/club-details.css';
 
 const sportsEmojis = {
@@ -344,12 +343,6 @@ export default function ClubDetails() {
         </div>
       </section>
 
-      {/* Real-time Status Indicator */}
-      <RealTimeStatusIndicator 
-        isPolling={isPolling}
-        hasChanges={hasChanges}
-        lastUpdated={lastUpdated}
-      />
       
       {/* Tab Content */}
       <main className="club-main-content">

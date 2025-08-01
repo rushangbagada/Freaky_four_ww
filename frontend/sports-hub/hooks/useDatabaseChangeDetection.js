@@ -40,7 +40,7 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
     setLastUpdated(new Date());
     
     // Set up polling interval
-    const intervalId = setInterval(pollAndDetectChanges, 3000); // Poll every 3 seconds
+    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
     
     return () => clearInterval(intervalId);
   }, dependencies);

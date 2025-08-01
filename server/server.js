@@ -804,6 +804,73 @@ app.get("/api/turfs", async (req, res) => {
   }
 });
 
+// Admin endpoint to create a new turf
+app.post("/api/admin/turfs", async (req, res) => {
+  try {
+    const { name, location, price, imageUrl } = req.body;
+    
+    // Get the highest existing ID and increment it
+    const lastTurf = await Turf.findOne().sort({ id: -1 });
+    const newId = lastTurf ? lastTurf.id + 1 : 1;
+    
+    const newTurf = new Turf({
+      id: newId,
+      name,
+      location,
+      price: price || 500,
+      imageUrl: imageUrl || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=75',
+      availability: true
+    });
+    
+    const savedTurf = await newTurf.save();
+    res.status(201).json(savedTurf);
+  } catch (error) {
+    console.error("Error creating turf:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Admin endpoint to update turf
+app.put("/api/admin/turfs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    const updatedTurf = await Turf.findOneAndUpdate(
+      { id: parseInt(id) },
+      updates,
+      { new: true }
+    );
+    
+    if (!updatedTurf) {
+      return res.status(404).json({ message: "Turf not found" });
+    }
+    
+    res.json(updatedTurf);
+  } catch (error) {
+    console.error("Error updating turf:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Admin endpoint to delete turf
+app.delete("/api/admin/turfs/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedTurf = await Turf.findOneAndDelete({ id: parseInt(id) });
+    
+    if (!deletedTurf) {
+      return res.status(404).json({ message: "Turf not found" });
+    }
+    
+    res.json({ message: "Turf deleted successfully", turf: deletedTurf });
+  } catch (error) {
+    console.error("Error deleting turf:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Admin endpoint to update match scores and calculate points
 app.post("/api/admin/live-matches/:matchId/update-scores", async (req, res) => {
   try {

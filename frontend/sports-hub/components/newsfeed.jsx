@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import FunFacts from './funfacts.jsx';
 import './css/newsfeed.css';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import RealTimeStatusIndicator from './RealTimeStatusIndicator';
 
 const NewsFeed = () => {
   const [activeTab, setActiveTab] = useState('news');
@@ -54,12 +53,6 @@ const NewsFeed = () => {
             <p>Stay updated with the latest happenings in campus sports</p>
           </div>
           
-          {/* Real-time Status Indicator */}
-          <RealTimeStatusIndicator 
-            isPolling={isPolling}
-            hasChanges={hasChanges}
-            lastUpdated={lastUpdated}
-          />
           
           <div className="news-grid">
             {newsItems.map((item,index) => (
