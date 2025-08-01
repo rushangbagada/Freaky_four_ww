@@ -250,9 +250,120 @@ export default function QuizManagement({ user }) {
               </ul>
               
               <div className="question-actions">
-                <button className="edit-btn" onClick={() => startEdit(q)}>Edit</button>
+                <button 
+                  className={`edit-btn ${editingQuestion === q._id ? 'editing' : ''}`}
+                  onClick={() => {
+                    if (editingQuestion === q._id) {
+                      setEditingQuestion(null);
+                      setEditQuestion({
+                        question: '',
+                        options: ['', '', '', ''],
+                        correctAnswer: '',
+                        category: 'general',
+                        difficulty: 'medium'
+                      });
+                    } else {
+                      startEdit(q);
+                    }
+                  }}
+                >
+                  {editingQuestion === q._id ? 'Cancel' : 'Edit'}
+                </button>
                 <button className="delete-btn" onClick={() => handleDeleteQuestion(q._id)}>Delete</button>
               </div>
+              
+              {editingQuestion === q._id && (
+                <div className="inline-edit-form">
+                  <h4>Edit Question</h4>
+                  <form onSubmit={handleEditSubmit}>
+                    <div className="form-group">
+                      <label>Question:</label>
+                      <input
+                        type="text"
+                        value={editQuestion.question}
+                        onChange={(e) => setEditQuestion({ ...editQuestion, question: e.target.value })}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Options:</label>
+                      <div className="options-grid">
+                        {editQuestion.options.map((option, idx) => (
+                          <input
+                            key={idx}
+                            type="text"
+                            placeholder={`Option ${idx + 1}`}
+                            value={option}
+                            onChange={(e) => {
+                              const options = [...editQuestion.options];
+                              options[idx] = e.target.value;
+                              setEditQuestion({ ...editQuestion, options });
+                            }}
+                            required
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label>Correct Answer:</label>
+                        <input
+                          type="text"
+                          value={editQuestion.correctAnswer}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, correctAnswer: e.target.value })}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Category:</label>
+                        <select
+                          value={editQuestion.category}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, category: e.target.value })}
+                        >
+                          {categories.map(cat => (
+                            <option key={cat.value} value={cat.value}>{cat.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Difficulty:</label>
+                        <select
+                          value={editQuestion.difficulty}
+                          onChange={(e) => setEditQuestion({ ...editQuestion, difficulty: e.target.value })}
+                        >
+                          {difficulties.map(diff => (
+                            <option key={diff.value} value={diff.value}>{diff.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="form-actions">
+                      <button type="submit" className="update-btn">Update Question</button>
+                      <button 
+                        type="button" 
+                        className="cancel-btn"
+                        onClick={() => {
+                          setEditingQuestion(null);
+                          setEditQuestion({
+                            question: '',
+                            options: ['', '', '', ''],
+                            correctAnswer: '',
+                            category: 'general',
+                            difficulty: 'medium'
+                          });
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
             </div>
           ))
         )}

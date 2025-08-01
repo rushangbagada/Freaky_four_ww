@@ -205,7 +205,7 @@
     transform: translateY(-1px);
 }
 
-.add-turf-form {
+.add-turf-form, .edit-turf-form {
     margin-top: 2rem;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
@@ -216,7 +216,12 @@
     gap: 1.5rem;
 }
 
-.add-turf-form label {
+.edit-turf-form {
+    border: 1px solid var(--accent-gold);
+    background: rgba(255, 193, 7, 0.05);
+}
+
+.add-turf-form label, .edit-turf-form label {
     font-size: 1rem;
     color: var(--text-primary);
     font-weight: 500;
@@ -225,7 +230,7 @@
     gap: 0.5rem;
 }
 
-.add-turf-form input {
+.add-turf-form input, .edit-turf-form input {
     padding: 1rem 1.25rem;
     border-radius: var(--border-radius);
     border: 1px solid var(--bg-light);
@@ -235,14 +240,19 @@
     transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
 }
 
-.add-turf-form input:focus {
+.add-turf-form input:focus, .edit-turf-form input:focus {
     border-color: var(--accent-blue);
     background: var(--bg-medium);
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
     outline: none;
 }
 
-.add-turf-form button {
+.edit-turf-form input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.add-turf-form button, .edit-turf-form button {
     padding: 1rem 2rem;
     border-radius: var(--border-radius);
     border: none;
@@ -255,10 +265,142 @@
     margin-top: 0.5rem;
 }
 
-.add-turf-form button:hover {
+.add-turf-form button:hover, .edit-turf-form button:hover {
     background: var(--accent-blue-deep);
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+}
+
+.edit-turf-form button[type="submit"] {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.edit-turf-form button[type="submit"]:hover {
+    background: #e6b800;
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.3);
+}
+
+.edit-turf-form button[type="button"] {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.edit-turf-form button[type="button"]:hover {
+    background: var(--bg-medium);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Inline Edit Form Styles */
+.inline-edit-form {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 193, 7, 0.08);
+    border: 1px solid var(--accent-gold);
+    border-radius: var(--border-radius);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+    }
+}
+
+.inline-edit-form h4 {
+    margin: 0 0 1rem 0;
+    color: var(--accent-gold);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.inline-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.inline-edit-form input {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-light);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.inline-edit-form input:focus {
+    border-color: var(--accent-gold);
+    background: var(--bg-medium);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.update-btn, .cancel-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.update-btn {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.update-btn:hover {
+    background: #e6b800;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.cancel-btn {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.cancel-btn:hover {
+    background: var(--bg-medium);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Edit button active state */
+.edit-btn.editing {
+    background: var(--accent-live);
+    color: white;
+}
+
+.edit-btn.editing:hover {
+    background: #dc2626;
 }
 
 /* Booking Management Styles */

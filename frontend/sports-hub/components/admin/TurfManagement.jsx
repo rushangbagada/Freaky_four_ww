@@ -5,6 +5,8 @@ import './css/turf-management.css';
 export default function TurfManagement() {
     const [turfs, setTurfs] = useState([]);
     const [newTurf, setNewTurf] = useState({ name: '', location: '', price: '' });
+    const [editingTurf, setEditingTurf] = useState(null);
+    const [editForm, setEditForm] = useState({ name: '', location: '', price: '' });
     const [lastUpdate, setLastUpdate] = useState(new Date());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -152,27 +154,122 @@ export default function TurfManagement() {
                 <h3>Turf Listings ({turfs.length} turfs)</h3>
                 <ul className="turf-list">
                 {turfs.map(turf => (
-                    <li key={turf.id} className="turf-item">
-                        <div className="turf-info">
-                            <div className="turf-details">
-                                <span className="turf-name">{turf.name}</span>
-                                <span className="turf-location">📍 {turf.location}</span>
-                                <span className="turf-price">💰 ₹{turf.price}</span>
+                    <div key={turf.id}>
+                        <li className="turf-item">
+                            <div className="turf-info">
+                                <div className="turf-details">
+                                    <span className="turf-name">{turf.name}</span>
+                                    <span className="turf-location">📍 {turf.location}</span>
+                                    <span className="turf-price">💰 ₹{turf.price}</span>
+                                </div>
+                                <span className={`status-badge ${turf.status.toLowerCase()}`}>
+                                    {turf.status}
+                                </span>
                             </div>
-                            <span className={`status-badge ${turf.status.toLowerCase()}`}>
-                                {turf.status}
-                            </span>
-                        </div>
-                        <div className="turf-actions">
-                            <button className="edit-btn">Edit</button>
-                            <button 
-                                className="delete-btn"
-                                onClick={() => handleDeleteTurf(turf.id)}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </li>
+                            <div className="turf-actions">
+                                <button 
+                                    className={`edit-btn ${editingTurf === turf.id ? 'editing' : ''}`}
+                                    onClick={() => {
+                                        if (editingTurf === turf.id) {
+                                            setEditingTurf(null);
+                                            setEditForm({ name: '', location: '', price: '' });
+                                        } else {
+                                            setEditingTurf(turf.id);
+                                            setEditForm({ name: turf.name, location: turf.location, price: turf.price.toString() });
+                                        }
+                                    }}
+                                >
+                                    {editingTurf === turf.id ? 'Cancel' : 'Edit'}
+                                </button>
+                                <button 
+                                    className="delete-btn"
+                                    onClick={() => handleDeleteTurf(turf.id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+                        
+                        {editingTurf === turf.id && (
+                            <div className="inline-edit-form">
+                                <h4>Edit Turf</h4>
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    try {
+                                        const response = await fetch(`http://localhost:5000/api/admin/turfs/${editingTurf}`, {
+                                            method: 'PUT',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                name: editForm.name,
+                                                location: editForm.location,
+                                                price: parseInt(editForm.price) || 500
+                                            })
+                                        });
+                                        if (response.ok) {
+                                            const updatedTurf = await response.json();
+                                            const mappedTurf = {
+                                                ...updatedTurf,
+                                                status: updatedTurf.availability ? 'Available' : 'Booked'
+                                            };
+                                            setTurfs(turfs.map(t => t.id === editingTurf ? mappedTurf : t));
+                                            setEditingTurf(null);
+                                            setEditForm({ name: '', location: '', price: '' });
+                                        } else {
+                                            throw new Error('Failed to update turf');
+                                        }
+                                    } catch (err) {
+                                        console.error('Error updating turf:', err);
+                                        setError('Failed to update turf: ' + err.message);
+                                    }
+                                }}>
+                                    <div className="form-row">
+                                        <label>
+                                            Name:
+                                            <input 
+                                                type="text" 
+                                                value={editForm.name}
+                                                onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                                                required 
+                                            />
+                                        </label>
+                                        <label>
+                                            Location:
+                                            <input 
+                                                type="text" 
+                                                value={editForm.location}
+                                                onChange={(e) => setEditForm({...editForm, location: e.target.value})}
+                                                required 
+                                            />
+                                        </label>
+                                        <label>
+                                            Price (₹):
+                                            <input 
+                                                type="number" 
+                                                value={editForm.price}
+                                                onChange={(e) => setEditForm({...editForm, price: e.target.value})}
+                                                min="100"
+                                            />
+                                        </label>
+                                    </div>
+                                    <div className="form-actions">
+                                        <button type="submit" className="update-btn">Update Turf</button>
+                                        <button 
+                                            type="button" 
+                                            className="cancel-btn"
+                                            onClick={() => {
+                                                setEditingTurf(null);
+                                                setEditForm({ name: '', location: '', price: '' });
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
+                    </div>
                 ))}
                 </ul>
 

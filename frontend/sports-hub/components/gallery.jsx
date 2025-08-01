@@ -8,7 +8,7 @@ export default function Gallery() {
   const [likedArray, setLikedArray] = useState([]);
   const [viewArray, setViewArray] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchGalleryData = async () => {
@@ -183,7 +183,7 @@ export default function Gallery() {
           <p>Capturing the spirit, passion, and triumph of campus sports</p>
         </div>
       </header>
-
+      
       <main>
         <section className="gallery-header">
           <h2>Sports Gallery</h2>
@@ -198,12 +198,7 @@ export default function Gallery() {
 
 
         <section className="gallery-grid">
-          {loading ? (
-            <div className="loading-container">
-              <div className="loading-spinner"></div>
-              <p>Loading gallery...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="error-container">
               <p>⚠️ Using offline data (Server connection failed)</p>
             </div>

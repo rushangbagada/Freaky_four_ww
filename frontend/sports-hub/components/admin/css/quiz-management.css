@@ -332,6 +332,161 @@
   box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
 }
 
+/* Edit button active state */
+.edit-btn.editing {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.edit-btn.editing:hover {
+  background: linear-gradient(135deg, #c82333, #a71e2a);
+}
+
+/* Inline Edit Form Styles */
+.inline-edit-form {
+  margin-top: 1.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 800px;
+  }
+}
+
+.inline-edit-form h4 {
+  margin: 0 0 1.5rem 0;
+  color: #e65100;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #ffc107;
+}
+
+.inline-edit-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.inline-edit-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #e65100;
+  font-size: 0.95rem;
+}
+
+.inline-edit-form input,
+.inline-edit-form select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #ffcc02;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.inline-edit-form input:focus,
+.inline-edit-form select:focus {
+  border-color: #ff9800;
+  background: #fffef7;
+  box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+  outline: none;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.inline-edit-form .form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ffcc02;
+}
+
+.update-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.update-btn:hover {
+  background: linear-gradient(135deg, #218838, #1e7e34);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+.inline-edit-form .cancel-btn {
+  background: linear-gradient(135deg, #6c757d, #5a6268);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.inline-edit-form .cancel-btn:hover {
+  background: linear-gradient(135deg, #5a6268, #495057);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.4);
+}
+
+/* Responsive design for inline edit form */
+@media (max-width: 768px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .inline-edit-form .form-actions {
+    flex-direction: column;
+  }
+  
+  .inline-edit-form {
+    padding: 1.5rem;
+  }
+}
+
 .loading {
   text-align: center;
   padding: 40px;
