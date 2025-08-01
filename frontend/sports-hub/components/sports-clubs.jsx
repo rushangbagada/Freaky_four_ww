@@ -58,13 +58,32 @@ export default function SportsClubs() {
 
   return (
     <div className="sports-clubs-container">
-      {/* Header */}
-      <section className="hero">
+      {/* Hero Section - Calendar Style */}
+      <div className="sports-clubs-hero">
         <div className="hero-content">
-          <h1>Sports Clubs</h1>
-          <p>Discover your passion and join our competitive sports teams</p>
+          <div className="hero-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <h1 className="hero-title">Sports Clubs</h1>
+          <p className="hero-subtitle">Discover your passion and join our competitive sports teams</p>
         </div>
-      </section>
+        <div className="hero-stats">
+          <div className="stat-card">
+            <span className="stat-number">{clubs.length}</span>
+            <span className="stat-label">Total Clubs</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{clubs.reduce((total, club) => total + club.players, 0)}</span>
+            <span className="stat-label">Active Players</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{clubs.reduce((total, club) => total + club.matches, 0)}</span>
+            <span className="stat-label">Upcoming Matches</span>
+          </div>
+        </div>
+      </div>
 
 
       {/* Search & Filter */}

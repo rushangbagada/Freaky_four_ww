@@ -32,6 +32,37 @@ const getRandomGradient = () => {
   return gradients[Math.floor(Math.random() * gradients.length)];
 };
 
+// Helper function to extract sport name from club name
+const extractSportFromClubName = (clubName) => {
+  if (!clubName) return null;
+  
+  const lowerName = clubName.toLowerCase();
+  const sportMapping = {
+    'basketball': 'Basketball',
+    'football': 'Football', 
+    'cricket': 'Cricket',
+    'tennis': 'Tennis',
+    'swimming': 'Swimming',
+    'badminton': 'Badminton',
+    'volleyball': 'Volleyball',
+    'hockey': 'Hockey',
+    'athletics': 'Athletics',
+    'boxing': 'Boxing',
+    'wrestling': 'Wrestling'
+  };
+  
+  // Find the sport in the club name
+  for (const [sportKey, sportValue] of Object.entries(sportMapping)) {
+    if (lowerName.includes(sportKey)) {
+      return sportValue;
+    }
+  }
+  
+  // If no sport found, return the first word capitalized
+  const firstWord = clubName.split(' ')[0];
+  return firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+};
+
 export default function ClubDetails() {
   const { name } = useParams();
 
@@ -79,10 +110,11 @@ export default function ClubDetails() {
           };
           setClub(formattedClub);
           
-          // Now fetch related data using the club name with safety check
+          // Now fetch related data using the extracted sport name
           if (matchedClub.name) {
-            const sport = encodeURIComponent(matchedClub.name.toLowerCase().trim());
-            fetchRelatedData(sport);
+            const sportName = extractSportFromClubName(matchedClub.name);
+            console.log('Extracted sport name:', sportName, 'from club name:', matchedClub.name);
+            fetchRelatedData(matchedClub.name, sportName);
           } else {
             console.error('Error: Matched club is missing name property');
             setError('Club data is missing name property');
@@ -115,8 +147,9 @@ export default function ClubDetails() {
         
         // Use club name for related data with safety check
         if (data.name) {
-          const sport = encodeURIComponent(data.name.toLowerCase().trim());
-          fetchRelatedData(sport);
+          const sportName = extractSportFromClubName(data.name);
+          console.log('Extracted sport name:', sportName, 'from club name:', data.name);
+          fetchRelatedData(data.name, sportName);
         } else {
           console.error('Error: Club data is missing name property');
           setError('Club data is missing name property');

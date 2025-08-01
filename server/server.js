@@ -535,31 +535,36 @@ app.get("/api/club-details/:id", async (req, res) => {
     const {id} = req.params;
     console.log(`Received request for club details with ID: ${id}`);
     
-    // Get club directly from the Club collection
-    const club = await Club.findOne({ _id: id }).lean();
+    let club = null;
     
-    if (!club) {
-      console.log(`Club not found with ID: ${id}, trying by name...`);
-      // Try to find by name
-      const clubByName = await Club.findOne({ name: { $regex: new RegExp(`^${id}$`, 'i') } }).lean();
-      
-      if (!clubByName) {
-        console.log(`Club not found with name: ${id}`);
-        return res.status(404).json({ message: "Club not found" });
+    // First try to find by name (most common case)
+    try {
+      club = await Club.findOne({ name: { $regex: new RegExp(`^${id}$`, 'i') } }).lean();
+      if (club) {
+        console.log(`Found club by name:`, club.name);
       }
-      
-      // Return the club found by name, with additional fields
-      console.log(`Found club by name:`, clubByName);
-      return res.json({
-        ...clubByName,
-        active_players: clubByName.players || 0,
-        upcoming_matches: clubByName.matches || 0,
-        win_rate: 75 // Default value
-      });
+    } catch (nameError) {
+      console.log('Name search failed:', nameError.message);
     }
     
-    // Return the club found by ID, with additional fields
-    console.log(`Found club by ID:`, club);
+    // If not found by name, try by MongoDB ObjectId (only if id looks like an ObjectId)
+    if (!club && id.match(/^[0-9a-fA-F]{24}$/)) {
+      try {
+        club = await Club.findById(id).lean();
+        if (club) {
+          console.log(`Found club by ID:`, club.name);
+        }
+      } catch (idError) {
+        console.log('ID search failed:', idError.message);
+      }
+    }
+    
+    if (!club) {
+      console.log(`Club not found with identifier: ${id}`);
+      return res.status(404).json({ message: "Club not found" });
+    }
+    
+    // Return the club with additional fields
     return res.json({
       ...club,
       active_players: club.players || 0,
@@ -567,7 +572,7 @@ app.get("/api/club-details/:id", async (req, res) => {
       win_rate: 75 // Default value
     });
   } catch (err) {
-    console.error("Error fetching club by ID:", err);
+    console.error("Error fetching club details:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });

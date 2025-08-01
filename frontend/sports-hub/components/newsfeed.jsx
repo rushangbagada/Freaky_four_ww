@@ -58,7 +58,22 @@ const NewsFeed = () => {
             {newsItems.map((item,index) => (
               <article key={index} className="news-card">
                 <div className="news-card-header">
-                  <span className="news-emoji">{item.image}</span>
+                  <div className="news-image-container">
+                    {item.image && item.image.startsWith('http') ? (
+                      <img 
+                        src={item.image} 
+                        alt={item.title}
+                        className="news-image"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'block';
+                        }}
+                      />
+                    ) : (
+                      <span className="news-emoji">{item.image || '📰'}</span>
+                    )}
+                    <span className="news-emoji-fallback" style={{display: 'none'}}>📰</span>
+                  </div>
                   <div className="news-meta">
                     <span className="news-category">{item.category}</span>
                     <span className="news-date">{formatDate(item.date)}</span>
