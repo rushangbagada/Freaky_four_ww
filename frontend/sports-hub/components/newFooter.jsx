@@ -5,19 +5,6 @@ import { Link } from 'react-router-dom';
 export default function NewFooter() {
   return (
     <footer className="glass-footer">
-      {/* Animated Wave SVG */}
-      <div className="wave-container">
-        <svg className="wave" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
-          <path className="wave-path" d="M0,64L48,69.3C96,75,192,85,288,85.3C384,85,480,75,576,74.7C672,75,768,85,864,90.7C960,96,1056,96,1152,90.7C1248,85,1344,75,1392,69.3L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="url(#waveGradient)" />
-          <defs>
-            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: '#1e3a8a', stopOpacity: 0.3 }} />
-              <stop offset="50%" style={{ stopColor: '#3b82f6', stopOpacity: 0.5 }} />
-              <stop offset="100%" style={{ stopColor: '#1e3a8a', stopOpacity: 0.3 }} />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
 
       <div className="footer-content">
         <div className="footer-section logo-section">

@@ -11,7 +11,7 @@ const SportsBot = () => {
     display: 'flex',
     flexDirection: 'row',
     fontFamily: "'Poppins', 'Inter', sans-serif",
-    paddingTop: '88px'
+    paddingTop: '100px'
   };
 
   const sidebarStyle = {
@@ -28,7 +28,7 @@ const SportsBot = () => {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    height: 'calc(100vh - 88px)'
+    height: 'calc(100vh - 100px)'
   };
 
   const headerStyle = {

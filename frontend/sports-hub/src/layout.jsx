@@ -1,7 +1,7 @@
 
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from '../components/header'
-import Footer from '../components/footer'
+import NewFooter from '../components/newFooter'
 
 export default function Layout() {
     const location = useLocation();
@@ -12,7 +12,7 @@ export default function Layout() {
         <>
             {!isAdminRoute && <Header/>}
             <Outlet />
-            {!isAdminRoute && !isChatbotRoute && <Footer />}
+            {!isAdminRoute && !isChatbotRoute && <NewFooter />}
         </>
     )
 }

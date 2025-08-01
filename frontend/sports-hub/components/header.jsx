@@ -132,10 +132,17 @@ export default function Header() {
 
  
 
-  <Link to="/aboutus" className={`nav-link ${isActive('/aboutus')}`}>
+  <Link to="/gallery" className={`nav-link ${isActive('/gallery')}`}>
     <div className="nav-item">
-      <div className="nav-icon">ℹ️</div>
-      <div className="nav-label">About</div>
+      <div className="nav-icon">🖼️</div>
+      <div className="nav-label">Gallery</div>
+    </div>
+  </Link>
+
+  <Link to="/calender" className={`nav-link ${isActive('/calender')}`}>
+    <div className="nav-item">
+      <div className="nav-icon">📅</div>
+      <div className="nav-label">Calendar</div>
     </div>
   </Link>
 
@@ -198,7 +205,6 @@ export default function Header() {
             <Link to="/result" className={`nav-link ${isActive('/result')}`}>🏆 Results</Link>
             <Link to="/gallery" className={`nav-link ${isActive('/gallery')}`}>🖼️ Gallery</Link>
             <Link to="/register" className={`nav-link ${isActive('/register')}`}>📝 Register</Link>
-            <Link to="/aboutus" className={`nav-link ${isActive('/aboutus')}`}>ℹ️ About</Link>
             <Link to="/gamepage" className={`nav-link ${isActive('/gamepage')}`}>🎮 Game Page</Link>
             <Link to="/blog" className={`nav-link ${isActive('/blog')}`}>📰 Blog</Link>
             <Link to="/livesports" className={`nav-link ${isActive('/livesports')}`}>📺 Live Sports</Link>

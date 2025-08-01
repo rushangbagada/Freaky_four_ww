@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import Header from '../components/header';
-import Footer from '../components/footer';
 import Home from '../components/home';
 import Register from '../components/register';
 import Login from '../components/login';
@@ -49,7 +48,7 @@ const ConditionalFooter = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isChatbotRoute = location.pathname === '/chatbot';
   
-  return !isAdminRoute && !isChatbotRoute ? <Footer /> : null;
+  return null; // Footer is now handled by Layout component
 };
 
 function AppRoutes() {
