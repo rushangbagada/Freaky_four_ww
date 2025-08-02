@@ -230,9 +230,9 @@ export default function QuizManagement({ user }) {
           </div>
         ) : (
           filteredQuestions.map((q) => (
-            <div key={q._id} className="question-item">
-              <div className="question-header">
-                <h3 className="question-title">{q.question}</h3>
+            <div key={q._id} className="question-card">
+              <div className="question-card-header">
+                <h3 className="question-text">{q.question}</h3>
                 <div className="question-meta">
                   <span className="category-badge">{q.category}</span>
                   <span className={`difficulty-badge ${q.difficulty}`}>{q.difficulty}</span>
@@ -241,10 +241,11 @@ export default function QuizManagement({ user }) {
               
               <ul className="options-list">
                 {q.options.map((option, idx) => (
-                  <li key={idx}>
+                  <li key={idx} className={q.correctAnswer === option ? 'correct-answer' : ''}>
+                    <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
                     <span className="option-text">{option}</span>
                     {q.correctAnswer === option && (
-                      <span className="correct-indicator">Correct</span>
+                      <span className="correct-indicator">✓ Correct</span>
                     )}
                   </li>
                 ))}
@@ -256,13 +257,6 @@ export default function QuizManagement({ user }) {
                   onClick={() => {
                     if (editingQuestion === q._id) {
                       setEditingQuestion(null);
-                      setEditQuestion({
-                        question: '',
-                        options: ['', '', '', ''],
-                        correctAnswer: '',
-                        category: 'general',
-                        difficulty: 'medium'
-                      });
                     } else {
                       startEdit(q);
                     }

@@ -1,3 +1,7 @@
+.quiz-management label {
+  color: white;
+}
+
 .quiz-management {
   padding: 20px;
   max-width: 1200px;

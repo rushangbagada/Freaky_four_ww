@@ -1,3 +1,7 @@
+.user-management label {
+  color: white;
+}
+
 /* User Management Styles */
 .user-management {
   background: var(--card-dark);

@@ -1,3 +1,7 @@
+.club-management-container label {
+  color: white;
+}
+
 /* Club Management Styles - Dark Theme */
 .club-management {
   background: #0f172a;

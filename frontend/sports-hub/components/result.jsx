@@ -229,40 +229,33 @@ export default function Result() {
         <h2 className="filter-title">Match Results</h2>
         <div className="filter-controls">
           <select onChange={(e) => setSport(e.target.value)}>
-            <option>All Sports</option>
-            <option>football</option>
-            <option>cricket</option>
-            <option>basketball</option>
-            <option>volleyball</option>
-            <option>tennis</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>All Sports</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>football</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>cricket</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>basketball</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>volleyball</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>tennis</option>
           </select>
           <select onChange={(e) => setTime(e.target.value)}>
-            <option>All Time</option>
-            <option>This Month</option>
-            <option>This Season</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>All Time</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>This Month</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>This Season</option>
           </select>
           <select onChange={(e) => setSortBy(e.target.value)}>
-            <option value="date">Sort by Date</option>
-            <option value="team1">Sort by Team 1</option>
-            <option value="team2">Sort by Team 2</option>
-            <option value="venue">Sort by Venue</option>
-            <option value="score">Sort by Score</option>
+            <option value="date" style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>Sort by Date</option>
+            <option value="team1" style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>Sort by Team 1</option>
+            <option value="team2" style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>Sort by Team 2</option>
+            <option value="venue" style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>Sort by Venue</option>
+            <option value="score" style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}>Sort by Score</option>
           </select>
-        </div>
+        </div>  
       </div>
     </div>
 
     <div className="main-section">
       {/* <!-- Main Section --> */}
       <div className="main-content">
-        {/* Debug info */}
-        <div style={{ padding: '10px', background: '#f0f0f0', margin: '10px 0', borderRadius: '5px', fontSize: '12px' }}>
-          <strong>🔍 Debug Info:</strong><br/>
-          Loading: {loading ? 'Yes' : 'No'}<br/>
-          Error: {error || 'None'}<br/>
-          Data Length: {dataState.length}<br/>
-          MVP Length: {mvp.length}
-        </div>
+       
 
         {loading && (
           <div className="loading-section">

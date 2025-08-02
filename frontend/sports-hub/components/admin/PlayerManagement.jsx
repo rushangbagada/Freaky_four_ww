@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
+import { getApiUrl } from '../../src/config/api';
 import './css/player-management.css';
 
 export default function PlayerManagement({ user, selectedClubProp }) {
@@ -11,20 +11,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
   const [selectedPlayer, setSelectedPlayer] = useState('');
   const [playerActionLoading, setPlayerActionLoading] = useState(false);
   const [playerActionError, setPlayerActionError] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterPosition, setFilterPosition] = useState('all');
-  const [filterYear, setFilterYear] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const [showPlayerDetails, setShowPlayerDetails] = useState(false);
-  const [selectedPlayerDetails, setSelectedPlayerDetails] = useState(null);
-  const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
-  const [bulkSelectedPlayers, setBulkSelectedPlayers] = useState([]);
-  const [showBulkActions, setShowBulkActions] = useState(false);
-  const [playerStats, setPlayerStats] = useState({});
-  const [showEditPlayer, setShowEditPlayer] = useState(false);
-  const [editingPlayer, setEditingPlayer] = useState(null);
   const [addPlayerMode, setAddPlayerMode] = useState('new'); // 'existing' or 'new'
   const [newPlayerData, setNewPlayerData] = useState({
     name: '',
@@ -43,17 +29,14 @@ export default function PlayerManagement({ user, selectedClubProp }) {
       fetchUsers();
     }
   }, [isAdmin]);
-  
-  // Effect to handle selectedClubProp from parent
+
   useEffect(() => {
     if (selectedClubProp) {
-      console.log('Setting selected club from prop:', selectedClubProp);
       setSelectedClub(selectedClubProp);
       fetchClubPlayers(selectedClubProp._id);
     }
   }, [selectedClubProp, users]);
-  
-  // Effect to auto-select club from localStorage (fallback)
+
   useEffect(() => {
     if (!selectedClubProp) {
       const selectedClubId = localStorage.getItem('selectedClubId');
@@ -62,7 +45,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
         if (club) {
           setSelectedClub(club);
           fetchClubPlayers(selectedClubId);
-          // Clear the localStorage after using it
           localStorage.removeItem('selectedClubId');
         }
       }
@@ -73,30 +55,23 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     try {
       let url = getApiUrl('/api/clubs');
       if (!isAdmin) {
-        // Club leaders can only see their own club
         url = getApiUrl('/api/clubs/my-club');
       }
-      
+
       const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
-        // Handle both array and object responses
-        if (data && (Array.isArray(data) || typeof data === 'object')) {
-          const clubsData = Array.isArray(data) ? data : [data];
-          setClubs(clubsData);
-          
-          // If club leader, automatically select their club
-          if (!isAdmin && clubsData.length === 1) {
-            setSelectedClub(clubsData[0]);
-            fetchClubPlayers(clubsData[0]._id);
-          }
-        } else {
-          setClubs([]);
+        const clubsData = Array.isArray(data) ? data : [data];
+        setClubs(clubsData);
+
+        if (!isAdmin && clubsData.length === 1) {
+          setSelectedClub(clubsData[0]);
+          fetchClubPlayers(clubsData[0]._id);
         }
       } else {
         setClubs([]);
@@ -116,7 +91,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
       });
       if (response.ok) {
         const data = await response.json();
-        // Fix: Extract users from the data.users property
         setUsers(data.users || []);
       } else {
         setUsers([]);
@@ -127,7 +101,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     }
   };
 
-  // Fetch players for a specific club
   const fetchClubPlayers = async (clubId) => {
     try {
       const response = await fetch(getApiUrl(`/api/admin/clubs/${clubId}/players`), {
@@ -138,19 +111,15 @@ export default function PlayerManagement({ user, selectedClubProp }) {
       if (response.ok) {
         const data = await response.json();
         setClubPlayers(data.players || []);
-        
-        // Fix: Make sure we have users before filtering
+
         if (users && users.length > 0) {
-          // Get the IDs of users who are already in the club
           const clubPlayerIds = data.players ? data.players.map(player => player._id) : [];
-          
-          // Filter available users (those not in any club and not already in this club)
-          const availableUsers = users.filter(user => 
-            (!user.club || user.club === null) && 
-            !clubPlayerIds.includes(user._id) && 
+          const available = users.filter(user =>
+            (!user.club || user.club === null) &&
+            !clubPlayerIds.includes(user._id) &&
             user.role === 'user'
           );
-          setAvailableUsers(availableUsers);
+          setAvailableUsers(available);
         } else {
           setAvailableUsers([]);
         }
@@ -161,9 +130,8 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     }
   };
 
-  // Add existing user as player to club
   const handleAddExistingPlayer = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
     if (!selectedPlayer) return;
     setPlayerActionLoading(true);
     setPlayerActionError('');
@@ -194,9 +162,8 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     }
   };
 
-  // Add new player to club
   const handleAddNewPlayer = async (e) => {
-    if (e) e.preventDefault();
+    e.preventDefault();
     if (!newPlayerData.name || !newPlayerData.email) {
       setPlayerActionError('Name and email are required');
       return;
@@ -237,7 +204,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     }
   };
 
-  // Remove player from club
   const handleRemovePlayer = async (userId) => {
     setPlayerActionLoading(true);
     setPlayerActionError('');
@@ -267,7 +233,6 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     }
   };
 
-  // Handle club selection change
   const handleClubChange = (e) => {
     const clubId = e.target.value;
     if (!clubId) {
@@ -276,7 +241,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
       setAvailableUsers([]);
       return;
     }
-    
+
     const club = clubs.find(c => c._id === clubId);
     setSelectedClub(club);
     fetchClubPlayers(clubId);
@@ -285,12 +250,12 @@ export default function PlayerManagement({ user, selectedClubProp }) {
   return (
     <div className="player-management-container">
       <h2>Player Management</h2>
-      
+
       {isAdmin && (
         <div className="club-selector">
           <label>Select Club:</label>
-          <select 
-            value={selectedClub?._id || ''} 
+          <select
+            value={selectedClub?._id || ''}
             onChange={handleClubChange}
           >
             <option value="">Select a club</option>
@@ -309,45 +274,48 @@ export default function PlayerManagement({ user, selectedClubProp }) {
           </div>
 
           <div className="players-section">
-            <h4>Current Players</h4>
+            <h4>Current Players ({clubPlayers.length})</h4>
             {clubPlayers.length === 0 ? (
               <p className="no-players">No players in this club.</p>
             ) : (
-              <ul className="players-list">
+              <div className="player-cards-container">
                 {clubPlayers.map(player => (
-                  <li key={player._id} className="player-item">
-                    <span>{player.name} ({player.email})</span>
-                    <button 
-                      className="remove-btn" 
-                      onClick={() => handleRemovePlayer(player._id)} 
+                  <div key={player._id} className="player-card">
+                    <div className="player-info">
+                      <span className="player-name">{player.name}</span>
+                      <span className="player-email">{player.email}</span>
+                    </div>
+                    <button
+                      className="remove-btn"
+                      onClick={() => handleRemovePlayer(player._id)}
                       disabled={playerActionLoading}
                     >
-                      Remove
+                      <i className="fas fa-trash-alt"></i>
                     </button>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
 
           <div className="add-player-section">
             <h4>Add Player</h4>
-            
+
             <div className="add-player-mode-selector">
               <label className={addPlayerMode === 'new' ? 'active' : ''}>
-                <input 
-                  type="radio" 
-                  value="new" 
-                  checked={addPlayerMode === 'new'} 
+                <input
+                  type="radio"
+                  value="new"
+                  checked={addPlayerMode === 'new'}
                   onChange={(e) => setAddPlayerMode(e.target.value)}
                 />
                 <span>Add New Player</span>
               </label>
               <label className={addPlayerMode === 'existing' ? 'active' : ''}>
-                <input 
-                  type="radio" 
-                  value="existing" 
-                  checked={addPlayerMode === 'existing'} 
+                <input
+                  type="radio"
+                  value="existing"
+                  checked={addPlayerMode === 'existing'}
                   onChange={(e) => setAddPlayerMode(e.target.value)}
                 />
                 <span>Add Existing User</span>
@@ -356,7 +324,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
 
             {addPlayerMode === 'new' ? (
               <form onSubmit={handleAddNewPlayer} className="add-new-player-form">
-                <div className="form-row">
+                 <div className="form-row">
                   <input
                     type="text"
                     placeholder="Player Name *"
@@ -410,9 +378,9 @@ export default function PlayerManagement({ user, selectedClubProp }) {
                     disabled={playerActionLoading}
                   />
                 </div>
-                <button 
-                  className="add-btn" 
-                  type="submit" 
+                <button
+                  className="add-btn"
+                  type="submit"
                   disabled={!newPlayerData.name || !newPlayerData.email || playerActionLoading}
                 >
                   {playerActionLoading ? 'Adding...' : 'Add Player'}
@@ -421,9 +389,9 @@ export default function PlayerManagement({ user, selectedClubProp }) {
             ) : (
               <form onSubmit={handleAddExistingPlayer} className="add-player-form">
                 <div className="existing-user-section">
-                  <select 
-                    value={selectedPlayer} 
-                    onChange={e => setSelectedPlayer(e.target.value)} 
+                  <select
+                    value={selectedPlayer}
+                    onChange={e => setSelectedPlayer(e.target.value)}
                     disabled={playerActionLoading}
                     className="user-select"
                   >
@@ -438,9 +406,9 @@ export default function PlayerManagement({ user, selectedClubProp }) {
                       ))
                     )}
                   </select>
-                  <button 
-                    className="add-btn" 
-                    type="submit" 
+                  <button
+                    className="add-btn"
+                    type="submit"
                     disabled={!selectedPlayer || playerActionLoading || availableUsers.length === 0}
                   >
                     {playerActionLoading ? 'Adding...' : 'Add User'}
@@ -453,7 +421,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
                 )}
               </form>
             )}
-            
+
             {playerActionError && (
               <div className="error-message">{playerActionError}</div>
             )}
@@ -471,3 +439,4 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     </div>
   );
 }
+

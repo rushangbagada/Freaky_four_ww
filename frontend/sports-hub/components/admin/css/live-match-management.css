@@ -1,3 +1,7 @@
+.live-match-management label {
+  color: white;
+}
+
 /* Additional styling for improved match action buttons */
 .match-actions {
   display: flex;

@@ -1,3 +1,7 @@
+.turf-management label {
+  color: white;
+}
+
 /* Turf Management Styles */
 .turf-management {
     background: var(--card-dark);

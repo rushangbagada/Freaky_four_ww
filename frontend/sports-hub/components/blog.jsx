@@ -30,22 +30,6 @@ const Blog = () => {
               to player interviews, discover the stories that make our sports community extraordinary.
             </p>
             
-            <div className="hero-stats">
-              <div className="stat-item">
-                <span className="stat-number">50+</span>
-                <span className="stat-label">Articles</span>
-              </div>
-              <div className="stat-divider"></div>
-              <div className="stat-item">
-                <span className="stat-number">15+</span>
-                <span className="stat-label">Sports Covered</span>
-              </div>
-              <div className="stat-divider"></div>
-              <div className="stat-item">
-                <span className="stat-number">1000+</span>
-                <span className="stat-label">Readers</span>
-              </div>
-            </div>
             
             <div className="hero-cta">
               <button className="hero-btn primary">
@@ -59,29 +43,27 @@ const Blog = () => {
             </div>
           </div>
           
-          <div className="hero-visual">
-            <div className="floating-card card-1">
-              <div className="card-icon">🏆</div>
-              <div className="card-text">
-                <div className="card-title">Championship</div>
-                <div className="card-subtitle">Victory Stories</div>
-              </div>
+          <div className="hero-cards">
+            <div className="stat-card">
+                <span className="stat-icon">🏆</span>
+                <div className="stat-info">
+                    <span className="stat-number">Championship</span>
+                    <span className="stat-label">Victory Stories</span>
+                </div>
             </div>
-            
-            <div className="floating-card card-2">
-              <div className="card-icon">⚽</div>
-              <div className="card-text">
-                <div className="card-title">Match</div>
-                <div className="card-subtitle">Highlights</div>
-              </div>
+            <div className="stat-card">
+                <span className="stat-icon">⚽</span>
+                <div className="stat-info">
+                    <span className="stat-number">Match</span>
+                    <span className="stat-label">Highlights</span>
+                </div>
             </div>
-            
-            <div className="floating-card card-3">
-              <div className="card-icon">👥</div>
-              <div className="card-text">
-                <div className="card-title">Player</div>
-                <div className="card-subtitle">Interviews</div>
-              </div>
+            <div className="stat-card">
+                <span className="stat-icon">👥</span>
+                <div className="stat-info">
+                    <span className="stat-number">Player</span>
+                    <span className="stat-label">Interviews</span>
+                </div>
             </div>
           </div>
         </div>

@@ -32,14 +32,20 @@ export default function Gallery() {
         setLikedArray(Array(data.length).fill(false));
         setViewArray(Array(data.length).fill(false));
       } else {
-        // Use mock data if no data from API
-        useMockData();
+        // No data from API, set empty arrays
+        setAllData([]);
+        setFilteredData([]);
+        setLikedArray([]);
+        setViewArray([]);
       }
     } catch (err) {
       console.error('Failed to fetch gallery data:', err);
       setError(err.message);
-      // Fallback to mock data on error
-      useMockData();
+      // Set empty arrays on error
+      setAllData([]);
+      setFilteredData([]);
+      setLikedArray([]);
+      setViewArray([]);
     } finally {
       setLoading(false);
     }
@@ -51,69 +57,9 @@ export default function Gallery() {
     []
   );
 
-  const useMockData = () => {
-    const mockData = [
-      {
-        id: 1,
-        title: "Football Championship",
-        image: "https://images.unsplash.com/photo-1606851095339-98c0e88e5071?auto=format&fit=crop&w=800&q=80",
-        description: "Exciting football match moment",
-        category: "Football",
-        likes: 12,
-        views: 45
-      },
-      {
-        id: 2,
-        title: "Basketball Finals",
-        image: "https://images.unsplash.com/photo-1599058917212-dc596dbe5396?auto=format&fit=crop&w=800&q=80",
-        description: "High-flying slam dunk",
-        category: "Basketball",
-        likes: 8,
-        views: 32
-      },
-      {
-        id: 3,
-        title: "Tennis Tournament",
-        image: "https://images.unsplash.com/photo-1599058916791-57c42a5e15cb?auto=format&fit=crop&w=800&q=80",
-        description: "Tennis court action",
-        category: "Tennis",
-        likes: 15,
-        views: 28
-      },
-      {
-        id: 4,
-        title: "Volleyball Match",
-        image: "https://images.unsplash.com/photo-1613482180640-1706ae24f648?auto=format&fit=crop&w=800&q=80",
-        description: "Teamwork at the net",
-        category: "Volleyball",
-        likes: 6,
-        views: 19
-      },
-      {
-        id: 5,
-        title: "Cricket Championship",
-        image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80",
-        description: "Perfect batting stance",
-        category: "Cricket",
-        likes: 22,
-        views: 67
-      },
-      {
-        id: 6,
-        title: "Badminton Finals",
-        image: "https://images.unsplash.com/photo-1606851096394-6b2b0f3329c2?auto=format&fit=crop&w=800&q=80",
-        description: "Smash shot in action",
-        category: "Badminton",
-        likes: 9,
-        views: 23
-      }
-    ];
-    
-    setAllData(mockData);
-    setFilteredData(mockData);
-    setLikedArray(Array(mockData.length).fill(false));
-    setViewArray(Array(mockData.length).fill(false));
-  };
+  useEffect(() => {
+    fetchGalleryData();
+  }, []);
 
   const handleLike = (index, id) => {
     const updated = [...filteredData];

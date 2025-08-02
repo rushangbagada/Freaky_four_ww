@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
+import { getApiUrl } from '../../src/config/api';
 import './css/match-management.css';
 
 export default function MatchManagement({ user }) {
@@ -20,7 +20,7 @@ export default function MatchManagement({ user }) {
     team1_score: 0,
     team2_score: 0,
     mvp: '',
-    status: 'scheduled' // Adding status even though it's not in the model for UI consistency
+    status: 'scheduled'
   });
 
   const isAdmin = user.role === 'admin';
@@ -32,7 +32,6 @@ export default function MatchManagement({ user }) {
 
   const fetchMatches = async () => {
     try {
-      // Use the result endpoint as fallback if matches endpoint fails
       let url = getApiUrl('/api/matches');
       
       const response = await fetch(url, {
@@ -43,11 +42,9 @@ export default function MatchManagement({ user }) {
       
       if (response.ok) {
         const data = await response.json();
-        // Handle both array and object responses
         if (data && (Array.isArray(data) || typeof data === 'object')) {
           setMatches(Array.isArray(data) ? data : [data]);
         } else {
-          // Try the result endpoint as fallback
           const fallbackResponse = await fetch(getApiUrl('/api/result'));
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
@@ -57,7 +54,6 @@ export default function MatchManagement({ user }) {
           }
         }
       } else {
-        // Try the result endpoint as fallback
         const fallbackResponse = await fetch(getApiUrl('/api/result'));
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
@@ -68,7 +64,6 @@ export default function MatchManagement({ user }) {
       }
     } catch (error) {
       console.error('Error fetching matches:', error);
-      // Try the result endpoint as fallback
       try {
         const fallbackResponse = await fetch(getApiUrl('/api/result'));
         if (fallbackResponse.ok) {
@@ -225,7 +220,6 @@ export default function MatchManagement({ user }) {
         </button>
       </div>
 
-
       {/* Search and Filter */}
       <div className="search-filter">
         <input
@@ -258,7 +252,7 @@ export default function MatchManagement({ user }) {
                 {match.status || 'scheduled'}
               </span>
             </div>
-            
+
             <div className="match-details">
               <div className="match-teams">
                 <div className="team">
@@ -273,16 +267,19 @@ export default function MatchManagement({ user }) {
                   <span className="label">Date:</span>
                   <span className="value">{new Date(match.date).toLocaleDateString()}</span>
                 </div>
+
                 {match.time && (
                   <div className="info-item">
                     <span className="label">Time:</span>
                     <span className="value">{match.time}</span>
                   </div>
                 )}
+
                 <div className="info-item">
                   <span className="label">Venue:</span>
                   <span className="value">{match.venue}</span>
                 </div>
+
                 {match.description && (
                   <div className="info-item">
                     <span className="label">Description:</span>
@@ -596,3 +593,4 @@ export default function MatchManagement({ user }) {
     </div>
   );
 }
+
