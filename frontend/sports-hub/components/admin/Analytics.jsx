@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/analytics.css';
 
 export default function Analytics() {
@@ -36,7 +37,7 @@ export default function Analytics() {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/analytics?timeRange=${timeRange}`, {
+      const response = await fetch(getApiUrl(`/api/admin/analytics?timeRange=${timeRange}`), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

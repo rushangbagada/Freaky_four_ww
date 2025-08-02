@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../src/AuthContext';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/admin-dashboard.css';
 import UserManagement from './UserManagement';
 import ClubManagement from './ClubManagement';
@@ -45,7 +46,7 @@ export default function AdminDashboard() {
       const token = localStorage.getItem('token');
       console.log('Token available:', !!token);
       
-      const response = await fetch('http://localhost:5000/api/admin/dashboard', {
+      const response = await fetch(getApiUrl('/api/admin/dashboard'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

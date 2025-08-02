@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/player-management.css';
 
 export default function PlayerManagement({ user, selectedClubProp }) {
@@ -70,10 +71,10 @@ export default function PlayerManagement({ user, selectedClubProp }) {
 
   const fetchClubs = async () => {
     try {
-      let url = 'http://localhost:5000/api/clubs';
+      let url = getApiUrl('/api/clubs');
       if (!isAdmin) {
         // Club leaders can only see their own club
-        url = `http://localhost:5000/api/clubs/my-club`;
+        url = getApiUrl('/api/clubs/my-club');
       }
       
       const response = await fetch(url, {
@@ -108,7 +109,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+      const response = await fetch(getApiUrl('/api/admin/users'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -129,7 +130,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
   // Fetch players for a specific club
   const fetchClubPlayers = async (clubId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/clubs/${clubId}/players`, {
+      const response = await fetch(getApiUrl(`/api/admin/clubs/${clubId}/players`), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -167,7 +168,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     setPlayerActionLoading(true);
     setPlayerActionError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs/add-player', {
+      const response = await fetch(getApiUrl('/api/admin/clubs/add-player'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +204,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     setPlayerActionLoading(true);
     setPlayerActionError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs/add-new-player', {
+      const response = await fetch(getApiUrl('/api/admin/clubs/add-new-player'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -241,7 +242,7 @@ export default function PlayerManagement({ user, selectedClubProp }) {
     setPlayerActionLoading(true);
     setPlayerActionError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs/remove-player', {
+      const response = await fetch(getApiUrl('/api/admin/clubs/remove-player'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

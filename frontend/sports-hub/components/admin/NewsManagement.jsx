@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/news-management.css';
 
 export default function NewsManagement({ user }) {
@@ -25,7 +26,7 @@ export default function NewsManagement({ user }) {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/news', {
+      const response = await fetch(getApiUrl('/api/news'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -48,7 +49,7 @@ export default function NewsManagement({ user }) {
   const handleAddNews = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/news', {
+      const response = await fetch(getApiUrl('/api/admin/news'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +76,7 @@ export default function NewsManagement({ user }) {
 
   const handleUpdateNews = async (newsId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/news/${newsId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/news/${newsId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +97,7 @@ export default function NewsManagement({ user }) {
   const handleDeleteNews = async (newsId) => {
     if (window.confirm('Are you sure you want to delete this news item?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/news/${newsId}`, {
+        const response = await fetch(getApiUrl(`/api/admin/news/${newsId}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

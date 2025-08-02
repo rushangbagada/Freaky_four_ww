@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/quiz-management.css';
 
 export default function QuizManagement({ user }) {
@@ -52,7 +53,7 @@ export default function QuizManagement({ user }) {
 
   const fetchQuestions = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/quiz', {
+      const response = await fetch(getApiUrl('/api/admin/quiz'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -75,7 +76,7 @@ export default function QuizManagement({ user }) {
   const handleAddQuestion = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/quiz', {
+      const response = await fetch(getApiUrl('/api/admin/quiz'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export default function QuizManagement({ user }) {
 
   const handleUpdateQuestion = async (questionId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/quiz/${questionId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/quiz/${questionId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +124,7 @@ export default function QuizManagement({ user }) {
   const handleDeleteQuestion = async (questionId) => {
     if (window.confirm('Are you sure you want to delete this question?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/quiz/${questionId}`, {
+        const response = await fetch(getApiUrl(`/api/admin/quiz/${questionId}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -371,4 +372,5 @@ export default function QuizManagement({ user }) {
     </div>
   );
 }
+
 

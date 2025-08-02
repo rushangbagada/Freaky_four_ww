@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/gallery.css';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 
 export default function Gallery() {
   const [allData, setAllData] = useState([]);
@@ -17,7 +18,7 @@ export default function Gallery() {
       setError(null);
       
       // Try the backend API first
-      const response = await fetch('http://localhost:5000/api/gallery');
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GALLERY));
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -140,7 +141,7 @@ export default function Gallery() {
 
   const handleUpdate = async (id, likes, views) => {
     try {
-      const response = await fetch('http://localhost:5000/api/gallery/update', {
+      const response = await fetch(getApiUrl('/api/gallery/update'), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, likes, views })

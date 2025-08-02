@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/match-management.css';
 
 export default function MatchManagement({ user }) {
@@ -32,7 +33,7 @@ export default function MatchManagement({ user }) {
   const fetchMatches = async () => {
     try {
       // Use the result endpoint as fallback if matches endpoint fails
-      let url = 'http://localhost:5000/api/matches';
+      let url = getApiUrl('/api/matches');
       
       const response = await fetch(url, {
         headers: {
@@ -47,7 +48,7 @@ export default function MatchManagement({ user }) {
           setMatches(Array.isArray(data) ? data : [data]);
         } else {
           // Try the result endpoint as fallback
-          const fallbackResponse = await fetch('http://localhost:5000/api/result');
+          const fallbackResponse = await fetch(getApiUrl('/api/result'));
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
             setMatches(Array.isArray(fallbackData) ? fallbackData : []);
@@ -57,7 +58,7 @@ export default function MatchManagement({ user }) {
         }
       } else {
         // Try the result endpoint as fallback
-        const fallbackResponse = await fetch('http://localhost:5000/api/result');
+        const fallbackResponse = await fetch(getApiUrl('/api/result'));
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
           setMatches(Array.isArray(fallbackData) ? fallbackData : []);
@@ -69,7 +70,7 @@ export default function MatchManagement({ user }) {
       console.error('Error fetching matches:', error);
       // Try the result endpoint as fallback
       try {
-        const fallbackResponse = await fetch('http://localhost:5000/api/result');
+        const fallbackResponse = await fetch(getApiUrl('/api/result'));
         if (fallbackResponse.ok) {
           const fallbackData = await fallbackResponse.json();
           setMatches(Array.isArray(fallbackData) ? fallbackData : []);
@@ -88,7 +89,7 @@ export default function MatchManagement({ user }) {
   const fetchClubs = async () => {
     try {
       console.log('🔄 Fetching clubs...');
-      const response = await fetch('http://localhost:5000/api/clubs', {
+      const response = await fetch(getApiUrl('/api/clubs'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -122,7 +123,7 @@ export default function MatchManagement({ user }) {
   const handleAddMatch = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/matches', {
+      const response = await fetch(getApiUrl('/api/admin/matches'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +154,7 @@ export default function MatchManagement({ user }) {
 
   const handleUpdateMatch = async (matchId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/matches/${matchId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/matches/${matchId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -187,8 +188,8 @@ export default function MatchManagement({ user }) {
         
         // Use the correct endpoint based on user role
         const endpoint = isAdmin 
-          ? `http://localhost:5000/api/admin/matches/${matchId}` 
-          : `http://localhost:5000/api/admin/my-matches/${matchId}`;
+          ? getApiUrl(`/api/admin/matches/${matchId}`) 
+          : getApiUrl(`/api/admin/my-matches/${matchId}`);
         
         console.log('Using endpoint:', endpoint);
         
@@ -645,25 +646,3 @@ export default function MatchManagement({ user }) {
     </div>
   );
 }
-const fetchMatches = async () => {
-  try {
-    // Use the result endpoint directly instead of trying matches first
-    const response = await fetch('http://localhost:5000/api/result', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      setMatches(Array.isArray(data) ? data : []);
-    } else {
-      setMatches([]);
-    }
-  } catch (error) {
-    console.error('Error fetching matches:', error);
-    setMatches([]);
-  } finally {
-    setLoading(false);
-  }
-};

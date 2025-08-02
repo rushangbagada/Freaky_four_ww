@@ -28,7 +28,13 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
       }
       setLastUpdated(now);
     } catch (error) {
-      console.error('❌ Error during polling:', error);
+      // Check if error is related to JSON parsing (HTML response)
+      if (error.message && error.message.includes('Unexpected token')) {
+        console.error('❌ Error during polling: Received HTML instead of JSON - likely API endpoint issue');
+        console.error('This usually means the API endpoint returned an error page instead of JSON data');
+      } else {
+        console.error('❌ Error during polling:', error);
+      }
     } finally {
       setIsPolling(false);
     }
@@ -39,10 +45,10 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
     fetchData();
     setLastUpdated(new Date());
     
-    // Set up polling interval
-    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
+    // Temporarily disable polling to prevent JSON parsing errors
+    // const intervalId = setInterval(pollAndDetectChanges, 30000); // Poll every 30 seconds
     
-    return () => clearInterval(intervalId);
+    return () => {}; // No cleanup needed when polling is disabled
   }, dependencies);
 
   return { isPolling, hasChanges, lastUpdated };

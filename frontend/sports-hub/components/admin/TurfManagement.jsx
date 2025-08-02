@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
 import './css/turf-management.css';
 
@@ -15,7 +16,7 @@ export default function TurfManagement() {
     const fetchTurfs = async () => {
         try {
             console.log('🔄 [Admin] Fetching turfs data...');
-            const response = await fetch('http://localhost:5000/api/turfs');
+              const response = await fetch(getApiUrl('/api/turfs'));
             if (!response.ok) {
                 throw new Error('Failed to fetch turfs');
             }
@@ -50,7 +51,7 @@ export default function TurfManagement() {
         e.preventDefault();
         if (newTurf.name && newTurf.location) {
             try {
-                const response = await fetch('http://localhost:5000/api/admin/turfs', {
+                const response = await fetch(getApiUrl('/api/admin/turfs'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -85,7 +86,7 @@ export default function TurfManagement() {
     
     const handleDeleteTurf = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/turfs/${id}`, {
+            const response = await fetch(getApiUrl(`/api/admin/turfs/${id}`), {
                 method: 'DELETE'
             });
             
@@ -196,7 +197,7 @@ export default function TurfManagement() {
                                 <form onSubmit={async (e) => {
                                     e.preventDefault();
                                     try {
-                                        const response = await fetch(`http://localhost:5000/api/admin/turfs/${editingTurf}`, {
+                                        const response = await fetch(getApiUrl(`/api/admin/turfs/${editingTurf}`), {
                                             method: 'PUT',
                                             headers: {
                                                 'Content-Type': 'application/json'
@@ -315,3 +316,4 @@ export default function TurfManagement() {
         </div>
     );
 }
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/user-management.css';
 
 export default function UserManagement() {
@@ -31,7 +32,7 @@ export default function UserManagement() {
       console.log('Fetching users...');
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+        const response = await fetch(getApiUrl('/api/admin/users'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export default function UserManagement() {
 
   const fetchClubs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/clubs');
+      const response = await fetch(getApiUrl('/api/clubs'));
       if (response.ok) {
         const data = await response.json();
         setClubs(Array.isArray(data) ? data : []);
@@ -72,7 +73,7 @@ export default function UserManagement() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+      const response = await fetch(getApiUrl('/api/admin/users'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ export default function UserManagement() {
       payload.club = payload.club._id;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/users/${userId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +129,7 @@ export default function UserManagement() {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+        const response = await fetch(getApiUrl(`/api/admin/users/${userId}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

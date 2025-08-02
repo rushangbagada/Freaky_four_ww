@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
 import './css/live-match-management.css';
 
@@ -46,7 +47,7 @@ export default function LiveMatchManagement({ user }) {
   const fetchLiveMatches = async () => {
     try {
       console.log('🔄 Fetching live matches from admin API...');
-      const response = await fetch('http://localhost:5000/api/admin/live-matches', {
+      const response = await fetch(getApiUrl('/api/admin/live-matches'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -82,7 +83,7 @@ export default function LiveMatchManagement({ user }) {
 
   const fetchClubs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/clubs', {
+      const response = await fetch(getApiUrl('/api/clubs'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -101,7 +102,7 @@ export default function LiveMatchManagement({ user }) {
     try {
       console.log('Submitting new match:', newMatch);
       
-      const response = await fetch('http://localhost:5000/api/admin/live-matches', {
+      const response = await fetch(getApiUrl('/api/admin/live-matches'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,7 +152,7 @@ export default function LiveMatchManagement({ user }) {
 
   const handleUpdateLiveMatch = async (matchId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -172,7 +173,7 @@ export default function LiveMatchManagement({ user }) {
   const handleDeleteLiveMatch = async (matchId) => {
     if (window.confirm('Are you sure you want to delete this live match?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}`, {
+        const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -201,7 +202,7 @@ export default function LiveMatchManagement({ user }) {
       if (!match) return;
 
       const updatedEvents = [...match.events, newEvent];
-      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${match._id}/events`, {
+      const response = await fetch(getApiUrl(`/api/admin/live-matches/${match._id}/events`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +233,7 @@ export default function LiveMatchManagement({ user }) {
     if (!currentMatchForStats) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${currentMatchForStats._id}/stats`, {
+      const response = await fetch(getApiUrl(`/api/admin/live-matches/${currentMatchForStats._id}/stats`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -257,7 +258,7 @@ export default function LiveMatchManagement({ user }) {
       const currentMatch = liveMatches.find(m => m._id === matchId);
       if (!currentMatch) return;
 
-      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -295,7 +296,7 @@ export default function LiveMatchManagement({ user }) {
   const handleFinishMatchAndCalculatePoints = async (matchId, team1Score, team2Score) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/admin/live-matches/${matchId}/update-scores`, {
+      const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}/update-scores`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

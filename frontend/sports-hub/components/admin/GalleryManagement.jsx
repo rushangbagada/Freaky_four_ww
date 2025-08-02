@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import '../css/gallery.css';
 import './css/admin-dashboard.css';
 
@@ -30,7 +31,7 @@ export default function GalleryManagement({ user }) {
   const fetchGallery = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/gallery', {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.GALLERY), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -52,7 +53,7 @@ export default function GalleryManagement({ user }) {
     setAddError('');
     setAddLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/admin/gallery', {
+      const response = await fetch(getApiUrl('/api/gallery/update'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

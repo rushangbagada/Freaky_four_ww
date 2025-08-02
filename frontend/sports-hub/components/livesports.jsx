@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import LiveScore from './livescore';
 import MatchViewer from './matchviewer';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/livesports.css';
 
 const LiveSports = () => {
@@ -14,7 +15,7 @@ const LiveSports = () => {
   const fetchLiveMatches = async () => {
     try {
       console.log('🔄 Fetching live matches for public view...');
-      const response = await fetch('http://localhost:5000/api/live_matches');
+      const response = await fetch(getApiUrl('/api/live_matches'));
       
       if (response.ok) {
         const data = await response.json();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TurfCard from './payment/TurfCard';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/turf.css';
 
 const Turf = () => {
@@ -34,7 +35,7 @@ const Turf = () => {
   const fetchTurfs = async () => {
     try {
       console.log('🔄 Fetching turfs data...');
-      const response = await fetch("http://localhost:5000/api/turfs");
+      const response = await fetch(getApiUrl('/api/turfs'));
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/club-management.css';
 
 export default function ClubManagement({ user, onManagePlayersClick }) {
@@ -40,10 +41,10 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
 
   const fetchClubs = async () => {
     try {
-      let url = 'http://localhost:5000/api/clubs';
+      let url = getApiUrl('/api/clubs');
       if (!isAdmin) {
         // Club leaders can only see their own club
-        url = `http://localhost:5000/api/clubs/my-club`;
+        url = getApiUrl('/api/clubs/my-club');
       }
       
       const response = await fetch(url, {
@@ -73,7 +74,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/users', {
+      const response = await fetch(getApiUrl('/api/admin/users'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -93,7 +94,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
   const handleAddClub = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs', {
+      const response = await fetch(getApiUrl('/api/admin/clubs'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +123,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
 
   const handleUpdateClub = async (clubId, updatedData) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/clubs/${clubId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/clubs/${clubId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +144,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
   const handleDeleteClub = async (clubId) => {
     if (window.confirm('Are you sure you want to delete this club?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/clubs/${clubId}`, {
+        const response = await fetch(getApiUrl(`/api/admin/clubs/${clubId}`), {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -162,7 +163,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
   // Fetch players for a specific club
   const fetchClubPlayers = async (clubId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/clubs/${clubId}/players`, {
+      const response = await fetch(getApiUrl(`/api/admin/clubs/${clubId}/players`), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -186,7 +187,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
     setPlayerActionLoading(true);
     setPlayerActionError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs/add-player', {
+      const response = await fetch(getApiUrl('/api/admin/clubs/add-player'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +218,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
     setPlayerActionLoading(true);
     setPlayerActionError('');
     try {
-      const response = await fetch('http://localhost:5000/api/admin/clubs/remove-player', {
+      const response = await fetch(getApiUrl('/api/admin/clubs/remove-player'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
