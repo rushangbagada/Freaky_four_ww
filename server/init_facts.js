@@ -15,47 +15,43 @@ async function main() {
 const sampleFacts = [
   {
     id: 1,
-    title: "Oldest Sport",
-    description: "Wrestling is considered the world's oldest competitive sport, dating back to 3000 BC.",
-    image: "🤼" ,
-    category: "Sports",
-    date: new Date()
-
+    title: "Wrestling: The Ancient Tradition",
+    description: "Wrestling is revered as the world's oldest competitive sport, dating back to ancient Mesopotamia around 3000 BC.",
+    image: "🤼",
+    category: "Ancient Sports",
+    date: new Date('3000-01-01')
   },
   {
     id: 2,
-    title: "Fastest Ball",
-    description: "The fastest recorded tennis serve was by Sam Groth at 263.4 km/h (163.7 mph).",
-    image: "🎾" ,
-    category: "Sports",
-    date: new Date()
+    title: "Tennis Serve Record",
+    description: "Sam Groth holds the record for the fastest tennis serve ever recorded at a blistering speed of 263.4 km/h (163.7 mph) in 2012.",
+    image: "🎾",
+    category: "Tennis",
+    date: new Date('2012-05-09')
   },
   {
     id: 3,
-    title: "Most Played Team Sport",
-    description: "Football (soccer) is the most played and watched sport in the world.",
+    title: "Global Passion for Football",
+    description: "Football, known as soccer in some countries, is the most played and watched sport worldwide, boasting millions of fans across continents.",
     image: "⚽",
-    category: "Sports" ,
-    date: new Date()
-
+    category: "Global Sports",
+    date: new Date('1863-10-26')
   },
   {
     id: 4,
-    title: "Olympic Debut",
-    description: "Basketball was first included in the Olympic Games in 1936.",
-    image: "🏀" ,
-    category: "Sports",
-    date: new Date()
-
+    title: "Basketball's Olympic Journey",
+    description: "Basketball made its grand debut as an Olympic sport in Berlin, Germany, during the 1936 Summer Olympics, greatly enhancing its international prominence.",
+    image: "🏀",
+    category: "Olympics",
+    date: new Date('1936-08-01')
   },
   {
     id: 5,
-    title: "Longest Match",
-    description: "The longest tennis match lasted 11 hours and 5 minutes at Wimbledon 2010.",
-    image: "⏱️" ,
-    category: "Sports",
-    date: new Date()
-
+    title: "Marathon Tennis Match",
+    description: "The longest tennis match in history spanned 11 hours and 5 minutes, played over three days during the 2010 Wimbledon Championships.",
+    image: "⏱️",
+    category: "Records",
+    date: new Date('2010-06-22')
   }
 ];
 

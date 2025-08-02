@@ -15,58 +15,58 @@ async function main() {
 const all_prediction_user=[
     {
         id:1,
-        name:"Sachin Tendulkar",
-        email:"4H2Z0@example.com",
-        total_point:80,
-        prediction:"India won the match",
-        accuracy:0.8,
-        wins:1,
-        streak:1,
-        badges:["🏆","🎯","⚡"]
+        name:"Sarah Chen",
+        email:"sarah.chen@techcorp.com",
+        total_point:950,
+        prediction:"Q4 revenue will exceed $2.5M target by 15%",
+        accuracy:0.92,
+        wins:23,
+        streak:8,
+        badges:["📈","🎯","💎"]
     },
     {
         id:2,
-        name:"Sachin Tendulkar",
-        email:"4H2Z0@example.com",
-        total_point:80,
-        prediction:"India won the match",
-        accuracy:0.8,
-        wins:1,
-        streak:1,
-        badges:["🏆","🎯","⚡"]
+        name:"Michael Rodriguez",
+        email:"m.rodriguez@analytics.pro",
+        total_point:875,
+        prediction:"Market volatility will decrease by 20% next quarter",
+        accuracy:0.88,
+        wins:19,
+        streak:5,
+        badges:["📊","🔍","⭐"]
     },
     {
         id:3,
-        name:"Sachin Tendulkar",
-        email:"4H2Z0@example.com",
-        total_point:80,
-        prediction:"India won the match",
-        accuracy:0.8,
-        wins:1,
-        streak:1,
-        badges:["🏆","🎯","⚡"]
+        name:"Emma Thompson",
+        email:"emma.t@businessinsights.com",
+        total_point:820,
+        prediction:"Customer retention rate will improve to 85%",
+        accuracy:0.85,
+        wins:17,
+        streak:3,
+        badges:["🎯","💼","🚀"]
     },
     {
         id:4,
-        name:"Sachin Tendulkar",
-        email:"4H2Z0@example.com",
-        total_point:80,
-        prediction:"India won the match",
-        accuracy:0.8,
-        wins:1,
-        streak:1,
-        badges:["🏆","🎯","⚡"]
+        name:"David Park",
+        email:"david.park@strategicdata.io",
+        total_point:765,
+        prediction:"Technology sector will outperform by 12%",
+        accuracy:0.81,
+        wins:15,
+        streak:2,
+        badges:["💻","📈","🎖️"]
     },
     {
         id:5,
-        name:"Sachin Tendulkar",
-        email:"4H2Z0@example.com",
-        total_point:80,
-        prediction:"India won the match",
-        accuracy:0.8,
-        wins:1,
+        name:"Jennifer Walsh",
+        email:"j.walsh@marketpredictions.net",
+        total_point:690,
+        prediction:"E-commerce growth rate will stabilize at 18%",
+        accuracy:0.78,
+        wins:12,
         streak:1,
-        badges:["🏆","🎯","⚡"]
+        badges:["🛒","📊","🏅"]
     }
 ]
 

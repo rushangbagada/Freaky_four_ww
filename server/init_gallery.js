@@ -15,57 +15,57 @@ async function main() {
 const new_gallery = [
   {
     id: 1,
-    title: "Football",
-    image: "https://images.unsplash.com/photo-1606851095339-98c0e88e5071?auto=format&fit=crop&w=800&q=80",
-    description: "Exciting football match moment",
+    title: "Epic Football Finale",
+    image: "https://images.unsplash.com/photo-1606851095339-98c0e88e5071?auto=formatfit=cropw=800q=80",
+    description: "An electrifying moment captured as players vie for the championship trophy in a thrilling football finale.",
     category: "Football",
-    likes: 0,
-    views: 0
+    likes: 150,
+    views: 1920
   },
   {
     id: 2,
-    title: "Basketball",
-    image: "https://images.unsplash.com/photo-1599058917212-dc596dbe5396?auto=format&fit=crop&w=800&q=80",
-    description: "High-flying slam dunk",
+    title: "Slam Dunk Spectacle",
+    image: "https://images.unsplash.com/photo-1599058917212-dc596dbe5396?auto=formatfit=cropw=800q=80",
+    description: "A powerful slam dunk that had the crowd on their feet, showcasing the raw energy of basketball.",
     category: "Basketball",
-    likes: 0,
-    views: 0
+    likes: 200,
+    views: 2345
   },
   {
     id: 3,
-    title: "Tennis",
-    image: "https://images.unsplash.com/photo-1599058916791-57c42a5e15cb?auto=format&fit=crop&w=800&q=80",
-    description: "Tennis court action",
+    title: "Tennis Triumph",
+    image: "https://images.unsplash.com/photo-1599058916791-57c42a5e15cb?auto=formatfit=cropw=800q=80",
+    description: "A moment of victory captured as a player secures an ace during a heated tennis tournament.",
     category: "Tennis",
-    likes: 0,
-    views: 0
+    likes: 180,
+    views: 2100
   },
   {
     id: 4,
-    title: "Volleyball",
-    image: "https://images.unsplash.com/photo-1613482180640-1706ae24f648?auto=format&fit=crop&w=800&q=80",
-    description: "Teamwork at the net",
+    title: "Victory at the Nets",
+    image: "https://images.unsplash.com/photo-1613482180640-1706ae24f648?auto=formatfit=cropw=800q=80",
+    description: "Players display impeccable teamwork and strategy in a nail-biting volleyball match.",
     category: "Volleyball",
-    likes: 0,
-    views: 0
+    likes: 170,
+    views: 1980
   },
   {
     id: 5,
-    title: "Baseball",
-    image: "https://images.unsplash.com/photo-1606851995170-27a12c129cfc?auto=format&fit=crop&w=800&q=80",
-    description: "Pitching perfection",
+    title: "Perfect Pitching Moment",
+    image: "https://images.unsplash.com/photo-1606851995170-27a12c129cfc?auto=formatfit=cropw=800q=80",
+    description: "A snapshot of unparalleled precision as the pitcher delivers a decisive curveball.",
     category: "Baseball",
-    likes: 0,
-    views: 0
+    likes: 160,
+    views: 1750
   },
   {
     id: 6,
-    title: "Soccer",
-    image: "https://images.unsplash.com/photo-1606851287863-2f39c2de33b5?auto=format&fit=crop&w=800&q=80",
-    description: "Intense soccer play",
+    title: "Soccer's Intensity Unleashed",
+    image: "https://images.unsplash.com/photo-1606851287863-2f39c2de33b5?auto=formatfit=cropw=800q=80",
+    description: "The raw intensity and skill of soccer players evident in every stride and tackle.",
     category: "Soccer",
-    likes: 0,
-    views: 0
+    likes: 190,
+    views: 2200
   }
 ];
 

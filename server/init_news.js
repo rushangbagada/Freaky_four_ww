@@ -28,88 +28,109 @@ async function main() {
 
 const news = [
   {
-    title: "Inter-College Basketball Championship Finals Set for This Weekend",
+    title: "Basketball Championship Finals: Engineering Eagles Claim Victory in Thrilling Overtime",
     image: "🏀", 
-    description: "The top four teams from different colleges will compete in the most anticipated basketball championship of the year. Engineering Eagles face off against Business Bears in what promises to be an electrifying semifinal match.",
-    date: new Date('2024-08-01'),
+    description: "In a nail-biting championship final, the Engineering Eagles defeated the Business Bears 94-91 in overtime. Kevin Johnson led the Eagles with 28 points, while Michael Davis dominated the boards with 15 rebounds. The victory marks the Eagles' first championship in three years.",
+    date: new Date('2024-12-15'),
     category: "Basketball"
   },
   {
-    title: "Football Season Kicks Off with Record-Breaking Attendance",
+    title: "Football Season Concludes with Record-Breaking Attendance and Arts Arrows Championship",
     image: "⚽",
-    description: "Over 5,000 spectators gathered to witness the opening match between Medical Mavericks and Law Lions. The atmosphere was electric as both teams showcased exceptional skill and determination.",
-    date: new Date('2024-07-30'),
+    description: "Over 6,200 spectators witnessed the Arts Arrows defeat the Science Sharks 3-2 in the football championship final. Marcus Thompson scored the winning goal in the 89th minute, completing a remarkable comeback from 2-1 down. The season saw unprecedented fan engagement across all matches.",
+    date: new Date('2024-12-10'),
     category: "Football"
   },
   {
-    title: "Tennis Doubles Tournament Sees Unprecedented Competition",
+    title: "Tennis Excellence: Rafael Martinez and Elena Petrov Dominate Singles Championships",
     image: "🎾",
-    description: "Sixteen pairs from eight different colleges participated in the annual doubles championship. The Arts Arrows duo dominated the courts with their strategic gameplay and powerful serves.",
-    date: new Date('2024-07-28'),
+    description: "The tennis singles championships concluded with spectacular performances from Rafael Martinez and Elena Petrov. Martinez defeated Lucas Chen 6-4, 7-5 in the men's final, while Petrov overcame Sophia Lee 6-3, 6-4 in the women's championship. Both players showcased exceptional court coverage and strategic gameplay.",
+    date: new Date('2024-12-08'),
     category: "Tennis"
   },
   {
-    title: "Volleyball Team Prepares for National Championships",
+    title: "Volleyball Powerhouse: Medical Mavericks Secure Third Consecutive Championship",
     image: "🏐",
-    description: "After winning the regional championship, our volleyball team is now preparing for the national competition. Coach Johnson reports that the team has been training intensively for the past month.",
-    date: new Date('2024-07-25'),
+    description: "The Medical Mavericks completed a historic three-peat by defeating the Law Lions 3-1 in the volleyball championship. Sarah Miller's 18 kills and Emma Garcia's precise setting led the Mavericks to victory. Coach Anderson praised the team's exceptional teamwork and mental fortitude throughout the season.",
+    date: new Date('2024-12-05'),
     category: "Volleyball"
   },
   {
-    title: "Swimming Records Broken at Annual Aquatic Meet",
+    title: "Swimming Sensation: Katie Thompson Breaks Multiple University Records",
     image: "🏊",
-    description: "Three new college records were set during the annual swimming championship. Sarah Mitchell broke the 100m freestyle record, while the men's relay team set a new benchmark in the 4x100m event.",
-    date: new Date('2024-07-23'),
+    description: "Katie Thompson delivered a record-breaking performance at the annual swimming championship, setting new university records in the 100m and 200m freestyle events. Daniel Kim complemented her performance with a stunning butterfly stroke victory, while the relay teams dominated their respective events.",
+    date: new Date('2024-12-03'),
     category: "Swimming"
   },
   {
-    title: "Badminton Singles Champion Emerges After Intense Final",
+    title: "Badminton Brilliance: Lin Wei Claims Singles Title in Epic Three-Set Battle",
     image: "🏸",
-    description: "The badminton singles final went to three sets before Mike Chen from Science Spartans emerged victorious. The match lasted over two hours and kept spectators on the edge of their seats.",
-    date: new Date('2024-07-20'),
+    description: "Lin Wei from the Computer Cobras emerged victorious in the badminton singles championship after a grueling three-set match against Priya Sharma. The final scores of 21-19, 18-21, 21-17 reflected the intense competition. Wei's aggressive playing style and court awareness proved decisive in the championship point.",
+    date: new Date('2024-11-30'),
     category: "Badminton"
   },
   {
-    title: "Track and Field Athletes Qualify for State Competition",
+    title: "Track and Field Excellence: University Athletes Shine at Regional Championships",
     image: "🏃",
-    description: "Five of our track and field athletes have qualified for the state-level competition after impressive performances at the regional meet. The 400m relay team posted their best time of the season.",
-    date: new Date('2024-07-18'),
+    description: "The university's track and field team delivered outstanding performances at the regional championships. Usain Roberts set a new personal best in the 100m sprint, while Maya Patel dominated the long-distance events. Jordan Smith's high jump victory and Carlos Mendez's shot put triumph completed a remarkable day for the team.",
+    date: new Date('2024-11-28'),
     category: "Track & Field"
   },
   {
-    title: "Cricket Team Wins Inter-University Trophy",
+    title: "Cricket Champions: Engineering Eagles Win Thrilling Final Against Business Bears",
     image: "🏏",
-    description: "After a thrilling final match that went into overtime, our cricket team has secured the Inter-University Trophy. Captain James Rodriguez led from the front with a match-winning performance.",
-    date: new Date('2024-07-15'),
+    description: "The Engineering Eagles secured the cricket championship with a 22-run victory over the Business Bears. Rajesh Sharma's all-round performance (67 runs and 4 wickets) earned him the Player of the Match award. Aditya Patel's crucial 45-run partnership with Vikram Singh in the middle overs proved decisive in setting a competitive total.",
+    date: new Date('2024-11-25'),
     category: "Cricket"
   },
   {
-    title: "New Sports Facility Opens with State-of-the-Art Equipment",
+    title: "State-of-the-Art Aquatic Center Opens with Olympic-Standard Facilities",
     image: "🏟️",
-    description: "The newly constructed multi-purpose sports complex opened its doors today, featuring modern gym equipment, indoor courts, and a regulation-size swimming pool. The facility will serve all student athletes.",
-    date: new Date('2024-07-12'),
+    description: "The newly constructed Aquatic Center opened its doors featuring Olympic-standard swimming pools, diving platforms, and cutting-edge timing systems. The facility includes a 50-meter competition pool, recreational pool, and specialized training areas. Athletic Director Sarah Johnson called it a 'game-changer for our aquatic programs.'",
+    date: new Date('2024-11-22'),
     category: "Facilities"
   },
   {
-    title: "Women's Soccer Team Advances to Championship Final",
-    image: "⚽",
-    description: "The women's soccer team defeated the defending champions 3-1 in a spectacular semifinal match. Star player Emma Thompson scored two goals, leading her team to their first final in five years.",
-    date: new Date('2024-07-10'),
-    category: "Soccer"
+    title: "Hockey Triumph: History Hawks Defeat Medical Mavericks in Championship Thriller",
+    image: "🏒",
+    description: "The History Hawks claimed their first hockey championship in over a decade with a 4-2 victory over the Medical Mavericks. Connor O'Brien scored twice, including the game-winning goal with 3:45 remaining. Jake Morrison made 28 saves to secure the victory in front of a capacity crowd at the Ice Hockey Rink.",
+    date: new Date('2024-11-20'),
+    category: "Hockey"
   },
   {
-    title: "Golf Tournament Raises Funds for Athletic Scholarships",
-    image: "⛳",
-    description: "The annual charity golf tournament raised over $25,000 for athletic scholarships. More than 100 participants, including alumni and local business leaders, contributed to this successful fundraising event.",
-    date: new Date('2024-07-08'),
-    category: "Golf"
+    title: "Table Tennis Mastery: Wang Li Dominates Annual Championship Tournament",
+    image: "🏓",
+    description: "Wang Li from the Table Tennis Club delivered a masterclass performance, winning the annual championship without dropping a single set. His victories over Anna Volkov in the semifinals and Hiroshi Sato in the final showcased exceptional technique and tactical awareness. The tournament featured 64 participants from across the university.",
+    date: new Date('2024-11-18'),
+    category: "Table Tennis"
   },
   {
-    title: "Esports Team Qualifies for National Gaming Championship",
-    image: "🎮",
-    description: "Our esports team has qualified for the national championship after winning the regional tournament in League of Legends. The team will compete against 15 other universities for the national title.",
-    date: new Date('2024-07-05'),
-    category: "Esports"
+    title: "Multi-Sport Excellence: University Hosts Successful Inter-Collegiate Championship",
+    image: "🏆",
+    description: "The university successfully hosted the annual Inter-Collegiate Championship, welcoming over 2,000 athletes from 25 institutions. The three-day event featured competitions in 12 different sports, with our teams securing podium finishes in 8 categories. The event generated significant media coverage and showcased our world-class facilities.",
+    date: new Date('2024-11-15'),
+    category: "Multi-Sport"
+  },
+  {
+    title: "Athletic Scholarship Program Expands with Record $50,000 Fundraising Success",
+    image: "💰",
+    description: "The annual athletic scholarship fundraising campaign exceeded all expectations, raising over $50,000 through various events including the charity golf tournament, alumni dinner, and corporate sponsorships. The funds will support 15 student-athletes across different sports, ensuring continued excellence in our athletic programs.",
+    date: new Date('2024-11-12'),
+    category: "Fundraising"
+  },
+  {
+    title: "Sports Medicine Center Launches Cutting-Edge Athlete Wellness Program",
+    image: "🏥",
+    description: "The Sports Medicine Center unveiled its comprehensive athlete wellness program, featuring advanced injury prevention protocols, nutrition counseling, and mental health support. The program utilizes state-of-the-art equipment for biomechanical analysis and recovery therapy, ensuring optimal performance and well-being for all student-athletes.",
+    date: new Date('2024-11-10'),
+    category: "Health & Wellness"
+  },
+  {
+    title: "Sustainability Initiative: Sports Complex Goes Carbon Neutral",
+    image: "🌱",
+    description: "The university's sports complex achieved carbon neutrality through the installation of solar panels, energy-efficient LED lighting, and a comprehensive recycling program. The initiative saves an estimated 200 tons of CO2 annually while reducing operational costs by 30%. This makes us the first carbon-neutral athletic facility in the region.",
+    date: new Date('2024-11-08'),
+    category: "Sustainability"
   }
 ];
 

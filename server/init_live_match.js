@@ -26,32 +26,34 @@ const all_live_matches = [
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
     events: [
       {
-        time: '45\'',
-        type: 'goal',
+        time: 'Q3 9:12',
+        type: 'three_pointer',
+        team: 'Business Bears',
+        player: 'Marcus Thompson',
+        description: 'Three-pointer from beyond the arc'
+      },
+      {
+        time: 'Q3 7:30',
+        type: 'slam_dunk',
         team: 'Engineering Eagles',
-        player: 'John Smith',
-        description: 'Goal scored from penalty kick'
+        player: 'David Rodriguez',
+        description: 'Powerful slam dunk off the fast break'
       },
       {
-        time: '38\'',
-        type: 'card',
+        time: 'Q2 15:45',
+        type: 'timeout',
         team: 'Business Bears',
-        player: 'Mike Johnson',
-        description: 'Yellow card for unsporting behavior'
-      },
-      {
-        time: '22\'',
-        type: 'goal',
-        team: 'Business Bears',
-        player: 'Sarah Davis',
-        description: 'Goal from free kick'
+        player: 'Coach Williams',
+        description: 'Timeout called to strategize'
       }
     ],
     stats: {
-      possession: { home: 58, away: 42 },
-      shots: { home: 12, away: 8 },
-      shots_on_target: { home: 5, away: 3 },
-      fouls: { home: 7, away: 11 }
+      field_goals: { home: 28, away: 31 },
+      three_pointers: { home: 8, away: 12 },
+      free_throws: { home: 14, away: 8 },
+      rebounds: { home: 24, away: 22 },
+      assists: { home: 18, away: 20 },
+      turnovers: { home: 9, away: 7 }
     }
   },
   {
@@ -67,32 +69,41 @@ const all_live_matches = [
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
     events: [
       {
-        time: '45\'',
+        time: '65\'',
         type: 'goal',
         team: 'Arts Arrows',
-        player: 'John Smith',
-        description: 'Goal scored from penalty kick'
+        player: 'Elena Rodriguez',
+        description: 'Beautiful curling shot into the top corner'
       },
       {
-        time: '38\'',
-        type: 'card',
+        time: '52\'',
+        type: 'yellow_card',
         team: 'Science Sharks',
-        player: 'Mike Johnson',
-        description: 'Yellow card for unsporting behavior'
+        player: 'Ahmed Hassan',
+        description: 'Yellow card for tactical foul'
       },
       {
-        time: '22\'',
+        time: '34\'',
         type: 'goal',
         team: 'Science Sharks',
-        player: 'Sarah Davis',
-        description: 'Goal from free kick'
+        player: 'Lucas Chen',
+        description: 'Header from corner kick'
+      },
+      {
+        time: '18\'',
+        type: 'goal',
+        team: 'Arts Arrows',
+        player: 'Sophia Martinez',
+        description: 'First goal from penalty kick'
       }
     ],
     stats: {
       possession: { home: 58, away: 42 },
       shots: { home: 12, away: 8 },
       shots_on_target: { home: 5, away: 3 },
-      fouls: { home: 7, away: 11 }
+      corners: { home: 6, away: 4 },
+      fouls: { home: 7, away: 11 },
+      offsides: { home: 3, away: 5 }
     }
   },
   {
@@ -103,78 +114,82 @@ const all_live_matches = [
     team1_score: 2,
     team2_score: 1,
     status: 'live',
-    time: 'Set 4',
+    time: 'Set 4 - 18-15',
     venue: 'Sports Hall B',
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
     events: [
       {
-        time: '45\'',
-        type: 'goal',
+        time: 'Set 4',
+        type: 'spike',
         team: 'Medical Mavericks',
-        player: 'John Smith',
-        description: 'Goal scored from penalty kick'
+        player: 'Sarah Miller',
+        description: 'Powerful spike down the line'
       },
       {
-        time: '38\'',
-        type: 'card',
+        time: 'Set 3',
+        type: 'block',
         team: 'Law Lions',
-        player: 'Mike Johnson',
-        description: 'Yellow card for unsporting behavior'
+        player: 'Emma Garcia',
+        description: 'Outstanding block at the net'
       },
       {
-        time: '22\'',
-        type: 'goal',
-        team: 'Law Lions',
-        player: 'Sarah Davis',
-        description: 'Goal from free kick'
+        time: 'Set 3',
+        type: 'ace',
+        team: 'Medical Mavericks',
+        player: 'Ashley Taylor',
+        description: 'Service ace to win the set'
       }
     ],
     stats: {
-      possession: { home: 58, away: 42 },
-      shots: { home: 12, away: 8 },
-      shots_on_target: { home: 5, away: 3 },
-      fouls: { home: 7, away: 11 }
+      kills: { home: 34, away: 28 },
+      blocks: { home: 8, away: 12 },
+      aces: { home: 6, away: 4 },
+      digs: { home: 45, away: 38 },
+      assists: { home: 32, away: 26 },
+      errors: { home: 14, away: 18 }
     }
   },
   {
     id: '4',
     sport: 'Tennis',
-    team1: 'Computer Cobras',
-    team2: 'History Hawks',
+    team1: 'Rafael Martinez',
+    team2: 'Elena Petrov',
     team1_score: 6,
     team2_score: 4,
     status: 'finished',
-    time: 'Final',
+    time: 'Final - Set 3',
     venue: 'Tennis Courts',
     url: 'https://www.youtube.com/embed/l88pZnG-2S0',
-    events:[
+    events: [
       {
-        time: '45\'',
-        type: 'goal',
-        team: 'Computer Cobras',
-        player: 'John Smith',
-        description: 'Goal scored from penalty kick'
+        time: 'Set 3',
+        type: 'match_point',
+        team: 'Rafael Martinez',
+        player: 'Rafael Martinez',
+        description: 'Match-winning ace down the T'
       },
       {
-        time: '38\'',
-        type: 'card',
-        team: 'History Hawks',
-        player: 'Mike Johnson',
-        description: 'Yellow card for unsporting behavior'
+        time: 'Set 2',
+        type: 'break_point',
+        team: 'Elena Petrov',
+        player: 'Elena Petrov',
+        description: 'Crucial break to level the match'
       },
       {
-        time: '22\'',
-        type: 'goal',
-        team: 'History Hawks',
-        player: 'Sarah Davis',
-        description: 'Goal from free kick'
+        time: 'Set 1',
+        type: 'winner',
+        team: 'Rafael Martinez',
+        player: 'Rafael Martinez',
+        description: 'Forehand winner down the line'
       }
     ],
     stats: {
-      possession: { home: 58, away: 42 },
-      shots: { home: 12, away: 8 },
-      shots_on_target: { home: 5, away: 3 },
-      fouls: { home: 7, away: 11 }
+      aces: { home: 8, away: 5 },
+      double_faults: { home: 2, away: 4 },
+      first_serve_percentage: { home: 72, away: 68 },
+      winners: { home: 24, away: 18 },
+      unforced_errors: { home: 15, away: 22 },
+      break_points_won: { home: 3, away: 2 }
     }
   }
 ];
