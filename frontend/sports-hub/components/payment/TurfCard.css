@@ -1,0 +1,93 @@
+.turf-card {
+  border: 1px solid var(--bg-medium);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--card-dark);
+  margin: var(--spacing-sm);
+}
+
+.turf-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.turf-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.turf-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.turf-card:hover .turf-image img {
+  transform: scale(1.05);
+}
+
+.turf-details {
+  padding: var(--spacing-md);
+}
+
+.turf-details h3 {
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.location {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.location-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="%23666" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path></svg>');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.price {
+  font-weight: bold;
+  color: var(--accent-gold);
+  margin-bottom: 8px;
+}
+
+.availability {
+  margin-bottom: 16px;
+  font-weight: 500;
+  color: var(--accent-finished);
+}
+
+.book-button {
+  background-color: var(--accent-blue-deep);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
+}
+
+.book-button:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.book-button:disabled {
+  background-color: var(--bg-light);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}

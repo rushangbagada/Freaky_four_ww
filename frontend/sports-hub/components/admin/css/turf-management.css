@@ -1,0 +1,614 @@
+/* Turf Management Styles */
+.turf-management {
+    background: var(--card-dark);
+    color: var(--text-primary);
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    max-width: 1200px;
+    margin: 1rem auto;
+}
+
+.turf-management:hover {
+    box-shadow: 0 8px 50px rgba(0, 0, 0, 0.2);
+}
+
+.header-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.turf-management h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.real-time-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: var(--spacing-sm);
+    padding: 0.5rem 1rem;
+    background: rgba(56, 189, 248, 0.1);
+    border-radius: 20px;
+    border: 1px solid var(--accent-blue);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-finished);
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.real-time-indicator span {
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+}
+
+.turf-management p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.turf-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 2.5rem;
+}
+
+.turf-list li {
+    background: var(--card-dark);
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, transform 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.turf-list li:hover {
+    background: var(--bg-light);
+    transform: translateY(-4px);
+}
+
+.turf-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.turf-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.turf-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.turf-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.turf-location, .turf-price {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge.available {
+    background: var(--accent-finished);
+    color: white;
+}
+
+.status-badge.booked {
+    background: var(--accent-live);
+    color: white;
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--accent-live);
+    color: var(--accent-live);
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+}
+
+.loading-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--bg-light);
+    border-top: 4px solid var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.turf-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.edit-btn, .delete-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.edit-btn {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.edit-btn:hover {
+    background: #e6b800;
+    transform: translateY(-1px);
+}
+
+.delete-btn {
+    background: var(--accent-live);
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.add-turf-form, .edit-turf-form {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.edit-turf-form {
+    border: 1px solid var(--accent-gold);
+    background: rgba(255, 193, 7, 0.05);
+}
+
+.add-turf-form label, .edit-turf-form label {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.add-turf-form input, .edit-turf-form input {
+    padding: 1rem 1.25rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-light);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.add-turf-form input:focus, .edit-turf-form input:focus {
+    border-color: var(--accent-blue);
+    background: var(--bg-medium);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    outline: none;
+}
+
+.edit-turf-form input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+}
+
+.add-turf-form button, .edit-turf-form button {
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius);
+    border: none;
+    background: var(--accent-blue);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    margin-top: 0.5rem;
+}
+
+.add-turf-form button:hover, .edit-turf-form button:hover {
+    background: var(--accent-blue-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+}
+
+.edit-turf-form button[type="submit"] {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.edit-turf-form button[type="submit"]:hover {
+    background: #e6b800;
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.3);
+}
+
+.edit-turf-form button[type="button"] {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.edit-turf-form button[type="button"]:hover {
+    background: var(--bg-medium);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* Inline Edit Form Styles */
+.inline-edit-form {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: rgba(255, 193, 7, 0.08);
+    border: 1px solid var(--accent-gold);
+    border-radius: var(--border-radius);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+    }
+}
+
+.inline-edit-form h4 {
+    margin: 0 0 1rem 0;
+    color: var(--accent-gold);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.inline-edit-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.inline-edit-form input {
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-light);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.inline-edit-form input:focus {
+    border-color: var(--accent-gold);
+    background: var(--bg-medium);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.update-btn, .cancel-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.update-btn {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.update-btn:hover {
+    background: #e6b800;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.cancel-btn {
+    background: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.cancel-btn:hover {
+    background: var(--bg-medium);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Edit button active state */
+.edit-btn.editing {
+    background: var(--accent-live);
+    color: white;
+}
+
+.edit-btn.editing:hover {
+    background: #dc2626;
+}
+
+/* Booking Management Styles */
+.booking-section {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-medium);
+    border-radius: var(--border-radius);
+}
+
+.booking-section h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2rem;
+}
+
+.booking-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.booking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-dark);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    border-radius: var(--border-radius);
+    transition: background 0.3s;
+}
+
+.booking-item:hover {
+    background: var(--bg-light);
+}
+
+.booking-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.approve-btn, .cancel-btn {
+    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: background 0.3s;
+}
+
+.approve-btn {
+    background: var(--accent-finished);
+    color: white;
+}
+
+.approve-btn:hover {
+    background: #16a34a;
+}
+
+.cancel-btn {
+    background: var(--accent-live);
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #dc2626;
+}
+
+/* Additional Spacing and Typography */
+.turf-management h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-blue);
+    display: inline-block;
+}
+
+.turf-management h3:first-of-type {
+    margin-top: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .turf-management {
+        padding: 1.5rem;
+        margin: 0.5rem;
+    }
+
+    .turf-management h2 {
+        font-size: 2rem;
+    }
+
+    .turf-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .turf-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .add-turf-form {
+        padding: 1.5rem;
+    }
+
+    .turf-list li {
+        padding: 1rem;
+    }
+
+    .turf-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .turf-management {
+        padding: 1rem;
+        margin: 0.25rem;
+    }
+
+    .header-section {
+        text-align: center;
+    }
+
+    .turf-management h2 {
+        font-size: 1.75rem;
+    }
+
+    .add-turf-form {
+        padding: 1rem;
+    }
+
+    .edit-btn, .delete-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Live Status Indicators */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.live-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid var(--accent-finished);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--accent-finished);
+    font-weight: 500;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-finished);
+    border-radius: 50%;
+    animation: pulse-live 2s infinite;
+}
+
+@keyframes pulse-live {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    50% { 
+        opacity: 0.7; 
+        transform: scale(1.1);
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+    }
+}
+
+/* Admin Real-time Indicator Customization */
+.admin-realtime-indicator {
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    background: rgba(56, 189, 248, 0.05) !important;
+}
+
+.admin-realtime-indicator .realtime-controls {
+    background: transparent !important;
+}
+
+.admin-realtime-indicator span {
+    color: var(--text-secondary) !important;
+}
+
+/* Retry Button */
+.retry-btn {
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    background: var(--accent-blue-deep) !important;
+    transform: translateY(-1px);
+}

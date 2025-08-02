@@ -1,0 +1,33 @@
+{
+  "name": "freaky_four_ww",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd frontend/sports-hub && npm run dev",
+    "backend": "cd server && npm run dev",
+    "dev": "concurrently -n \"frontend,backend\" -c \"bgRed,bgGreen\" \"npm run frontend\" \"npm run backend\"",
+    "build": "cd server && npm install",
+    "start": "cd server && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rrrr08/Freaky_four_ww.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rrrr08/Freaky_four_ww/issues"
+  },
+  "homepage": "https://github.com/rrrr08/Freaky_four_ww#readme",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "@langchain/google-genai": "^0.2.16",
+    "@stripe/stripe-js": "^7.5.0"
+  }
+}
