@@ -39,12 +39,12 @@ const LiveScore = ({ match, onMatchSelect }) => {
       <div className="teams-scores">
         <div className="team-row">
           <span className="team-name">{match.team1}</span>
-          <span className="team-score">{match.team1_score}</span>
+          <span style={{ color: 'yellow'}} className="team-score">{match.team1_score}</span>
         </div>
         <div className="vs-divider">VS</div>
         <div className="team-row">
           <span className="team-name">{match.team2}</span>
-          <span className="team-score">{match.team2_score}</span>
+          <span style={{ color: 'yellow'}} className="team-score">{match.team2_score}</span>
         </div>
       </div>
 

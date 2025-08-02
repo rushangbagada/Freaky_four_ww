@@ -5,6 +5,7 @@
   min-height: 80vh;
   padding: 2rem;
   background: linear-gradient(135deg, #181c23 0%, #23272f 100%);
+  margin-top:100px;
 }
 
 .profile-card {

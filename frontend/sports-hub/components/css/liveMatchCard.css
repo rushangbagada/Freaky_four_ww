@@ -5,14 +5,18 @@
 
 /* Base live match card styles */
 .live-match-card {
-  background-color: var(--card-dark);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  border-left: 4px solid transparent;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  transition: all 0.3s ease;
-  color: var(--text-primary);
+  background: linear-gradient(145deg, #1e293b 0%, #334155 50%, #475569 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(245, 180, 1, 0.15);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: #e0e4e7;
+  position: relative;
+  overflow: hidden;
 }
 
 .live-match-card:hover {
@@ -24,8 +28,16 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  color: #f5b401; /* Golden color */
   text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.live-match-card .team-names:hover {
+  color: #38bdf8; /* Sky blue on hover */
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+  transform: scale(1.05);
 }
 
 .live-match-card .match-details {
