@@ -84,12 +84,32 @@ const ReviewsPage = () => {
 
   return (
     <div className="reviews-container">
-      <section className="reviews-hero">
-        <div className="reviews-hero-content">
-          <h1>What Our Community Says</h1>
-          <p>Read testimonials from our sports community members</p>
+      {/* Hero Section - Result Page Style */}
+      <div className="reviews-hero">
+        <div className="hero-content">
+          <div className="hero-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+          </div>
+          <h1 className="hero-title">Community Reviews</h1>
+          <p className="hero-subtitle">Discover what our sports community members are saying about their experiences</p>
         </div>
-      </section>
+        <div className="hero-stats">
+          <div className="stat-card">
+            <span className="stat-number">{reviews.length}</span>
+            <span className="stat-label">Total Reviews</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{reviews.filter(review => review.position).length}</span>
+            <span className="stat-label">Community Members</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{reviews.filter(review => review.review && review.review.length > 100).length}</span>
+            <span className="stat-label">Detailed Reviews</span>
+          </div>
+        </div>
+      </div>
 
       <section className="reviews-section">
         <div className="reviews-grid">

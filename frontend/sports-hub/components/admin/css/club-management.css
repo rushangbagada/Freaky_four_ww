@@ -1,5 +1,12 @@
-.club-management-container label {
-  color: white;
+/* Club Management Form Labels - Ensure all labels are white */
+.club-management-container label,
+.club-management label,
+.club-management .form-group label,
+.club-management .form-label,
+.modal label,
+.modal .form-group label,
+.modal .form-label {
+  color: white !important;
 }
 
 /* Club Management Styles - Dark Theme */

@@ -1,5 +1,14 @@
-.player-management label {
-  color: white;
+/* Player Management Form Labels - Ensure all labels are white */
+.player-management label,
+.player-management-container label,
+.player-management .form-group label,
+.player-management .form-label,
+.club-selector label,
+.add-player-mode-selector label,
+.modal label,
+.modal .form-group label,
+.modal .form-label {
+  color: white !important;
 }
 
 /* Player Management Styles */

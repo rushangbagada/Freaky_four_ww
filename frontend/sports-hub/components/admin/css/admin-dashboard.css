@@ -1,5 +1,12 @@
-.admin-content label {
-  color: white;
+/* Admin Form Labels - Ensure all labels are white with high specificity */
+.admin-content label,
+.admin-dashboard label,
+.admin-content .form-label,
+.admin-content .form-group label,
+.modal label,
+.modal .form-label,
+.modal .form-group label {
+  color: white !important;
 }
 
 /* Themed Admin Dashboard Redesign */
