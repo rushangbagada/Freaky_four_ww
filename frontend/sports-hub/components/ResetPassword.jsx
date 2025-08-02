@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/reset-password.css';
 
 export default function ResetPassword() {
@@ -29,7 +30,7 @@ export default function ResetPassword() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/reset-password', {
+      const res = await fetch(getApiUrl(API_ENDPOINTS.RESET_PASSWORD), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

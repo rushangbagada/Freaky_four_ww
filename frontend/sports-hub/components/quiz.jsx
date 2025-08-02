@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../src/AuthContext';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/quiz.css';
 
 const Quiz = ({ onPointsEarned }) => {
@@ -12,7 +13,7 @@ const Quiz = ({ onPointsEarned }) => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const response = await fetch('/api/quiz/random-question');
+        const response = await fetch(getApiUrl('/api/quiz/random-question'));
         if (response.ok) {
           const data = await response.json();
           setQuestion(data);
@@ -45,7 +46,7 @@ const Quiz = ({ onPointsEarned }) => {
     setAnswered(true);
 
     try {
-      const response = await fetch('/api/quiz/answer', {
+      const response = await fetch(getApiUrl('/api/quiz/answer'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

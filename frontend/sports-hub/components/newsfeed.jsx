@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import FunFacts from './funfacts.jsx';
 import './css/newsfeed.css';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 
 const NewsFeed = () => {
@@ -10,7 +11,7 @@ const NewsFeed = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await fetch('/api/news');
+      const res = await fetch(getApiUrl(API_ENDPOINTS.NEWS));
       const data = await res.json();
       setNewsItems(data);
     } catch (err) {

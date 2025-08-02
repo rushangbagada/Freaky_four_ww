@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/funfacts.css';
 
 const FunFacts = () => {
@@ -77,13 +78,13 @@ const FunFacts = () => {
   useEffect(() => {
   const fetchData = async () => {
     try {
-      const factsRes = await fetch('/api/funfacts');
+      const factsRes = await fetch(getApiUrl('/api/funfacts'));
       const factsData = await factsRes.json();
       console.log(factsData);
       setfunFacts(Array.isArray(factsData) ? factsData : []);
 
 
-      const statsRes = await fetch('/api/stats');
+      const statsRes = await fetch(getApiUrl('/api/stats'));
       const statsData = await statsRes.json();
       console.log(statsData);
       setStats(Array.isArray(statsData) ? statsData : []);

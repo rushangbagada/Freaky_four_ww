@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/register.css';
 
 export default function Register() {
@@ -20,7 +21,7 @@ export default function Register() {
   const onRegisterSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(getApiUrl(API_ENDPOINTS.REGISTER), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

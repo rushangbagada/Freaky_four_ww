@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../src/AuthContext';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/login.css';
 
 export default function Login() {
@@ -21,7 +22,7 @@ export default function Login() {
   const onLoginSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(getApiUrl(API_ENDPOINTS.LOGIN), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -49,7 +50,7 @@ export default function Login() {
     
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/forgot-password', {
+      const res = await fetch(getApiUrl('/api/auth/forgot-password'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotEmail })

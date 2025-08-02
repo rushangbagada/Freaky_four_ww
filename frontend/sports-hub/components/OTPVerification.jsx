@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../src/AuthContext';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/otp-verification.css';
 
 export default function OTPVerification() {
@@ -54,11 +55,11 @@ export default function OTPVerification() {
       let redirectPath = '';
 
       if (type === 'login') {
-        endpoint = '/api/auth/verify-otp';
+        endpoint = getApiUrl(API_ENDPOINTS.VERIFY_OTP);
         successMessage = 'Login successful! Redirecting...';
         redirectPath = '/';
       } else if (type === 'reset') {
-        endpoint = '/api/auth/verify-reset-token';
+        endpoint = getApiUrl('/api/auth/verify-reset-token');
         successMessage = 'Token verified! You can now reset your password.';
         redirectPath = `/reset-password?email=${email}&token=${data.otp}`;
       }
@@ -106,10 +107,10 @@ export default function OTPVerification() {
       let body = {};
 
       if (type === 'login') {
-        endpoint = '/api/auth/resend-otp';
+        endpoint = getApiUrl('/api/auth/resend-otp');
         body = { email };
       } else if (type === 'reset') {
-        endpoint = '/api/auth/forgot-password';
+        endpoint = getApiUrl('/api/auth/forgot-password');
         body = { email };
       }
 

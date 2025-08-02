@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './css/reviews.css';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import { useAuth } from '../src/AuthContext';
 
 const ReviewsPage = () => {
@@ -22,7 +23,7 @@ const ReviewsPage = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch('/api/review');
+      const response = await fetch(getApiUrl(API_ENDPOINTS.REVIEWS));
       if (response.ok) {
         const data = await response.json();
         setReviews(data);
@@ -52,7 +53,7 @@ const ReviewsPage = () => {
     setSuccess('');
 
     try {
-      const response = await fetch('/api/admin/reviews', {
+      const response = await fetch(getApiUrl('/api/admin/reviews'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
