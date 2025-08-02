@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../src/AuthContext';
-import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
+import { apiRequest, getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/quiz.css';
 
 const Quiz = ({ onPointsEarned }) => {
@@ -13,17 +13,20 @@ const Quiz = ({ onPointsEarned }) => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const response = await fetch(getApiUrl('/api/quiz/random-question'));
-        if (response.ok) {
-          const data = await response.json();
+        console.log('🧐 Fetching quiz question...');
+        const data = await apiRequest(API_ENDPOINTS.QUIZ_RANDOM_QUESTION);
+        console.log('✅ Quiz question received:', data);
+        
+        if (data && data.question) {
           setQuestion(data);
           setTimer(20);
           setAnswered(false);
         } else {
+          console.warn('⚠️ No quiz question data available');
           setQuestion(null);
         }
       } catch (error) {
-        console.error('Error fetching question:', error);
+        console.error('❌ Error fetching quiz question:', error);
         setQuestion(null);
       }
     };

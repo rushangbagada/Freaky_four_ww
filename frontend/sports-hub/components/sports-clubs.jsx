@@ -1,53 +1,79 @@
 import React, { useEffect, useState } from "react";
 import "./css/sports-clubs.css";
 import { Link } from "react-router-dom";
-
-// Custom hook for database change detection
-function useDatabaseChangeDetection(fetchData, dependencies = []) {
-  const [isPolling, setIsPolling] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [hasChanges, setHasChanges] = useState(false);
-
-  const pollAndDetectChanges = async () => {
-    setIsPolling(true);
-    try {
-      await fetchData();
-      const now = new Date();
-      if (lastUpdated && (now - lastUpdated) < 15000) {
-        setHasChanges(true);
-        setTimeout(() => setHasChanges(false), 3000);
-      }
-      setLastUpdated(now);
-    } catch (error) {
-      console.error('Error during polling:', error);
-    } finally {
-      setIsPolling(false);
-    }
-  };
-
-  useEffect(() => {
-    // Initial fetch
-    fetchData();
-    setLastUpdated(new Date());
-    
-    // Set up polling interval
-    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
-    
-    return () => clearInterval(intervalId);
-  }, dependencies);
-
-  return { isPolling, hasChanges, lastUpdated };
-}
+import { getApiUrl, API_ENDPOINTS, apiRequest } from '../src/config/api';
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 
 export default function SportsClubs() {
   const [clubs, setClubs] = useState([]);
   const [type, setType] = useState("All");
   const [searchtext, setSearchText] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  console.log('🏆 [SPORTS-CLUBS DEBUG] Component state:', {
+    clubsLength: clubs.length,
+    type,
+    searchtext,
+    loading,
+    error
+  });
 
   const fetchClubs = async () => {
-    const response = await fetch(`/api/clubs?type=${type}`);
-    const data = await response.json();
-    setClubs(data);
+    console.log('🚀 [SPORTS-CLUBS DEBUG] Starting fetchClubs with type:', type);
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Construct query parameters
+      const queryParams = new URLSearchParams();
+      if (type && type !== 'All') {
+        queryParams.append('type', type);
+        console.log('🎯 [SPORTS-CLUBS DEBUG] Added type filter:', type);
+      }
+      
+      const endpoint = `${API_ENDPOINTS.CLUBS}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      console.log('🌐 [SPORTS-CLUBS DEBUG] API endpoint:', endpoint);
+      
+      const data = await apiRequest(endpoint);
+      console.log('📊 [SPORTS-CLUBS DEBUG] Raw API response:', data);
+      
+      // Handle different data structures
+      let clubsArray = [];
+      if (Array.isArray(data)) {
+        console.log('✅ [SPORTS-CLUBS DEBUG] Data is direct array');
+        clubsArray = data;
+      } else if (data && data.value && Array.isArray(data.value)) {
+        console.log('✅ [SPORTS-CLUBS DEBUG] Data has value property with array');
+        clubsArray = data.value;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        console.log('✅ [SPORTS-CLUBS DEBUG] Data has data property with array');
+        clubsArray = data.data;
+      } else {
+        console.warn('⚠️ [SPORTS-CLUBS DEBUG] Unexpected data structure:', data);
+        console.log('🔍 [SPORTS-CLUBS DEBUG] Available properties:', Object.keys(data || {}));
+        clubsArray = [];
+      }
+      
+      console.log('📝 [SPORTS-CLUBS DEBUG] Processed clubs array:', clubsArray);
+      console.log('📊 [SPORTS-CLUBS DEBUG] Clubs array length:', clubsArray.length);
+      
+      if (clubsArray.length > 0) {
+        console.log('🎯 [SPORTS-CLUBS DEBUG] First club sample:', clubsArray[0]);
+      }
+      
+      setClubs(clubsArray);
+      console.log('✅ [SPORTS-CLUBS DEBUG] Clubs state updated successfully');
+      
+    } catch (err) {
+      console.error('💥 [SPORTS-CLUBS DEBUG] Error fetching clubs:', err);
+      console.error('💥 [SPORTS-CLUBS DEBUG] Error stack:', err.stack);
+      setError(err.message || 'Failed to fetch clubs');
+      setClubs([]);
+    } finally {
+      setLoading(false);
+      console.log('✅ [SPORTS-CLUBS DEBUG] Set loading to false');
+    }
   };
 
   const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(

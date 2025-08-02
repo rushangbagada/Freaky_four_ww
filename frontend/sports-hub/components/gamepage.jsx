@@ -6,6 +6,7 @@ import UserStats from './userStates.jsx';
 import Quiz from './quiz.jsx';
 import { useAuth } from '../src/AuthContext';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import { apiRequest, getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
@@ -43,51 +44,87 @@ const PredictionGamePage = () => {
   // Function to fetch prediction user data
   const fetchPredictionUser = async (email) => {
     try {
-      console.log('Fetching prediction user for email:', email);
-      const response = await fetch(`/api/user?email=${encodeURIComponent(email)}`);
-      
-      if (response.ok) {
-        const predUser = await response.json();
-        console.log('Prediction user found:', predUser);
-        setPredictionUser(predUser);
-      } else {
-        console.log('Prediction user not found, response status:', response.status);
-        setPredictionUser(null);
-      }
+      console.log('🔍 Fetching prediction user for email:', email);
+      const endpoint = `${API_ENDPOINTS.USER_BY_EMAIL}?email=${encodeURIComponent(email)}`;
+      const predUser = await apiRequest(endpoint);
+      console.log('✅ Prediction user found:', predUser);
+      setPredictionUser(predUser);
     } catch (error) {
-      console.error('Error fetching prediction user:', error);
+      console.error('❌ Error fetching prediction user:', error);
       setPredictionUser(null);
     }
   };
 
   // Function to refresh leaderboard
-  const refreshLeaderboard = () => {
-    fetch("/api/leader")
-      .then(res => res.json())
-      .then(data => {
-        data.sort((a, b) => b.total_point - a.total_point);
-        setLeaderboard(data.slice(0, 7));
-      })
-      .catch(err => console.error("Error fetching leaderboard:", err));
+  const refreshLeaderboard = async () => {
+    try {
+      console.log('🏆 Fetching leaderboard data...');
+      const data = await apiRequest(API_ENDPOINTS.LEADERBOARD);
+      console.log('📈 Leaderboard data received:', data);
+      
+      // Handle different data structures
+      let leaderboardArray = [];
+      if (Array.isArray(data)) {
+        leaderboardArray = data;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        leaderboardArray = data.data;
+      } else {
+        console.warn('⚠️ Unexpected leaderboard data structure:', data);
+        leaderboardArray = [];
+      }
+      
+      leaderboardArray.sort((a, b) => b.total_point - a.total_point);
+      setLeaderboard(leaderboardArray.slice(0, 7));
+      console.log('✅ Leaderboard updated successfully');
+    } catch (error) {
+      console.error('❌ Error fetching leaderboard:', error);
+      setLeaderboard([]);
+    }
   };
 
   // Functions for real-time data fetching
   const fetchAllMatchData = async () => {
     try {
+      console.log('⚽ Fetching all match data...');
+      
       // Fetch regular matches
-      const predictionRes = await fetch("/api/prediction_match");
-      const predictionData = await predictionRes.json();
-      setMatches(predictionData);
+      console.log('📊 Fetching prediction matches...');
+      const predictionData = await apiRequest(API_ENDPOINTS.PREDICTION_MATCHES);
+      console.log('✅ Prediction matches received:', predictionData);
+      
+      // Handle different data structures for prediction matches
+      if (Array.isArray(predictionData)) {
+        setMatches(predictionData);
+      } else if (predictionData && predictionData.data && Array.isArray(predictionData.data)) {
+        setMatches(predictionData.data);
+      } else {
+        console.warn('⚠️ Unexpected prediction matches data structure:', predictionData);
+        setMatches([]);
+      }
 
       // Fetch live matches
-      const liveRes = await fetch("/api/game/live-matches");
-      const liveData = await liveRes.json();
-      setLiveMatches(liveData);
+      console.log('🅸 Fetching live matches...');
+      const liveData = await apiRequest(API_ENDPOINTS.LIVE_MATCHES);
+      console.log('✅ Live matches received:', liveData);
+      
+      // Handle different data structures for live matches
+      if (Array.isArray(liveData)) {
+        setLiveMatches(liveData);
+      } else if (liveData && liveData.data && Array.isArray(liveData.data)) {
+        setLiveMatches(liveData.data);
+      } else {
+        console.warn('⚠️ Unexpected live matches data structure:', liveData);
+        setLiveMatches([]);
+      }
 
       // Refresh leaderboard
-      refreshLeaderboard();
+      await refreshLeaderboard();
+      
+      console.log('✅ All match data fetched successfully');
     } catch (err) {
-      console.error("Error fetching match data:", err);
+      console.error('❌ Error fetching match data:', err);
+      setMatches([]);
+      setLiveMatches([]);
     }
   };
 
@@ -99,24 +136,35 @@ const PredictionGamePage = () => {
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
-    if (predictionUser && predictionUser._id && token) {
-      // Fetch live match predictions with authorization using predictionUser's _id
-      const headers = {};
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+    const fetchLivePredictions = async () => {
+      if (predictionUser && predictionUser._id && token) {
+        try {
+          console.log('🔮 Fetching live predictions for predictionUser ID:', predictionUser._id);
+          const endpoint = `${API_ENDPOINTS.USER_LIVE_PREDICTIONS}/${predictionUser._id}/live-match-predictions`;
+          const data = await apiRequest(endpoint, {
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          });
+          console.log('✅ Live predictions fetched:', data);
+          
+          // Handle different data structures
+          if (Array.isArray(data)) {
+            setLivePredictions(data);
+          } else if (data && data.data && Array.isArray(data.data)) {
+            setLivePredictions(data.data);
+          } else {
+            console.warn('⚠️ Unexpected live predictions data structure:', data);
+            setLivePredictions([]);
+          }
+        } catch (error) {
+          console.error('❌ Error fetching live match predictions:', error);
+          setLivePredictions([]);
+        }
       }
-      
-      console.log('Fetching live predictions for predictionUser ID:', predictionUser._id);
-      fetch(`/api/user/${predictionUser._id}/live-match-predictions`, {
-        headers
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Live predictions fetched:', data);
-          setLivePredictions(data);
-        })
-        .catch(err => console.error("Error fetching live match predictions:", err));
-    }
+    };
+    
+    fetchLivePredictions();
   }, [predictionUser, token]);
 
   // Handle regular match prediction submission
@@ -196,7 +244,8 @@ const PredictionGamePage = () => {
 
     console.log('Request headers:', headers);
 
-    fetch("/api/user/live-match-prediction", {
+    // Use the centralized API request function
+    apiRequest(API_ENDPOINTS.SUBMIT_LIVE_PREDICTION, {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -206,28 +255,8 @@ const PredictionGamePage = () => {
         team2Score: parsedTeam2Score
       })
     })
-      .then(res => {
-        console.log('Response status:', res.status);
-        console.log('Response headers:', res.headers);
-        
-        if (!res.ok) {
-          return res.text().then(text => {
-            console.error('Server error response:', text);
-            let errorMessage = 'Failed to submit prediction';
-            try {
-              const errorData = JSON.parse(text);
-              errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-              console.log('Response is not JSON:', text);
-              errorMessage = text || errorMessage;
-            }
-            throw new Error(errorMessage);
-          });
-        }
-        return res.json();
-      })
       .then(data => {
-        console.log('Success response:', data);
+        console.log('✅ Prediction submitted successfully:', data);
         
         // Update the live predictions state
         setLivePredictions(prev => {

@@ -1,4 +1,5 @@
-import React, { useState ,  useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { getApiUrl, API_ENDPOINTS, apiRequest } from '../src/config/api'
 import './css/result.css'
 
 export default function Result() {
@@ -7,52 +8,192 @@ export default function Result() {
   const [time,setTime]=useState("All Times");
   const [mvp,setMvp]=useState([]);
   const [sortBy, setSortBy] = useState("date"); // Add sorting state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  console.log('🎭 [RESULT DEBUG] Component state:', {
+    dataStateLength: dataState.length,
+    sport,
+    time,
+    sortBy,
+    mvpLength: mvp.length,
+    loading,
+    error
+  });
 
   const find_mvp=async(data)=>
   {
+    console.log('🏆 [MVP DEBUG] Starting find_mvp with data:', data);
+    console.log('🏆 [MVP DEBUG] Data length:', data.length);
+    
+    if (!data || data.length === 0) {
+      console.log('⚠️ [MVP DEBUG] No data provided, setting empty MVP');
+      setMvp([]);
+      return;
+    }
+    
     let sorted_map=[];
     const countMap=new Map();
-    data.forEach((item) => {
+    
+    data.forEach((item, index) => {
+      console.log(`🔍 [MVP DEBUG] Processing item ${index}:`, item);
+      
+      if (!item.mvp) {
+        console.warn(`⚠️ [MVP DEBUG] Item ${index} has no MVP property:`, item);
+        return;
+      }
+      
       if (countMap.has(item.mvp)) {
-        countMap.set(item.mvp, countMap.get(item.mvp) + 1);
+        const currentCount = countMap.get(item.mvp);
+        countMap.set(item.mvp, currentCount + 1);
+        console.log(`📈 [MVP DEBUG] Updated count for ${item.mvp}: ${currentCount + 1}`);
       } else {
         countMap.set(item.mvp, 1);
+        console.log(`🆕 [MVP DEBUG] First occurrence of ${item.mvp}`);
       }
-
     });
+    
+    console.log('🗺️ [MVP DEBUG] MVP count map:', Object.fromEntries(countMap));
+    
     sorted_map=Array.from(countMap).sort((a, b) => {
       if(a[1]!==b[1]) return b[1]-a[1];
-
       return a[0].localeCompare(b[0]);
     });
+    
+    console.log('🏅 [MVP DEBUG] Sorted MVP list:', sorted_map);
     setMvp(sorted_map);
+    console.log('✅ [MVP DEBUG] MVP state updated');
   }
 
   useEffect(() => {
-    fetch(`/api/result?sport=${sport}&time=${time}`)
-    .then(res => res.json())
-    .then(data => {
-      // Sort data based on sortBy value
-      let sortedData = [...data];
-      if (sortBy === "date") {
-        sortedData.sort((a, b) => new Date(b.date) - new Date(a.date));
-      } else if (sortBy === "team1") {
-        sortedData.sort((a, b) => a.team1.localeCompare(b.team1));
-      } else if (sortBy === "team2") {
-        sortedData.sort((a, b) => a.team2.localeCompare(b.team2));
-      } else if (sortBy === "venue") {
-        sortedData.sort((a, b) => a.venue.localeCompare(b.venue));
-      } else if (sortBy === "score") {
-        sortedData.sort((a, b) => (b.team1_score + b.team2_score) - (a.team1_score + a.team2_score));
-      }
+    const fetchResults = async () => {
+      console.log('🚀 [RESULT DEBUG] Starting fetchResults function');
+      console.log('🔧 [RESULT DEBUG] Current state:', { sport, time, sortBy });
       
-      setData(sortedData);
-      find_mvp(sortedData);
-    })
-    .catch(err => console.error('Failed to fetch data:', err));
+      setLoading(true);
+      setError(null);
+      console.log('⏳ [RESULT DEBUG] Set loading to true');
+      
+      try {
+        console.log('🏆 [RESULT DEBUG] Fetching results data...', { sport, time, sortBy });
+        
+        // Construct query parameters
+        const queryParams = new URLSearchParams();
+        if (sport && sport !== 'All Sports') {
+          queryParams.append('sport', sport.toLowerCase());
+          console.log('🎯 [RESULT DEBUG] Added sport filter:', sport.toLowerCase());
+        }
+        if (time && time !== 'All Time' && time !== 'All Times') {
+          queryParams.append('time', time.toLowerCase());
+          console.log('⏰ [RESULT DEBUG] Added time filter:', time.toLowerCase());
+        }
+        
+        console.log('📋 [RESULT DEBUG] Query params constructed:', queryParams.toString());
+        
+        // Try both endpoints
+        let endpoint = `/api/result${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        console.log('🌐 [RESULT DEBUG] Primary endpoint:', endpoint);
+        
+        let data;
+        try {
+          data = await apiRequest(endpoint);
+          console.log('📊 [RESULT DEBUG] Primary endpoint response:', data);
+          
+          // Check if result endpoint has data
+          if (!data || (data.value && data.value.length === 0) || (Array.isArray(data) && data.length === 0)) {
+            console.log('⚠️ [RESULT DEBUG] Primary endpoint empty, trying recent_matches');
+            endpoint = `/api/recent_matches${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+            console.log('🌐 [RESULT DEBUG] Fallback endpoint:', endpoint);
+            data = await apiRequest(endpoint);
+            console.log('📊 [RESULT DEBUG] Fallback endpoint response:', data);
+          }
+        } catch (primaryError) {
+          console.error('❌ [RESULT DEBUG] Primary endpoint failed:', primaryError);
+          console.log('🔄 [RESULT DEBUG] Trying fallback endpoint...');
+          endpoint = `/api/recent_matches${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+          data = await apiRequest(endpoint);
+          console.log('📊 [RESULT DEBUG] Fallback endpoint response:', data);
+        }
+        
+        console.log('🔍 [RESULT DEBUG] Final data received:', data);
+        console.log('🔍 [RESULT DEBUG] Data type:', typeof data);
+        console.log('🔍 [RESULT DEBUG] Is array:', Array.isArray(data));
+        
+        // Handle different data structures
+        let resultsArray = [];
+        if (Array.isArray(data)) {
+          console.log('✅ [RESULT DEBUG] Data is direct array');
+          resultsArray = data;
+        } else if (data && data.value && Array.isArray(data.value)) {
+          console.log('✅ [RESULT DEBUG] Data has value property with array');
+          resultsArray = data.value;
+        } else if (data && data.data && Array.isArray(data.data)) {
+          console.log('✅ [RESULT DEBUG] Data has data property with array');
+          resultsArray = data.data;
+        } else {
+          console.warn('⚠️ [RESULT DEBUG] Unexpected data structure for results:', data);
+          console.log('🔍 [RESULT DEBUG] Available properties:', Object.keys(data || {}));
+          resultsArray = [];
+        }
+        
+        console.log('📝 [RESULT DEBUG] Extracted results array:', resultsArray);
+        console.log('📊 [RESULT DEBUG] Results array length:', resultsArray.length);
+        
+        if (resultsArray.length > 0) {
+          console.log('🎯 [RESULT DEBUG] First result sample:', resultsArray[0]);
+        }
+        
+        // Sort data based on sortBy value
+        let sortedData = [...resultsArray];
+        console.log('🔄 [RESULT DEBUG] Sorting by:', sortBy);
+        
+        if (sortBy === "date") {
+          sortedData.sort((a, b) => new Date(b.date) - new Date(a.date));
+          console.log('📅 [RESULT DEBUG] Sorted by date');
+        } else if (sortBy === "team1") {
+          sortedData.sort((a, b) => a.team1.localeCompare(b.team1));
+          console.log('🏟️ [RESULT DEBUG] Sorted by team1');
+        } else if (sortBy === "team2") {
+          sortedData.sort((a, b) => a.team2.localeCompare(b.team2));
+          console.log('🏟️ [RESULT DEBUG] Sorted by team2');
+        } else if (sortBy === "venue") {
+          sortedData.sort((a, b) => a.venue.localeCompare(b.venue));
+          console.log('📍 [RESULT DEBUG] Sorted by venue');
+        } else if (sortBy === "score") {
+          sortedData.sort((a, b) => (b.team1_score + b.team2_score) - (a.team1_score + a.team2_score));
+          console.log('⚽ [RESULT DEBUG] Sorted by score');
+        }
+        
+        console.log('✅ [RESULT DEBUG] Final processed results data:', sortedData);
+        console.log('📊 [RESULT DEBUG] Setting data state with', sortedData.length, 'items');
+        
+        setData(sortedData);
+        
+        console.log('🏆 [RESULT DEBUG] Calling find_mvp with data');
+        find_mvp(sortedData);
+        
+        console.log('🎉 [RESULT DEBUG] fetchResults completed successfully');
+        setLoading(false);
+        console.log('✅ [RESULT DEBUG] Set loading to false');
+        
+      } catch (err) {
+        console.error('💥 [RESULT DEBUG] Failed to fetch results data:', err);
+        console.error('💥 [RESULT DEBUG] Error stack:', err.stack);
+        console.log('🧹 [RESULT DEBUG] Setting empty state due to error');
+        setData([]);
+        setMvp([]);
+        setError(err.message || 'Failed to fetch data');
+        setLoading(false);
+        console.log('❌ [RESULT DEBUG] Set loading to false due to error');
+      }
+    };
+    
+    console.log('🎬 [RESULT DEBUG] useEffect triggered with dependencies:', { sport, time, sortBy });
+    fetchResults();
   }, [sport, time, sortBy]);
- return(
-  <div className="result-container">
+  
+  return (
+    <div className="result-container">
 
   {/* Hero Section - Calendar Style */}
   <div className="result-hero">
@@ -114,22 +255,40 @@ export default function Result() {
     <div className="main-section">
       {/* <!-- Main Section --> */}
       <div className="main-content">
-        {/* <div className="stats-cards">
-          <div className="card green">
-            <p>Win Rate</p>
-            <p className="value">{(dataState.reduce((total, item) => total + (item.team1_score > item.team2_score ? 1 : 0), 0) / dataState.length * 100).toFixed(2)}%</p>
-          </div>
-          <div className="card blue">
-            <p>Total Matches</p>
-            <p className="value">{dataState.length}</p>
-          </div>
-          <div className="card orange">
-            <p>Total Goals</p>
-            <p className="value">{dataState.reduce((total, item) => total + item.team1_score , 0)}</p>
-          </div>
-        </div> */}
+        {/* Debug info */}
+        <div style={{ padding: '10px', background: '#f0f0f0', margin: '10px 0', borderRadius: '5px', fontSize: '12px' }}>
+          <strong>🔍 Debug Info:</strong><br/>
+          Loading: {loading ? 'Yes' : 'No'}<br/>
+          Error: {error || 'None'}<br/>
+          Data Length: {dataState.length}<br/>
+          MVP Length: {mvp.length}
+        </div>
 
-        {dataState.slice(0, 7).map((item, index) => (
+        {loading && (
+          <div className="loading-section">
+            <div className="loading-spinner"></div>
+            <p>🔄 Loading match results...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="error-section">
+            <h3>❌ Error Loading Data</h3>
+            <p>{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-btn">
+              🔄 Retry
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && dataState.length === 0 && (
+          <div className="no-data-section">
+            <h3>📭 No Match Results Found</h3>
+            <p>No match results are available at the moment. Please check back later or try adjusting your filters.</p>
+          </div>
+        )}
+
+        {!loading && !error && dataState.length > 0 && dataState.slice(0, 7).map((item, index) => (
               <div className="match-list" key={index}>
                 <div className="match-card">
                   <div className="match-info">

@@ -29,9 +29,11 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
       setLastUpdated(now);
     } catch (error) {
       // Check if error is related to JSON parsing (HTML response)
-      if (error.message && error.message.includes('Unexpected token')) {
+      if (error.message && (error.message.includes('Unexpected token') || error.message.includes('<!doctype'))) {
         console.error('❌ Error during polling: Received HTML instead of JSON - likely API endpoint issue');
-        console.error('This usually means the API endpoint returned an error page instead of JSON data');
+        console.error('📄 This usually means the API endpoint returned an error page instead of JSON data');
+        console.error('🔧 Consider checking if the API server is running and accessible');
+        console.error('🌐 URL being polled:', error.url || 'Unknown');
       } else {
         console.error('❌ Error during polling:', error);
       }

@@ -104,7 +104,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
-import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
+import { getApiUrl, API_ENDPOINTS, apiRequest } from '../src/config/api';
 import './css/home.css';
 
 const slides = [
@@ -185,18 +185,26 @@ export default function Home() {
 
   // Functions for real-time data fetching
   const fetchHomeData = async () => {
+    console.log('🏠 Fetching home page data...');
     try {
       // Fetch recent matches
-      const recentRes = await fetch(getApiUrl(API_ENDPOINTS.RECENT_MATCHES));
-      const recentData = await recentRes.json();
-      setRecentMatches(recentData);
+      console.log('📊 Fetching recent matches...');
+      const recentData = await apiRequest(API_ENDPOINTS.RECENT_MATCHES);
+      console.log('📊 Recent matches data:', recentData);
+      setRecentMatches(Array.isArray(recentData) ? recentData : []);
 
       // Fetch clubs
-      const clubsRes = await fetch(getApiUrl(API_ENDPOINTS.CLUBS));
-      const clubsData = await clubsRes.json();
-      setClubs(clubsData);
+      console.log('🏟️ Fetching clubs...');
+      const clubsData = await apiRequest(API_ENDPOINTS.CLUBS);
+      console.log('🏟️ Clubs data:', clubsData);
+      setClubs(Array.isArray(clubsData) ? clubsData : []);
+      
+      console.log('✅ Home data fetched successfully');
     } catch (err) {
-      console.error("Error fetching home data:", err);
+      console.error("💥 Error fetching home data:", err);
+      // Set empty arrays to prevent undefined errors
+      setRecentMatches([]);
+      setClubs([]);
     }
   };
 

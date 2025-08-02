@@ -229,6 +229,7 @@
 
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { apiRequest, API_ENDPOINTS } from '../src/config/api';
 import './css/calender.css';
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -313,13 +314,31 @@ const Calendar = ({ onClick }) => {
 
   // Fetch events
   useEffect(() => {
-    fetch('/api/events')
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) setEvents(data);
-        else if (Array.isArray(data.events)) setEvents(data.events);
-      })
-      .catch((err) => console.log(err));
+    const fetchEvents = async () => {
+      try {
+        console.log('🗓️ Fetching calendar events...');
+        const data = await apiRequest(API_ENDPOINTS.EVENTS);
+        console.log('📅 Events data received:', data);
+        
+        if (Array.isArray(data)) {
+          setEvents(data);
+        } else if (Array.isArray(data.events)) {
+          setEvents(data.events);
+        } else if (data && data.data && Array.isArray(data.data)) {
+          setEvents(data.data);
+        } else {
+          console.warn('⚠️ Unexpected events data structure:', data);
+          setEvents([]);
+        }
+        
+        console.log('✅ Events loaded successfully');
+      } catch (error) {
+        console.error('❌ Error fetching events:', error);
+        setEvents([]);
+      }
+    };
+    
+    fetchEvents();
   }, []);
 
   const monthOptions = monthNames.map((name, index) => ({ name, value: index }));
