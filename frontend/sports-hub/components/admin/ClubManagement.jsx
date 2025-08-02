@@ -248,8 +248,8 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
   };
 
   const filteredClubs = clubs.filter(club => {
-    const matchesSearch = club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         club.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (club.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (club.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' || club.type === filterType;
     return matchesSearch && matchesType;
   });
@@ -345,7 +345,6 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
                     <button
                       className="manage-players-btn"
                       onClick={() => {
-                        console.log('Manage Players clicked for club:', club);
                         if (onManagePlayersClick) {
                           onManagePlayersClick(club);
                         } else {

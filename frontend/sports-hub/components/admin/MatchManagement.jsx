@@ -88,7 +88,6 @@ export default function MatchManagement({ user }) {
 
   const fetchClubs = async () => {
     try {
-      console.log('🔄 Fetching clubs...');
       const response = await fetch(getApiUrl('/api/clubs'), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -96,27 +95,13 @@ export default function MatchManagement({ user }) {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Clubs fetched successfully:', data);
         setClubs(Array.isArray(data) ? data : (data ? [data] : []));
       } else {
-        console.error('❌ Failed to fetch clubs, status:', response.status);
-        // Add some default teams as fallback
-        setClubs([
-          { _id: 'team1', name: 'Team A' },
-          { _id: 'team2', name: 'Team B' },
-          { _id: 'team3', name: 'Team C' },
-          { _id: 'team4', name: 'Team D' }
-        ]);
+        setClubs([]);
       }
     } catch (error) {
-      console.error('❌ Error fetching clubs:', error);
-      // Add some default teams as fallback
-      setClubs([
-        { _id: 'team1', name: 'Team A' },
-        { _id: 'team2', name: 'Team B' },
-        { _id: 'team3', name: 'Team C' },
-        { _id: 'team4', name: 'Team D' }
-      ]);
+      console.error('Error fetching clubs:', error);
+      setClubs([]);
     }
   };
 
@@ -175,23 +160,14 @@ export default function MatchManagement({ user }) {
   const handleDeleteMatch = async (matchId) => {
     if (window.confirm('Are you sure you want to delete this match?')) {
       try {
-        // Log the matchId to help with debugging
-        console.log('Attempting to delete match with ID:', matchId);
-        console.log('Is admin:', isAdmin);
-        console.log('Token:', localStorage.getItem('token'));
-        
-        // Check if matchId is valid
         if (!matchId) {
-          console.error('Invalid match ID:', matchId);
+          alert('Invalid match ID');
           return;
         }
         
-        // Use the correct endpoint based on user role
         const endpoint = isAdmin 
           ? getApiUrl(`/api/admin/matches/${matchId}`) 
           : getApiUrl(`/api/admin/my-matches/${matchId}`);
-        
-        console.log('Using endpoint:', endpoint);
         
         const response = await fetch(endpoint, {
           method: 'DELETE',
@@ -199,29 +175,17 @@ export default function MatchManagement({ user }) {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
-
-        console.log('Delete response status:', response.status);
         
         if (response.ok) {
-          console.log('Match deleted successfully');
           fetchMatches();
-          // Add an alert to notify the user
           alert('Match deleted successfully!');
         } else {
-          // Log the error response for debugging
-          try {
-            const errorData = await response.json();
-            console.error('Server responded with error:', errorData);
-            alert(`Failed to delete match: ${errorData.message || 'Unknown error'}`);
-          } catch (e) {
-            console.error('Could not parse error response:', e);
-            console.error('Response status:', response.status, response.statusText);
-            alert(`Failed to delete match: ${response.statusText}`);
-          }
+          const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+          alert(`Failed to delete match: ${errorData.message}`);
         }
       } catch (error) {
         console.error('Error deleting match:', error);
-        alert(`Error deleting match: ${error.message}`);
+        alert('Failed to delete match. Please try again.');
       }
     }
   };
@@ -261,13 +225,6 @@ export default function MatchManagement({ user }) {
         </button>
       </div>
 
-      {/* Debug Info */}
-      <div className="debug-info" style={{ background: '#f0f0f0', padding: '10px', margin: '10px 0', borderRadius: '5px' }}>
-        <p><strong>Debug Info:</strong></p>
-        <p>Clubs loaded: {clubs.length}</p>
-        <p>Clubs: {clubs.map(c => c.name).join(', ')}</p>
-        <p>Matches loaded: {matches.length}</p>
-      </div>
 
       {/* Search and Filter */}
       <div className="search-filter">
@@ -518,13 +475,6 @@ export default function MatchManagement({ user }) {
               </button>
             </div>
             
-            {/* Debug info for edit modal */}
-            <div style={{ background: '#e8f4f8', padding: '10px', margin: '10px 0', borderRadius: '5px', fontSize: '12px' }}>
-              <strong>Edit Match Debug:</strong><br/>
-              Current team1: {editingMatch.team1 || 'undefined'}<br/>
-              Current team2: {editingMatch.team2 || 'undefined'}<br/>
-              Available clubs: {clubs.length} ({clubs.map(c => c.name).join(', ')})
-            </div>
             <form 
               onSubmit={(e) => {
                 e.preventDefault();

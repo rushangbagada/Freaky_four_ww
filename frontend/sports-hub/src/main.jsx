@@ -1,6 +1,8 @@
 import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import ErrorBoundary from '../components/admin/ErrorBoundary'
+import '../components/admin/css/error-boundary.css'
 import { AuthProvider } from './AuthContext'
 import './index.css'
 import AboutUs from '../components/aboutus'
@@ -102,7 +104,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/admin',
-        element: <Suspense fallback={<div>Loading...</div>}><AdminDashboard /></Suspense>
+        element: <ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <AdminDashboard />
+          </Suspense>
+        </ErrorBoundary>
       },
       {
         path: '/payment/PaymentSuccess',

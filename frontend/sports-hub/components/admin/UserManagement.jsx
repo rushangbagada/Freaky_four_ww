@@ -29,10 +29,9 @@ export default function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      console.log('Fetching users...');
       const token = localStorage.getItem('token');
       
-        const response = await fetch(getApiUrl('/api/admin/users'), {
+      const response = await fetch(getApiUrl('/api/admin/users'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -42,12 +41,9 @@ export default function UserManagement() {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Users data received:', data);
-        
         setUsers(data.users || []);
       } else {
-        const errorText = await response.text();
-        console.error('Error response:', response.status, errorText);
+        console.error('Failed to fetch users:', response.status);
         setUsers([]);
       }
     } catch (error) {
@@ -146,8 +142,8 @@ export default function UserManagement() {
   };
 
   const filteredUsers = Array.isArray(users) ? users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = (user.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (user.email || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = filterRole === 'all' || user.role === filterRole;
     return matchesSearch && matchesRole;
   }) : [];
