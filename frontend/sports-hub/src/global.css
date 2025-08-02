@@ -59,6 +59,19 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
+  
+  /* Z-Index System */
+  --z-background: -2;
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-header: 50;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+  --z-tooltip: 400;
+  --z-chatbot: 1000;
+  --z-max: 9999;
 }
 
 /* ==========================================================================
@@ -88,7 +101,7 @@ body {
   line-height: 1.6;
 }
 
-/* Animated Background */
+/* Animated Background - Reduced opacity for cleaner hero sections */
 body::before {
   content: '';
   position: fixed;
@@ -104,7 +117,7 @@ body::before {
   background-repeat: repeat;
   background-size: 200px 100px;
   animation: sparkle 15s linear infinite;
-  opacity: 0.3;
+  opacity: 0.1; /* Reduced from 0.3 to 0.1 for cleaner look */
   z-index: -2;
   pointer-events: none;
 }

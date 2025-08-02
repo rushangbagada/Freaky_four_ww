@@ -12,6 +12,10 @@ const Turf = () => {
   const [priceRange, setPriceRange] = useState('');
   const [availabilityFilter, setAvailabilityFilter] = useState('');
   const [error, setError] = useState(null);
+  
+  const totalTurfs = turfs.length;
+  const availableTurfs = turfs.filter(turf => turf.availability).length;
+  const locations = new Set(turfs.map(turf => turf.location)).size;
 
   // Filter turfs based on search criteria
   const filteredTurfs = turfs.filter(turf => {
@@ -91,11 +95,31 @@ const Turf = () => {
   return (
     <div className="turf-page">
       
-      {/* Hero Section */}
+{/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Turf Booking</h1>
-          <p>Find and book the best sports facilities with ease</p>
+          <div className="hero-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+              <path d="M10 17l5-5-5-5v10z"/>
+            </svg>
+          </div>
+          <h1 className="hero-title">Turf Booking</h1>
+          <p className="hero-subtitle">Find and book the best sports facilities with ease</p>
+        </div>
+        <div className="hero-stats">
+          <div className="stat-card">
+            <span className="stat-number">{totalTurfs}</span>
+            <span className="stat-label">Total Turfs</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{availableTurfs}</span>
+            <span className="stat-label">Available</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-number">{locations}</span>
+            <span className="stat-label">Locations</span>
+          </div>
         </div>
       </section>
 

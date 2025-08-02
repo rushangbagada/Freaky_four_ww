@@ -1,18 +1,18 @@
-/* OTP Verification Container */
+/* OTP Verification Container - Login Theme Match */
 .otp-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  background: linear-gradient(135deg, #181c23 0%, #23272f 100%);
+  padding: 100px 20px 20px 20px;
 }
 
 .otp-card {
-  background: white;
+  background: #181c23;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.10);
   width: 100%;
   max-width: 450px;
   text-align: center;
@@ -21,38 +21,40 @@
 .otp-icon {
   font-size: 48px;
   margin-bottom: 20px;
+  color: #60a5fa;
 }
 
 .otp-card h2 {
-  color: #333;
-  margin-bottom: 15px;
+  color: #e3e8ee;
+  margin-bottom: 30px;
   font-size: 24px;
   font-weight: 600;
 }
 
 .otp-description {
-  color: #666;
+  color: #9ca3af;
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
 .email-display {
-  background: #f8f9fa;
+  background: #23272f;
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 25px;
-  border: 1px solid #e9ecef;
+  border: 1px solid #374151;
 }
 
 .email-display strong {
-  color: #333;
+  color: #60a5fa;
   font-size: 16px;
+  font-weight: 500;
 }
 
 /* OTP Form */
 .otp-form {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .form-group {
@@ -60,43 +62,70 @@
   margin-bottom: 20px;
 }
 
-.form-group label {
+.otp-label {
   display: block;
-  margin-bottom: 8px;
-  color: #555;
+  margin-bottom: 15px;
+  color: #bfc6d1;
   font-weight: 500;
   font-size: 14px;
+  text-align: center;
 }
 
-.otp-input {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e1e5e9;
+/* Individual OTP Digit Inputs - Login Theme */
+.otp-inputs-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.otp-digit-input {
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  border: 2px solid #23272f;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   text-align: center;
-  letter-spacing: 2px;
+  background: #23272f;
+  color: #e5e7eb;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
+  outline: none;
 }
 
-.otp-input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.otp-digit-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.otp-digit-input:not(:placeholder-shown) {
+  border-color: #2563eb;
+  color: #60a5fa;
+}
+
+.otp-digit-input.error {
+  border-color: #f87171;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
 .error-text {
-  color: #dc3545;
+  color: #f87171;
   font-size: 12px;
   margin-top: 5px;
   display: block;
 }
 
-/* Buttons */
+/* Buttons - Login Theme Match */
 .otp-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
   color: white;
   padding: 14px 20px;
   border: none;
@@ -106,12 +135,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .otp-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(56, 189, 248, 0.18);
 }
 
 .otp-btn:disabled {
@@ -124,50 +158,67 @@
   margin-bottom: 20px;
 }
 
-/* Timer Section */
+/* Loading Spinner */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Timer Section - Login Theme */
 .timer-section {
   margin-bottom: 20px;
   padding: 15px;
-  background: #f8f9fa;
+  background: #23272f;
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  border: 1px solid #374151;
 }
 
 .timer {
   margin: 0;
   font-size: 14px;
-  color: #666;
+  color: #bfc6d1;
+  font-weight: 500;
 }
 
 .timer-countdown {
-  color: #dc3545;
+  color: #60a5fa;
   font-weight: 600;
   font-size: 16px;
 }
 
 .timer.expired {
-  color: #dc3545;
+  color: #f87171;
   font-weight: 600;
 }
 
-/* Resend Section */
+/* Resend Section - Login Theme */
 .resend-section {
   margin-bottom: 25px;
   padding-top: 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #23272f;
+  text-align: center;
 }
 
 .resend-section p {
-  margin-bottom: 10px;
-  color: #666;
+  color: #bfc6d1;
   font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .resend-btn {
   background: none;
-  border: 1px solid #667eea;
-  color: #667eea;
-  padding: 10px 20px;
+  border: 1px solid #2563eb;
+  color: #60a5fa;
+  padding: 8px 16px;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
@@ -175,7 +226,7 @@
 }
 
 .resend-btn:hover:not(:disabled) {
-  background: #667eea;
+  background: #2563eb;
   color: white;
 }
 
@@ -184,16 +235,13 @@
   cursor: not-allowed;
 }
 
-/* Back Section */
+/* Back Section - Login Theme */
 .back-section {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
+  text-align: center;
 }
 
 .back-btn {
-  background: #6c757d;
+  background: #374151;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -204,10 +252,9 @@
 }
 
 .back-btn:hover {
-  background: #5a6268;
+  background: #23272f;
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .otp-card {
     padding: 30px 20px;
@@ -218,21 +265,18 @@
     font-size: 20px;
   }
   
-  .otp-input {
-    font-size: 16px;
-    padding: 12px;
+  .otp-inputs-container {
+    gap: 8px;
+  }
+  
+  .otp-digit-input {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
   }
   
   .otp-btn {
     font-size: 14px;
     padding: 12px 16px;
   }
-  
-  .back-section {
-    flex-direction: column;
-  }
-  
-  .back-btn {
-    width: 100%;
-  }
-} 
+}

@@ -1,6 +1,9 @@
 /* Import Global Styles */
 @import './global.css';
 
+/* Import Conflict Resolution Fixes */
+@import './conflict-fixes.css';
+
 /* ==========================================================================
    INDEX-SPECIFIC STYLES
    ========================================================================== */

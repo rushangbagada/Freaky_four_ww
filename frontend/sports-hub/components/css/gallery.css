@@ -9,7 +9,7 @@
   padding-top: 120px; /* Increased to prevent navbar overlap */
 }
 
-/* ========== Result Page Hero Section Style ========== */
+/* ========== Gallery Page Hero Section Style ========== */
 .gallery-hero {
   text-align: center !important;
   padding: 4rem 2rem !important;
@@ -73,70 +73,162 @@
   line-height: 1.6;
 }
 
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+/* Enhanced Gallery Hero Stats - Admin Dashboard Style */
+.gallery-hero .hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
   margin-top: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.stat-card {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  padding: 1.5rem 2rem;
-  border-radius: 16px;
-  text-align: center;
-  min-width: 120px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+.gallery-hero .stat-card {
+  background: linear-gradient(135deg, var(--card-dark) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  padding: 2rem !important;
+  border-radius: var(--border-radius) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: all var(--transition-normal) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(10px) !important;
+  /* Performance optimizations */
+  will-change: transform, box-shadow !important;
+  transform: translateZ(0) !important;
 }
 
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
-  transition: left 0.5s;
-  z-index: 1;
+.gallery-hero .stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--accent-color), rgba(255, 255, 255, 0.3), var(--accent-color)) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+  box-shadow: 0 0 15px var(--accent-color) !important;
 }
 
-.stat-card:hover::before {
-  left: 100%;
+.gallery-hero .stat-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%) !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: none !important;
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(56, 189, 248, 0.6);
-  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.25);
-  background: rgba(30, 41, 59, 0.8);
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.stat-number {
-  display: block;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #38bdf8;
-  margin-bottom: 0.5rem;
-  position: relative;
-  z-index: 2;
+/* Individual card accent colors */
+.gallery-hero .stat-card:nth-child(1) {
+  --accent-color: var(--accent-blue);
 }
 
-.stat-label {
-  font-size: 0.9rem;
-  color: #7dd3fc;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-  position: relative;
-  z-index: 2;
+.gallery-hero .stat-card:nth-child(2) {
+  --accent-color: var(--accent-finished);
 }
+
+.gallery-hero .stat-card:nth-child(3) {
+  --accent-color: var(--accent-gold);
+}
+
+.gallery-hero .stat-card:nth-child(4) {
+  --accent-color: var(--accent-mvp-text);
+}
+
+.gallery-hero .stat-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--accent-color),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+.gallery-hero .stat-card:hover::after {
+  opacity: 1 !important;
+}
+
+.gallery-hero .stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg) !important;
+  filter: drop-shadow(0 0 15px var(--accent-color)) !important;
+}
+
+.gallery-hero .stat-card:hover .stat-info h3 {
+  color: var(--accent-color) !important;
+  text-shadow: 0 0 10px var(--accent-color) !important;
+}
+
+.gallery-hero .stat-icon {
+  font-size: 2.5rem !important;
+  color: var(--accent-color) !important;
+  opacity: 0.9 !important;
+  filter: drop-shadow(0 0 8px var(--accent-color)) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.gallery-hero .stat-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.gallery-hero .stat-info h3 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 0.25rem 0 !important;
+  color: var(--text-primary) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.gallery-hero .stat-info p {
+  margin: 0 !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Legacy support for old stat-number and stat-label classes */
+.gallery-hero .stat-number {
+  display: block !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 0.25rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.gallery-hero .stat-label {
+  font-size: 1rem !important;
+  color: var(--text-secondary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* ========== Gallery Header ========== */
 .gallery-header {
   padding: 40px 20px 20px;
   display: flex;

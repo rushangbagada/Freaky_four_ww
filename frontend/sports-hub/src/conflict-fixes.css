@@ -1,0 +1,405 @@
+/* ==========================================================================
+   CSS CONFLICT RESOLUTION FILE
+   ========================================================================== */
+
+/* This file fixes conflicts between different CSS files in the project */
+
+/* ==========================================================================
+   Z-INDEX STANDARDIZATION
+   ========================================================================== */
+
+/* Use standardized z-index values from global.css variables */
+.header {
+  z-index: var(--z-header) !important;
+}
+
+.chat-fab,
+.floating-chat-button {
+  z-index: var(--z-chatbot) !important;
+}
+
+.floating-chatbot {
+  z-index: calc(var(--z-chatbot) + 1) !important;
+}
+
+.chatbot-overlay {
+  z-index: calc(var(--z-chatbot) - 1) !important;
+}
+
+/* Modal and overlay elements */
+.modal,
+.overlay {
+  z-index: var(--z-modal) !important;
+}
+
+.tooltip {
+  z-index: var(--z-tooltip) !important;
+}
+
+.dropdown {
+  z-index: var(--z-dropdown) !important;
+}
+
+/* ==========================================================================
+   HERO CLASS SPECIFICITY FIXES
+   ========================================================================== */
+
+/* Make hero classes more specific to avoid conflicts */
+.turf-page .hero {
+  /* Turf-specific hero styles take precedence */
+  background: transparent !important;
+}
+
+/* Ultra-specific override to ensure no blue background */
+.turf-page .hero,
+.turf-page .hero::before,
+.turf-page .hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.sports-clubs-container .hero {
+  /* Sports clubs-specific hero styles */
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 240px !important;
+}
+
+.result-container .hero {
+  /* Result page-specific hero styles */
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 240px !important;
+}
+
+.home-container .hero-carousel {
+  /* Home page carousel is different */
+  background: none !important;
+}
+
+/* ==========================================================================
+   CONTAINER AND LAYOUT FIXES
+   ========================================================================== */
+
+/* Prevent horizontal overflow */
+body {
+  overflow-x: hidden !important;
+}
+
+/* Ensure all page containers respect global styles */
+.page-container,
+.turf-page,
+.sports-clubs-container,
+.result-container,
+.home-container {
+  font-family: var(--font-primary) !important;
+  background-color: var(--bg-dark-blue) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ==========================================================================
+   BUTTON STANDARDIZATION
+   ========================================================================== */
+
+/* Ensure all buttons follow global button styles unless specifically overridden */
+.btn:not(.details-btn):not(.register-btn):not(.hero-btn) {
+  font-family: var(--font-primary) !important;
+  transition: var(--transition-normal) !important;
+}
+
+/* ==========================================================================
+   CARD COMPONENT FIXES
+   ========================================================================== */
+
+/* Standardize card hover effects */
+.card:hover,
+.sports-club-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINT STANDARDIZATION
+   ========================================================================== */
+
+/* Ensure consistent mobile behavior */
+@media (max-width: 768px) {
+  .header {
+    display: none !important;
+  }
+  
+  .main-content {
+    padding-top: 0 !important;
+  }
+  
+  /* Adjust page containers for mobile */
+  .turf-page,
+  .sports-clubs-container,
+  .result-container,
+  .calendar-page,
+  .gallery-container {
+    padding-top: 100px !important;
+  }
+}
+
+/* ==========================================================================
+   ANIMATION CONFLICT RESOLUTION
+   ========================================================================== */
+
+/* Prevent conflicting animations */
+.card::before {
+  transition: left 0.5s ease !important;
+}
+
+/* Standardize fade-in animations */
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out both !important;
+}
+
+/* ==========================================================================
+   FORM INPUT STANDARDIZATION
+   ========================================================================== */
+
+/* Ensure all form inputs use global styles */
+.form-input,
+.search-input,
+.message-input,
+.username-field {
+  font-family: var(--font-primary) !important;
+  background: var(--bg-medium) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--bg-light) !important;
+  border-radius: var(--border-radius-sm) !important;
+}
+
+.form-input:focus,
+.search-input:focus,
+.message-input:focus,
+.username-field:focus {
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12) !important;
+}
+
+/* ==========================================================================
+   SCROLLBAR STANDARDIZATION
+   ========================================================================== */
+
+/* Consistent scrollbar styling across components */
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bg-light);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue-deep);
+}
+
+/* ==========================================================================
+   UTILITY CLASS OVERRIDES
+   ========================================================================== */
+
+/* Ensure utility classes work consistently */
+.text-primary {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.gradient-text {
+  background: var(--gradient-text) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ==========================================================================
+   CONFLICT PREVENTION
+   ========================================================================== */
+
+/* Prevent common CSS conflicts */
+* {
+  box-sizing: border-box;
+}
+
+/* Ensure consistent line heights */
+p, span, div {
+  line-height: 1.6;
+}
+
+/* Consistent font weights */
+h1, h2 { font-weight: 800 !important; }
+h3 { font-weight: 700 !important; }
+h4, h5, h6 { font-weight: 600 !important; }
+
+/* ==========================================================================
+   ULTIMATE TURF HERO BACKGROUND FIX - HIGHEST PRIORITY
+   ========================================================================== */
+
+/* Nuclear option - ensure no blue background can ever appear */
+body .turf-page .hero,
+body .turf-page .hero::before,
+body .turf-page .hero::after,
+html body .turf-page .hero,
+html body .turf-page .hero::before,
+html body .turf-page .hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-origin: padding-box !important;
+  background-clip: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Sports club hero section fixes - ensure clean appearance with ultra-high specificity */
+body .sports-clubs-container .hero,
+body .sports-clubs-container .hero::before,
+body .sports-clubs-container .hero::after,
+body .sports-clubs-container .sports-clubs-hero,
+body .sports-clubs-container .sports-clubs-hero::before,
+body .sports-clubs-container .sports-clubs-hero::after,
+html body .sports-clubs-container .hero,
+html body .sports-clubs-container .hero::before,
+html body .sports-clubs-container .hero::after,
+html body .sports-clubs-container .sports-clubs-hero,
+html body .sports-clubs-container .sports-clubs-hero::before,
+html body .sports-clubs-container .sports-clubs-hero::after,
+html body div.sports-clubs-container .hero,
+html body div.sports-clubs-container .hero::before,
+html body div.sports-clubs-container .hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-origin: padding-box !important;
+  background-clip: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+}
+
+/* Result page hero section fixes - ensure clean appearance and consistent spacing */
+body .result-container .hero,
+body .result-container .hero::before,
+body .result-container .hero::after,
+body .result-container .result-hero,
+body .result-container .result-hero::before,
+body .result-container .result-hero::after,
+html body .result-container .hero,
+html body .result-container .hero::before,
+html body .result-container .hero::after,
+html body .result-container .result-hero,
+html body .result-container .result-hero::before,
+html body .result-container .result-hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-origin: padding-box !important;
+  background-clip: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+}
+
+/* Ensure consistent container padding-top for navbar spacing */
+body .result-container {
+  padding-top: 170px !important;
+}
+
+body .sports-clubs-container {
+  padding-top: 170px !important;
+}
+
+body .calendar-page {
+  padding-top: 170px !important;
+}
+
+body .gallery-container {
+  padding-top: 170px !important;
+}
+
+/* Calendar page hero section fixes - ensure clean appearance and consistent spacing */
+body .calendar-page .calendar-hero,
+body .calendar-page .calendar-hero::before,
+body .calendar-page .calendar-hero::after,
+body .calendar-page .hero,
+body .calendar-page .hero::before,
+body .calendar-page .hero::after,
+html body .calendar-page .calendar-hero,
+html body .calendar-page .calendar-hero::before,
+html body .calendar-page .calendar-hero::after,
+html body .calendar-page .hero,
+html body .calendar-page .hero::before,
+html body .calendar-page .hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-origin: padding-box !important;
+  background-clip: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+}
+
+/* Gallery page hero section fixes - ensure clean appearance and consistent spacing */
+body .gallery-container .gallery-hero,
+body .gallery-container .gallery-hero::before,
+body .gallery-container .gallery-hero::after,
+body .gallery-container .hero,
+body .gallery-container .hero::before,
+body .gallery-container .hero::after,
+html body .gallery-container .gallery-hero,
+html body .gallery-container .gallery-hero::before,
+html body .gallery-container .gallery-hero::after,
+html body .gallery-container .hero,
+html body .gallery-container .hero::before,
+html body .gallery-container .hero::after {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-origin: padding-box !important;
+  background-clip: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+}

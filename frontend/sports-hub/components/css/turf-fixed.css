@@ -19,11 +19,11 @@
 .turf-page .hero {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: transparent;
   border-radius: 16px;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border: 1px solid #38bdf8;
+  box-shadow: none;
+  border: none;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -38,7 +38,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+  background: transparent;
   z-index: 1;
 }
 

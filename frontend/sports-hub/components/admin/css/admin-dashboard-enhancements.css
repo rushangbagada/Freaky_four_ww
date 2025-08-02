@@ -1,0 +1,245 @@
+/* ==========================================================================
+   ADMIN DASHBOARD OVERVIEW CARDS ENHANCEMENTS
+   ========================================================================== */
+
+/* Enhanced Overview Cards with improved accessibility and performance */
+
+/* Reduced motion for users who prefer less animation */
+@media (prefers-reduced-motion: reduce) {
+  .stat-card {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .stat-card::before {
+    animation: none !important;
+  }
+  
+  .stat-card:hover .stat-icon {
+    transform: none !important;
+  }
+}
+
+/* Improved focus states for accessibility */
+.stat-card:focus-within {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Loading state for stat cards */
+.stat-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.stat-card.loading::before {
+  background: linear-gradient(90deg, #374151, #6b7280, #374151);
+  animation: loading-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Error state for stat cards */
+.stat-card.error {
+  border-color: var(--accent-live);
+  background: linear-gradient(135deg, var(--card-dark) 0%, rgba(239, 68, 68, 0.1) 100%);
+}
+
+.stat-card.error::before {
+  background: var(--accent-live);
+  animation: none;
+}
+
+/* Success/Updated state */
+.stat-card.updated {
+  border-color: var(--accent-finished);
+  animation: success-pulse 2s ease-in-out;
+}
+
+@keyframes success-pulse {
+  0%, 100% { 
+    box-shadow: var(--shadow-lg);
+  }
+  50% { 
+    box-shadow: 
+      var(--shadow-lg),
+      0 0 20px var(--accent-finished);
+  }
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+    gap: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+    align-self: center;
+  }
+  
+  .stat-info h3 {
+    font-size: 1.75rem;
+  }
+  
+  .stat-info p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Improved dark mode contrast */
+@media (prefers-contrast: high) {
+  .stat-card {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--card-dark);
+  }
+  
+  .stat-info h3 {
+    color: #ffffff;
+  }
+  
+  .stat-info p {
+    color: #e5e7eb;
+  }
+}
+
+/* Print styles */
+@media print {
+  .stat-card {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  
+  .stat-card::before,
+  .stat-card::after {
+    display: none !important;
+  }
+  
+  .stat-icon {
+    color: #666 !important;
+    filter: none !important;
+  }
+}
+
+/* Improved card content spacing */
+.stat-card .stat-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0; /* Prevent flex item overflow */
+}
+
+/* Number counter animation */
+.stat-info h3.counting {
+  animation: number-change 0.5s ease-out;
+}
+
+@keyframes number-change {
+  0% {
+    transform: scale(1.1);
+    color: var(--accent-color);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--text-primary);
+  }
+}
+
+/* Improved tooltip for stat cards */
+.stat-card[data-tooltip] {
+  position: relative;
+}
+
+.stat-card[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-dark);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: var(--z-tooltip);
+  opacity: 0;
+  animation: tooltip-show 0.3s ease forwards;
+}
+
+@keyframes tooltip-show {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Grid layout improvements for different screen sizes */
+@media (min-width: 1400px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+    margin: 0 auto 3rem auto;
+  }
+}
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* Enhanced visual hierarchy */
+.overview-section .section-description {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Skeleton loading state */
+.stat-card.skeleton {
+  background: linear-gradient(90deg, var(--card-dark) 25%, #374151 50%, var(--card-dark) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.stat-card.skeleton .stat-icon,
+.stat-card.skeleton .stat-info h3,
+.stat-card.skeleton .stat-info p {
+  background: #374151;
+  color: transparent;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

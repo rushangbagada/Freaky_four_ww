@@ -1,16 +1,18 @@
---- Reset & Base ---
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Import CSS Variables - Fallback Support */
+:root {
+  --card-dark: #111827;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-radius: 1rem;
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --transition-normal: 0.3s ease;
+  --accent-blue: #38bdf8;
+  --accent-finished: #22c55e;
+  --accent-gold: #facc15;
+  --accent-mvp-text: #f59e0b;
 }
-body {
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
-  min-height: 100vh;
-  letter-spacing: 0.01em;
-}
+
+/* Removed duplicate reset - using global.css reset */
 .turf-page {
   background: #0f172a;
   padding: 2rem;
@@ -20,30 +22,50 @@ body {
 
 /* --- Hero Section --- */
 .hero {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  border: 1px solid #38bdf8;
+  text-align: center !important;
+  padding: 4rem 2rem !important;
+  background: transparent !important;
+  margin-top: 0 !important; /* Unified margin-top for hero sections */
+  margin-bottom: 2rem !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+}
+
+.hero-content {
   position: relative;
-  overflow: hidden;
+  z-index: 2;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
-  z-index: 1;
+.hero-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
 }
+
+.hero-icon svg {
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+}
+
+/* Removed hero background gradient to keep hero section clean */
 
 .hero-content {
   position: relative;
@@ -73,7 +95,162 @@ body {
   line-height: 1.6;
 }
 
-/* --- Search & Filter --- */
+/* Enhanced Turf Hero Stats - Admin Dashboard Style */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, var(--card-dark) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  padding: 2rem !important;
+  border-radius: var(--border-radius) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: all var(--transition-normal) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(10px) !important;
+  /* Performance optimizations */
+  will-change: transform, box-shadow !important;
+  transform: translateZ(0) !important;
+}
+
+.stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--accent-color), rgba(255, 255, 255, 0.3), var(--accent-color)) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+  box-shadow: 0 0 15px var(--accent-color) !important;
+}
+
+.stat-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%) !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: none !important;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Individual card accent colors */
+.stat-card:nth-child(1) {
+  --accent-color: var(--accent-blue);
+}
+
+.stat-card:nth-child(2) {
+  --accent-color: var(--accent-finished);
+}
+
+.stat-card:nth-child(3) {
+  --accent-color: var(--accent-gold);
+}
+
+.stat-card:nth-child(4) {
+  --accent-color: var(--accent-mvp-text);
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--accent-color),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+.stat-card:hover::after {
+  opacity: 1 !important;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg) !important;
+  filter: drop-shadow(0 0 15px var(--accent-color)) !important;
+}
+
+.stat-card:hover .stat-info h3 {
+  color: var(--accent-color) !important;
+  text-shadow: 0 0 10px var(--accent-color) !important;
+}
+
+.hero-stats .stat-icon {
+  font-size: 2.5rem !important;
+  color: var(--accent-color) !important;
+  opacity: 0.9 !important;
+  filter: drop-shadow(0 0 8px var(--accent-color)) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.hero-stats .stat-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.hero-stats .stat-info h3 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 0.25rem 0 !important;
+  color: var(--text-primary) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.hero-stats .stat-info p {
+  margin: 0 !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Legacy support for old stat-number and stat-label classes */
+.hero-stats .stat-number {
+  display: block !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 0.25rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.hero-stats .stat-label {
+  font-size: 1rem !important;
+  color: var(--text-secondary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* --- Search \u0026 Filter --- */
 .search-filter {
   display: flex;
   justify-content: center;

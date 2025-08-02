@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../src/AuthContext';
 import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
@@ -11,20 +10,14 @@ export default function OTPVerification() {
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
   const [canResend, setCanResend] = useState(false);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [errors, setErrors] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const inputRefs = useRef([]);
 
   const type = searchParams.get('type'); // 'register' or 'reset'
   const email = searchParams.get('email');
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch
-  } = useForm();
-
-  const otp = watch('otp');
 
   // Countdown timer
   useEffect(() => {
@@ -42,8 +35,53 @@ export default function OTPVerification() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleOTPVerification = async (data) => {
-    if (!data.otp || data.otp.length !== 6) {
+  // Handle OTP input change
+  const handleOtpChange = (index, value) => {
+    if (value.length > 1) {
+      // Handle paste
+      const pastedValue = value.slice(0, 6);
+      const newOtp = [...otp];
+      for (let i = 0; i < pastedValue.length && i < 6; i++) {
+        newOtp[i] = pastedValue[i];
+      }
+      setOtp(newOtp);
+      
+      // Focus on the next empty input or the last one
+      const nextIndex = Math.min(pastedValue.length, 5);
+      if (inputRefs.current[nextIndex]) {
+        inputRefs.current[nextIndex].focus();
+      }
+    } else {
+      // Handle single character input
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+      
+      // Auto-focus next input
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    }
+    
+    // Clear errors when user starts typing
+    if (errors) {
+      setErrors('');
+    }
+  };
+
+  // Handle backspace
+  const handleKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleOTPVerification = async (e) => {
+    e.preventDefault();
+    const otpString = otp.join('');
+    
+    if (!otpString || otpString.length !== 6) {
+      setErrors('Please enter a valid 6-digit OTP');
       toast.error('Please enter a valid 6-digit OTP');
       return;
     }
@@ -61,7 +99,7 @@ export default function OTPVerification() {
       } else if (type === 'reset') {
         endpoint = getApiUrl('/api/auth/verify-reset-token');
         successMessage = 'Token verified! You can now reset your password.';
-        redirectPath = `/reset-password?email=${email}&token=${data.otp}`;
+        redirectPath = `/reset-password?email=${email}&token=${otpString}`;
       }
 
       const res = await fetch(endpoint, {
@@ -71,13 +109,14 @@ export default function OTPVerification() {
         },
         body: JSON.stringify({
           email: email,
-          otp: data.otp
+          otp: otpString
         })
       });
 
       const result = await res.json();
 
       if (!res.ok) {
+        setErrors(result.message || 'Verification failed');
         toast.error(result.message || 'Verification failed');
       } else {
         if (type === 'login') {
@@ -92,6 +131,7 @@ export default function OTPVerification() {
         setTimeout(() => navigate(redirectPath), 2000);
       }
     } catch (err) {
+      setErrors('Network error. Try again.');
       toast.error('Network error. Try again.');
     } finally {
       setLoading(false);
@@ -183,32 +223,42 @@ export default function OTPVerification() {
           <strong>{email}</strong>
         </div>
 
-        <form onSubmit={handleSubmit(handleOTPVerification)} className="otp-form">
+        <form onSubmit={handleOTPVerification} className="otp-form">
           <div className="form-group">
-            <label htmlFor="otp">Enter Verification Code</label>
-            <input
-              type="text"
-              id="otp"
-              {...register('otp', {
-                required: 'Verification code is required',
-                pattern: {
-                  value: /^[0-9]{6}$/,
-                  message: 'Please enter a valid 6-digit code'
-                }
-              })}
-              placeholder="Enter 6-digit code"
-              maxLength={6}
-              className="otp-input"
-            />
-            {errors.otp && <span className="error-text">{errors.otp.message}</span>}
+            <label className="otp-label">Enter Verification Code</label>
+            <div className="otp-inputs-container">
+              {otp.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleOtpChange(index, e.target.value.replace(/[^0-9]/g, ''))}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  className={`otp-digit-input ${errors ? 'error' : ''}`}
+                  maxLength={1}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  autoComplete="off"
+                />
+              ))}
+            </div>
+            {errors && <span className="error-text">{errors}</span>}
           </div>
 
           <button 
             type="submit" 
             className="otp-btn verify-btn" 
-            disabled={loading}
+            disabled={loading || otp.join('').length !== 6}
           >
-            {loading ? 'Verifying...' : 'Verify Code'}
+            {loading ? (
+              <>
+                <span className="loading-spinner"></span>
+                Verifying...
+              </>
+            ) : (
+              'Verify Code'
+            )}
           </button>
         </form>
 
@@ -235,13 +285,8 @@ export default function OTPVerification() {
 
         <div className="back-section">
           <button onClick={handleBackToLogin} className="back-btn">
-            Back to Login
+            ← Back to Login
           </button>
-          {type === 'login' && (
-            <button onClick={handleBackToLogin} className="back-btn">
-              Back to Login
-            </button>
-          )}
         </div>
       </div>
       <Toaster position="top-right" />

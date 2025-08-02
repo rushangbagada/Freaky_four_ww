@@ -1,3 +1,17 @@
+/* Import CSS Variables - Fallback Support */
+:root {
+  --card-dark: #111827;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-radius: 1rem;
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --transition-normal: 0.3s ease;
+  --accent-blue: #38bdf8;
+  --accent-finished: #22c55e;
+  --accent-gold: #facc15;
+  --accent-mvp-text: #f59e0b;
+}
+
 /* Custom Cursor Styles for Bigger Pointers */
 * {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="1"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>'), auto;
@@ -17,7 +31,7 @@ a, [role="button"], input[type="button"], input[type="submit"] {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   color: #e2e8f0;
-  padding-top: 120px; /* Space for fixed navbar - unified with result and gallery pages */
+  padding-top: 150px; /* Unified padding-top for consistent navbar spacing */
 }
 
 /* Hero Section */
@@ -25,7 +39,7 @@ a, [role="button"], input[type="button"], input[type="submit"] {
   text-align: center !important;
   padding: 4rem 2rem !important;
   background: transparent !important;
-  margin-top: 70px !important;
+  margin-top: 0 !important; /* Unified margin-top for hero sections */
   margin-bottom: 2rem !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
@@ -80,10 +94,330 @@ a, [role="button"], input[type="button"], input[type="submit"] {
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
-  text-align: center;
-  line-height: 1.6;
 }
 
+/* Enhanced Calendar Hero Stats - Admin Dashboard Style */
+.calendar-hero .hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.calendar-hero .stat-card {
+  background: linear-gradient(135deg, var(--card-dark) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  padding: 2rem !important;
+  border-radius: var(--border-radius) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: all var(--transition-normal) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(10px) !important;
+  /* Performance optimizations */
+  will-change: transform, box-shadow !important;
+  transform: translateZ(0) !important;
+}
+
+.calendar-hero .stat-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, var(--accent-color), rgba(255, 255, 255, 0.3), var(--accent-color)) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 3s ease-in-out infinite !important;
+  box-shadow: 0 0 15px var(--accent-color) !important;
+}
+
+.calendar-hero .stat-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%) !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  pointer-events: none !important;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Individual card accent colors */
+.calendar-hero .stat-card:nth-child(1) {
+  --accent-color: var(--accent-blue);
+}
+
+.calendar-hero .stat-card:nth-child(2) {
+  --accent-color: var(--accent-finished);
+}
+
+.calendar-hero .stat-card:nth-child(3) {
+  --accent-color: var(--accent-gold);
+}
+
+.calendar-hero .stat-card:nth-child(4) {
+  --accent-color: var(--accent-mvp-text);
+}
+
+.calendar-hero .stat-card:hover {
+  transform: translateY(-8px) scale(1.03) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--accent-color),
+    0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+.calendar-hero .stat-card:hover::after {
+  opacity: 1 !important;
+}
+
+.calendar-hero .stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg) !important;
+  filter: drop-shadow(0 0 15px var(--accent-color)) !important;
+}
+
+.calendar-hero .stat-card:hover .stat-info h3 {
+  color: var(--accent-color) !important;
+  text-shadow: 0 0 10px var(--accent-color) !important;
+}
+
+.calendar-hero .stat-icon {
+  font-size: 2.5rem !important;
+  color: var(--accent-color) !important;
+  opacity: 0.9 !important;
+  filter: drop-shadow(0 0 8px var(--accent-color)) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.calendar-hero .stat-info {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+
+.calendar-hero .stat-info h3 {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin: 0 0 0.25rem 0 !important;
+  color: var(--text-primary) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.calendar-hero .stat-info p {
+  margin: 0 !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Legacy support for old stat-number and stat-label classes */
+.calendar-hero .stat-number {
+  display: block !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 0.25rem !important;
+  position: relative !important;
+  z-index: 2 !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.calendar-hero .stat-label {
+  font-size: 1rem !important;
+  color: var(--text-secondary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 500 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Base stat card styling */
+.calendar-hero .stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.calendar-hero .stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-hero .stat-icon svg {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.calendar-hero .stat-number {
+  display: block;
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.calendar-hero .stat-card:hover .stat-number {
+  transform: scale(1.05);
+  text-shadow: 0 0 20px currentColor;
+}
+
+/* Blue stat card variant */
+.calendar-hero .stat-card.blue .stat-icon {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.calendar-hero .stat-card.blue .stat-number {
+  color: #38bdf8;
+}
+
+.calendar-hero .stat-card.blue {
+  position: relative;
+}
+
+.calendar-hero .stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, rgba(71, 85, 105, 0.6), transparent);
+  transition: bottom 0.5s;
+  z-index: 1;
+}
+
+.calendar-hero .stat-card.blue:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.25), 0 0 30px rgba(56, 189, 248, 0.2);
+}
+
+.calendar-hero .stat-card.blue:hover::before {
+  bottom: 0;
+}
+
+/* Green stat card variant */
+.calendar-hero .stat-card.green .stat-icon {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.calendar-hero .stat-card.green .stat-number {
+  color: #22c55e;
+}
+
+.calendar-hero .stat-card.green {
+  position: relative;
+}
+
+.calendar-hero .stat-card.green::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, rgba(34, 197, 94, 0.6), transparent);
+  transition: bottom 0.5s;
+  z-index: 1;
+}
+
+.calendar-hero .stat-card.green:hover {
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 20px 40px rgba(34, 197, 94, 0.25), 0 0 30px rgba(34, 197, 94, 0.2);
+}
+
+.calendar-hero .stat-card.green:hover::before {
+  bottom: 0;
+}
+
+/* Golden stat card variant */
+.calendar-hero .stat-card.golden .stat-icon {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+.calendar-hero .stat-card.golden .stat-number {
+  color: #f59e0b;
+}
+
+.calendar-hero .stat-card.golden {
+  position: relative;
+}
+
+.calendar-hero .stat-card.golden::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.6), transparent);
+  transition: bottom 0.5s;
+  z-index: 1;
+}
+
+.calendar-hero .stat-card.golden:hover {
+  border-color: rgba(245, 158, 11, 0.6);
+  box-shadow: 0 20px 40px rgba(245, 158, 11, 0.25), 0 0 30px rgba(245, 158, 11, 0.2);
+}
+
+.calendar-hero .stat-card.golden:hover::before {
+  bottom: 0;
+}
+
+.calendar-hero .stat-label {
+  font-size: 1rem;
+  color: #94a3b8;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  line-height: 1.4;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.calendar-hero .stat-card:hover .stat-label {
+  color: #e2e8f0;
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Generic hero stats container */
 .hero-stats {
   display: flex;
   justify-content: center;
@@ -92,61 +426,28 @@ a, [role="button"], input[type="button"], input[type="submit"] {
   margin-top: 2rem;
 }
 
-.stat-card {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  padding: 1.5rem 2rem;
-  border-radius: 16px;
-  text-align: center;
-  min-width: 120px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
-  transition: left 0.5s;
-  z-index: 1;
-}
-
-.stat-card:hover::before {
-  left: 100%;
-}
-
-.stat-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(56, 189, 248, 0.6);
-  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.25);
-  background: rgba(30, 41, 59, 0.8);
-}
-
-.stat-number {
+/* Generic stat number styling */
+.calendar-hero .stat-number {
   display: block;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #38bdf8;
+  color: #e5e7eb;
   margin-bottom: 0.5rem;
   position: relative;
   z-index: 2;
 }
 
-.stat-label {
+/* Generic stat label styling */
+.calendar-hero .stat-label {
   font-size: 0.9rem;
-  color: #7dd3fc;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
   position: relative;
   z-index: 2;
+  text-align: center;
+  line-height: 1.6;
 }
 
 .calendar-container {

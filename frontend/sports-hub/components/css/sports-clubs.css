@@ -1,20 +1,8 @@
-/* --- Reset & Base --- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
-  min-height: 100vh;
-  letter-spacing: 0.01em;
-}
+/* Removed duplicate reset - using global.css reset */
 .sports-clubs-container {
   background: #0f172a;
   padding: 2rem;
-  padding-top: 180px;
+  padding-top: 170px; /* Additional padding to match calendar page spacing */
   min-height: 100vh;
 }
 
@@ -24,7 +12,8 @@ body {
   padding: 4rem 2rem;
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   border-radius: 16px;
-  margin-bottom: 2rem;
+  margin-top: 0; /* Unified margin-top for hero sections */
+  margin-bottom: 4rem; /* Additional spacing to match calendar page */
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   border: 1px solid #38bdf8;
   position: relative;
@@ -54,6 +43,24 @@ body {
   justify-content: center;
 }
 
+.hero-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.hero-icon svg {
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+}
+
 .hero-content h1 {
   font-size: 3rem;
   font-weight: 700;
@@ -71,6 +78,161 @@ body {
   margin: 0 auto;
   text-align: center;
   line-height: 1.6;
+}
+
+/* Enhanced Sports Clubs Hero Stats - Admin Dashboard Style */
+.sports-clubs-hero .hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sports-clubs-hero .stat-card {
+  background: linear-gradient(135deg, var(--card-dark) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  /* Performance optimizations */
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+
+.sports-clubs-hero .stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), rgba(255, 255, 255, 0.3), var(--accent-color));
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  box-shadow: 0 0 15px var(--accent-color);
+}
+
+.sports-clubs-hero .stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Individual card accent colors */
+.sports-clubs-hero .stat-card:nth-child(1) {
+  --accent-color: var(--accent-blue);
+}
+
+.sports-clubs-hero .stat-card:nth-child(2) {
+  --accent-color: var(--accent-finished);
+}
+
+.sports-clubs-hero .stat-card:nth-child(3) {
+  --accent-color: var(--accent-gold);
+}
+
+.sports-clubs-hero .stat-card:nth-child(4) {
+  --accent-color: var(--accent-mvp-text);
+}
+
+.sports-clubs-hero .stat-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--accent-color),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.sports-clubs-hero .stat-card:hover::after {
+  opacity: 1;
+}
+
+.sports-clubs-hero .stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 15px var(--accent-color));
+}
+
+.sports-clubs-hero .stat-card:hover .stat-info h3 {
+  color: var(--accent-color);
+  text-shadow: 0 0 10px var(--accent-color);
+}
+
+.sports-clubs-hero .stat-icon {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 8px var(--accent-color));
+  transition: all var(--transition-normal);
+}
+
+.sports-clubs-hero .stat-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.sports-clubs-hero .stat-info h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+}
+
+.sports-clubs-hero .stat-info p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Legacy support for old stat-number and stat-label classes */
+.sports-clubs-hero .stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-normal);
+}
+
+.sports-clubs-hero .stat-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  position: relative;
+  z-index: 2;
 }
 
 /* --- CTA Section --- */
@@ -453,7 +615,94 @@ body {
   box-shadow: 0 0 30px rgba(250, 204, 21, 0.4);
 }
 
-/* --- Responsive Design --- */
+/* --- Responsive Design for Sports Clubs Hero Cards --- */
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .sports-clubs-hero .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sports-clubs-hero .hero-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0;
+  }
+  
+  .sports-clubs-hero .stat-card {
+    padding: 1.5rem;
+    gap: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .sports-clubs-hero .stat-icon {
+    font-size: 2rem;
+    align-self: center;
+  }
+  
+  .sports-clubs-hero .stat-info h3 {
+    font-size: 1.75rem;
+  }
+  
+  .sports-clubs-hero .stat-info p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .sports-clubs-hero .hero-stats {
+    margin-top: 1.5rem;
+  }
+  
+  .sports-clubs-hero .stat-card {
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+  
+  .sports-clubs-hero .stat-icon {
+    font-size: 1.75rem;
+  }
+  
+  .sports-clubs-hero .stat-info h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Enhanced accessibility for sports clubs hero cards */
+@media (prefers-reduced-motion: reduce) {
+  .sports-clubs-hero .stat-card {
+    transition: none;
+    animation: none;
+  }
+  
+  .sports-clubs-hero .stat-card::before {
+    animation: none;
+  }
+  
+  .sports-clubs-hero .stat-card:hover .stat-icon {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .sports-clubs-hero .stat-card {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--card-dark);
+  }
+  
+  .sports-clubs-hero .stat-info h3 {
+    color: #ffffff;
+  }
+  
+  .sports-clubs-hero .stat-info p {
+    color: #e5e7eb;
+  }
+}
+
 @media (max-width: 1100px) {
   .sports-grid {
     grid-template-columns: 1fr 1fr;
