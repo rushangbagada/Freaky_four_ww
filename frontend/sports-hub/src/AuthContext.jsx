@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getApiUrl, API_ENDPOINTS } from './config/api';
 
 const AuthContext = createContext();
 
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
     if (storedToken) {
       setToken(storedToken);
       // Always try to fetch the latest user info from backend
-      fetch('/api/auth/me', {
+      fetch(getApiUrl(API_ENDPOINTS.ME), {
         headers: {
           'Authorization': `Bearer ${storedToken}`
         }

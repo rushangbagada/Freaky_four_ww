@@ -104,6 +104,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
+import { getApiUrl, API_ENDPOINTS } from '../src/config/api';
 import './css/home.css';
 
 const slides = [
@@ -186,12 +187,12 @@ export default function Home() {
   const fetchHomeData = async () => {
     try {
       // Fetch recent matches
-      const recentRes = await fetch('/api/recent_matches');
+      const recentRes = await fetch(getApiUrl(API_ENDPOINTS.RECENT_MATCHES));
       const recentData = await recentRes.json();
       setRecentMatches(recentData);
 
       // Fetch clubs
-      const clubsRes = await fetch('/api/clubs');
+      const clubsRes = await fetch(getApiUrl(API_ENDPOINTS.CLUBS));
       const clubsData = await clubsRes.json();
       setClubs(clubsData);
     } catch (err) {
