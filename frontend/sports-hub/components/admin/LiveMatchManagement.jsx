@@ -338,16 +338,16 @@ export default function LiveMatchManagement({ user }) {
 
   return (
     <div className="live-match-management">
-      <div className="management-header">
+      <div className="live-match-management-header">
         <h2>Live Match Management</h2>
-        <div className="management-actions">
+        {isAdmin && (
           <button 
-            className="add-button"
+            className="add-live-match-btn"
             onClick={() => setShowAddMatch(true)}
           >
-            Add Live Match
+            + Add Live Match
           </button>
-        </div>
+        )}
       </div>
 
 

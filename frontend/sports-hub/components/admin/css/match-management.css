@@ -1,3 +1,7 @@
+.match-management label {
+  color: white;
+}
+
 /* Match Management Styles - Dark Theme */
 .match-management {
   background: #0f172a;
@@ -406,7 +410,7 @@
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
+.value-overlapping-fix .info-item { flex-wrap: wrap; }
 @media (max-width: 768px) {
   .match-management {
     padding: 1.5rem;

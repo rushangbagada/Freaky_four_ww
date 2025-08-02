@@ -342,7 +342,7 @@ export default function Home() {
 <section className="blog-promo-section">
   <div className="blog-promo-content">
     <div className="blog-promo-image">
-<img src="https://images.unsplash.com/photo-1486312338219-ce68e2c4c293?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog Visual" className="blog-promo-img-3d" />
+<img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog Visual" className="blog-promo-img-3d" />
     </div>
     <div className="blog-promo-text">
       <h2>
@@ -383,12 +383,12 @@ export default function Home() {
 <section className="gallery-promo-section">
   <div className="gallery-promo-content">
     <div className="gallery-promo-images">
-      <div className="gallery-grid">
+      {/* <div className="gallery-grid"> */}
         <div className="gallery-item">
 <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sports Gallery" className="gallery-img" />
         </div>
         
-      </div>
+      {/* </div> */}
     </div>
     <div className="gallery-promo-text">
       <h2>

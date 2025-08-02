@@ -153,10 +153,10 @@ export default function SportsClubs() {
               onChange={(e) => setType(e.target.value)}
               className="modern-select"
             >
-              <option value="All">All Categories</option>
-              <option value="Team Sports">🏀 Team Sports</option>
-              <option value="Racket Sports">🏸 Racket Sports</option>
-              <option value="Individual Sports">🏃 Individual Sports</option>
+              <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="All">All Categories</option>
+              <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="Team Sports">🏀 Team Sports</option>
+              <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="Racket Sports">🏸 Racket Sports</option>
+              <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="Individual Sports">🏃 Individual Sports</option>
             </select>
             <svg className="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <polyline points="6,9 12,15 18,9"></polyline>

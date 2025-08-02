@@ -111,7 +111,7 @@ export const API_ENDPOINTS = {
   GALLERY: '/api/gallery',
   EVENTS: '/api/events',
   CALENDAR: '/api/calendar',
-  REVIEWS: '/api/reviews',
+  REVIEWS: '/api/review',
   QUIZ: '/api/quiz',
   QUIZ_RANDOM_QUESTION: '/api/quiz/random-question',
   QUIZ_ANSWER: '/api/quiz/answer',

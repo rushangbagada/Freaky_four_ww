@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
+import { getApiUrl } from '../../src/config/api';
 import './css/analytics.css';
 
 export default function Analytics() {
@@ -75,48 +75,36 @@ export default function Analytics() {
       </div>
 
       {/* Key Metrics */}
-      <div className="metrics-grid">
-        <div className="metric-card">
-          <div className="metric-icon">👥</div>
-          <div className="metric-content">
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">👥</div>
+          <div className="stat-info">
             <h3>{analytics.userStats.totalUsers}</h3>
             <p>Total Users</p>
-            <span className="metric-change positive">
-              +{analytics.userStats.userGrowth}% from last period
-            </span>
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="metric-icon">🏆</div>
-          <div className="metric-content">
+        <div className="stat-card">
+          <div className="stat-icon">🏆</div>
+          <div className="stat-info">
             <h3>{analytics.clubStats.totalClubs}</h3>
             <p>Total Clubs</p>
-            <span className="metric-change positive">
-              {analytics.clubStats.activeClubs} active
-            </span>
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="metric-icon">⚽</div>
-          <div className="metric-content">
+        <div className="stat-card">
+          <div className="stat-icon">⚽</div>
+          <div className="stat-info">
             <h3>{analytics.matchStats.totalMatches}</h3>
             <p>Total Matches</p>
-            <span className="metric-change positive">
-              {analytics.matchStats.matchSuccessRate}% success rate
-            </span>
           </div>
         </div>
 
-        <div className="metric-card">
-          <div className="metric-icon">📈</div>
-          <div className="metric-content">
+        <div className="stat-card">
+          <div className="stat-icon">📈</div>
+          <div className="stat-info">
             <h3>{analytics.userStats.newUsersThisMonth}</h3>
             <p>New Users This Month</p>
-            <span className="metric-change positive">
-              +{analytics.userStats.userGrowth}% growth
-            </span>
           </div>
         </div>
       </div>
@@ -230,3 +218,4 @@ export default function Analytics() {
     </div>
   );
 } 
+

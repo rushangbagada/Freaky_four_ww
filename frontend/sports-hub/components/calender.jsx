@@ -690,7 +690,7 @@ const Calendar = ({ onClick }) => {
             <div className="month-year-selector">
               <select value={selectedMonth} onChange={handleMonthChange} className="month-select">
                 {monthOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.name}</option>
+                  <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} key={opt.value} value={opt.value}>{opt.name}</option>
                 ))}
               </select>
               <div className="year-nav">

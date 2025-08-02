@@ -28,6 +28,7 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  position: relative;
 }
 
 .brand {
@@ -156,16 +157,92 @@
 
 .nav-mobile {
   display: none;
+  position: fixed;
+  top: 105px;
+  left: 0;
+  right: 0;
   flex-direction: column;
-  gap: 5px;
-  padding: 10px 0;
-  color: #e5e7eb;
-  background: #181c23;
-  border-radius: 0 0 12px 12px;
+  gap: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  z-index: calc(var(--z-header) - 1);
+  animation: slideDown 0.3s ease-out;
+  max-height: calc(100vh - 105px);
+  overflow-y: auto;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .nav-mobile.show {
   display: flex;
+}
+
+.nav-mobile .nav-link {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  background: transparent;
+  border-radius: 0;
+}
+
+.nav-mobile .nav-link:last-child {
+  border-bottom: none;
+  border-radius: 0 0 16px 16px;
+}
+
+.nav-mobile .nav-link:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--accent-blue);
+  transform: translateX(8px);
+  border-left: 3px solid var(--accent-blue);
+  box-shadow: none;
+}
+
+.nav-mobile .nav-link.active {
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-deep));
+  color: white;
+  border-left: 3px solid var(--accent-gold);
+  font-weight: 600;
+}
+
+/* Enhanced Menu Toggle Button */
+.menu-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 18px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.menu-toggle:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--accent-blue);
+  transform: scale(1.05);
 }
 
 /* Responsive */
@@ -179,8 +256,115 @@
   }
 }
 
+/* Tablet and below */
+@media (max-width: 1024px) {
+  .header {
+    display: block !important; /* Force header to show */
+    height: 90px;
+  }
+  
+  .nav-mobile {
+    top: 90px;
+    max-height: calc(100vh - 90px);
+  }
+}
+
+/* Mobile devices */
 @media (max-width: 768px) {
   .header {
-    display: none;
+    display: block !important; /* Force header to show on mobile */
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: var(--z-header);
+  }
+  
+  .nav-mobile {
+    top: 80px;
+    max-height: calc(100vh - 80px);
+  }
+  
+  #headerContainer {
+    padding: 0 1.5rem;
+  }
+  
+  .brand-text {
+    display: flex; /* Show brand text on mobile */
+  }
+  
+  .brand-main {
+    font-size: 16px;
+  }
+  
+  .brand-sub {
+    font-size: 18px;
+  }
+  
+  .icon-bg {
+    padding: 10px;
+    font-size: 18px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .header {
+    display: block !important; /* Ensure visibility on small screens */
+    height: 70px;
+  }
+  
+  .nav-mobile {
+    top: 70px;
+    max-height: calc(100vh - 70px);
+  }
+  
+  #headerContainer {
+    padding: 0 1rem;
+  }
+  
+  .brand-text {
+    display: none; /* Hide brand text only on very small screens */
+  }
+  
+  .menu-toggle {
+    padding: 8px 12px;
+    font-size: 18px;
+    background: rgba(56, 189, 248, 0.2);
+    border: 1px solid var(--accent-blue);
+  }
+  
+  .nav-mobile .nav-link {
+    padding: 1rem 1.5rem;
+    font-size: 15px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 320px) {
+  .header {
+    display: block !important;
+    height: 65px;
+  }
+  
+  .nav-mobile {
+    top: 65px;
+    max-height: calc(100vh - 65px);
+  }
+  
+  #headerContainer {
+    padding: 0 0.75rem;
+  }
+  
+  .icon-bg {
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .menu-toggle {
+    padding: 6px 10px;
+    font-size: 16px;
   }
 }

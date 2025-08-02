@@ -355,7 +355,7 @@ export default function AdminDashboard() {
         {activeTab === 'analytics' && isAdmin && <Analytics />}
         {activeTab === 'gallery' && isAdmin && <GalleryManagement user={user} />}
         {activeTab === 'quiz' && isAdmin && <QuizManagement user={user} />}
-        {activeTab === 'turf' && isAdmin && <TurfManagement />}
+        {activeTab === 'turf' && <TurfManagement />}
       </main>
     </div>
   );

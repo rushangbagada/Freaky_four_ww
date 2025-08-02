@@ -74,26 +74,43 @@
 //   );
 // }
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './css/header.css';
 import { useAuth } from '../src/AuthContext';
 
-// import { Link, useLocation } from 'react-router-dom';
-
-
 export default function Header() {
   const { user, isAuthenticated } = useAuth();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
-  
   const toggleMenu = () => {
-    const menu = document.getElementById('mobileMenu');
-    if (menu) {
-      menu.classList.toggle('show');
-    }
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const header = document.querySelector('.header');
+      if (header && !header.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <>
@@ -130,30 +147,12 @@ export default function Header() {
     </div>
   </Link>
 
- 
-
-  <Link to="/gallery" className={`nav-link ${isActive('/gallery')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">🖼️</div>
-      <div className="nav-label">Gallery</div>
-    </div>
-  </Link>
-
-  <Link to="/calender" className={`nav-link ${isActive('/calender')}`}>
-    <div className="nav-item">
-      <div className="nav-icon">📅</div>
-      <div className="nav-label">Calendar</div>
-    </div>
-  </Link>
-
   <Link to="/gamepage" className={`nav-link ${isActive('/gamepage')}`}>
     <div className="nav-item">
       <div className="nav-icon">🎮</div>
-      <div className="nav-label">Game Page</div>
+      <div className="nav-label">Games</div>
     </div>
   </Link>
-
-  
 
   <Link to="/livesports" className={`nav-link ${isActive('/livesports')}`}>
     <div className="nav-item">
@@ -162,7 +161,6 @@ export default function Header() {
     </div>
   </Link>
 
- 
   <Link to="/Turf" className={`nav-link ${isActive('/TurfCard')}`}>
     <div className="nav-item">
       <div className="nav-icon">🏏</div>
@@ -195,19 +193,18 @@ export default function Header() {
 </nav>
 
 
-            <button className="menu-toggle" onClick={toggleMenu}>☰</button>
+            <button className="menu-toggle" onClick={toggleMenu}>
+              {isMobileMenuOpen ? '✕' : '☰'}
+            </button>
           </div>
 
-          <div className="nav-mobile" id="mobileMenu">
+          <div className={`nav-mobile ${isMobileMenuOpen ? 'show' : ''}`} id="mobileMenu">
             <Link to="/" className={`nav-link ${isActive('/')}`}>🏠 Home</Link>
             <Link to="/sports-clubs" className={`nav-link ${isActive('/sports-clubs')}`}>🏃‍♂️ Sports Clubs</Link>
-            <Link to="/calender" className={`nav-link ${isActive('/calender')}`}>📅 Calendar</Link>
             <Link to="/result" className={`nav-link ${isActive('/result')}`}>🏆 Results</Link>
-            <Link to="/gallery" className={`nav-link ${isActive('/gallery')}`}>🖼️ Gallery</Link>
-            <Link to="/register" className={`nav-link ${isActive('/register')}`}>📝 Register</Link>
-            <Link to="/gamepage" className={`nav-link ${isActive('/gamepage')}`}>🎮 Game Page</Link>
-            <Link to="/blog" className={`nav-link ${isActive('/blog')}`}>📰 Blog</Link>
+            <Link to="/gamepage" className={`nav-link ${isActive('/gamepage')}`}>🎮 Games</Link>
             <Link to="/livesports" className={`nav-link ${isActive('/livesports')}`}>📺 Live Sports</Link>
+            <Link to="/Turf" className={`nav-link ${isActive('/TurfCard')}`}>🏏 Turf</Link>
             <Link to="/chatbot" className={`nav-link ${isActive('/chatbot')}`}>🤖 Sports Bot</Link>
             {!isAuthenticated() ? (
               <Link to="/login" className={`nav-link ${isActive('/login')}`}>🔐 Login</Link>

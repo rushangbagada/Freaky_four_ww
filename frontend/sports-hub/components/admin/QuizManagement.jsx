@@ -175,51 +175,118 @@ export default function QuizManagement({ user }) {
 
   return (
     <div className="quiz-management">
-      <div className="management-header">
+      <div className="quiz-management-header">
         <h2>Quiz Management</h2>
-        <div className="management-actions">
+        {isAdmin && (
           <button 
-            className="add-button"
+            className="add-quiz-btn"
             onClick={() => setShowAddQuestion(true)}
           >
-            Add Question
+            + Add Question
           </button>
-        </div>
+        )}
       </div>
 
-      {/* Add Question Form */}
+      {/* Add Question Modal */}
       {showAddQuestion && (
-        <form className="add-question-form" onSubmit={handleAddQuestion}>
-          <input
-            type="text"
-            placeholder="Enter question"
-            value={newQuestion.question}
-            onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
-            required
-          />
-          {newQuestion.options.map((option, idx) => (
-            <input
-              key={idx}
-              type="text"
-              placeholder={`Option ${idx + 1}`}
-              value={option}
-              onChange={(e) => {
-                const options = [...newQuestion.options];
-                options[idx] = e.target.value;
-                setNewQuestion({ ...newQuestion, options });
-              }}
-              required
-            />
-          ))}
-          <input
-            type="text"
-            placeholder="Correct answer"
-            value={newQuestion.correctAnswer}
-            onChange={(e) => setNewQuestion({ ...newQuestion, correctAnswer: e.target.value })}
-            required
-          />
-          <button type="submit">Submit</button>
-        </form>
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Add New Question</h3>
+              <button 
+                className="close-btn"
+                onClick={() => setShowAddQuestion(false)}
+              >
+                ×
+              </button>
+            </div>
+            <form onSubmit={handleAddQuestion} className="quiz-form">
+              <div className="form-group">
+                <label>Question</label>
+                <textarea
+                  value={newQuestion.question}
+                  onChange={(e) => setNewQuestion({ ...newQuestion, question: e.target.value })}
+                  placeholder="Enter your question here..."
+                  required
+                  rows="3"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Answer Options</label>
+                <div className="options-grid">
+                  {newQuestion.options.map((option, idx) => (
+                    <div key={idx} className="option-input">
+                      <label className="option-label">Option {String.fromCharCode(65 + idx)}</label>
+                      <input
+                        type="text"
+                        placeholder={`Option ${idx + 1}`}
+                        value={option}
+                        onChange={(e) => {
+                          const options = [...newQuestion.options];
+                          options[idx] = e.target.value;
+                          setNewQuestion({ ...newQuestion, options });
+                        }}
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Correct Answer</label>
+                  <select
+                    value={newQuestion.correctAnswer}
+                    onChange={(e) => setNewQuestion({ ...newQuestion, correctAnswer: e.target.value })}
+                    required
+                  >
+                    <option value="">Select correct answer</option>
+                    {newQuestion.options.map((option, idx) => (
+                      option && <option key={idx} value={option}>{String.fromCharCode(65 + idx)}: {option}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label>Category</label>
+                  <select
+                    value={newQuestion.category}
+                    onChange={(e) => setNewQuestion({ ...newQuestion, category: e.target.value })}
+                  >
+                    {categories.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label>Difficulty</label>
+                  <select
+                    value={newQuestion.difficulty}
+                    onChange={(e) => setNewQuestion({ ...newQuestion, difficulty: e.target.value })}
+                  >
+                    {difficulties.map(diff => (
+                      <option key={diff.value} value={diff.value}>{diff.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              
+              <div className="form-actions">
+                <button type="submit" className="submit-btn">Add Question</button>
+                <button 
+                  type="button" 
+                  className="cancel-btn"
+                  onClick={() => setShowAddQuestion(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
 
       {/* Questions List */}
@@ -230,9 +297,9 @@ export default function QuizManagement({ user }) {
           </div>
         ) : (
           filteredQuestions.map((q) => (
-            <div key={q._id} className="question-item">
-              <div className="question-header">
-                <h3 className="question-title">{q.question}</h3>
+            <div key={q._id} className="question-card">
+              <div className="question-card-header">
+                <h3 className="question-text">{q.question}</h3>
                 <div className="question-meta">
                   <span className="category-badge">{q.category}</span>
                   <span className={`difficulty-badge ${q.difficulty}`}>{q.difficulty}</span>
@@ -241,10 +308,11 @@ export default function QuizManagement({ user }) {
               
               <ul className="options-list">
                 {q.options.map((option, idx) => (
-                  <li key={idx}>
+                  <li key={idx} className={q.correctAnswer === option ? 'correct-answer' : ''}>
+                    <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
                     <span className="option-text">{option}</span>
                     {q.correctAnswer === option && (
-                      <span className="correct-indicator">Correct</span>
+                      <span className="correct-indicator">✓ Correct</span>
                     )}
                   </li>
                 ))}
@@ -256,13 +324,6 @@ export default function QuizManagement({ user }) {
                   onClick={() => {
                     if (editingQuestion === q._id) {
                       setEditingQuestion(null);
-                      setEditQuestion({
-                        question: '',
-                        options: ['', '', '', ''],
-                        correctAnswer: '',
-                        category: 'general',
-                        difficulty: 'medium'
-                      });
                     } else {
                       startEdit(q);
                     }

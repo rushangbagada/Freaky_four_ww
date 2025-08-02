@@ -164,7 +164,7 @@ export default function NewsManagement({ user }) {
         </div>
         
         <div className="filter-dropdown">
-          <select 
+          <select  style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }}
             value={filterCategory} 
             onChange={(e) => setFilterCategory(e.target.value)}
           >

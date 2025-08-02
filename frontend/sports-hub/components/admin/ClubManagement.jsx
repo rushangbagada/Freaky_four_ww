@@ -560,22 +560,7 @@ export default function ClubManagement({ user, onManagePlayersClick }) {
                 </select>
               </div>
               
-              {isAdmin && (
-                <div className="form-group">
-                  <label>Club Leader</label>
-                  <select
-                    value={editingClub.leader?._id || ''}
-                    onChange={(e) => setEditingClub({...editingClub, leader: e.target.value})}
-                  >
-                    <option value="">Select Leader</option>
-                    {userOptions.map(user => (
-                      <option key={user._id} value={user._id}>
-                        {user.name} ({user.email})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              
               
               <div className="form-actions">
                 <button type="submit" className="submit-btn">Update Club</button>

@@ -137,28 +137,28 @@ const Turf = () => {
 
         <div className="filter-box">
           <select value={selectedLocation} onChange={(e)=>setSelectedLocation(e.target.value)}>
-            <option value="">All Locations</option>
-            <option value="North Campus">North Campus</option>
-            <option value="South Campus">South Campus</option>
-            <option value="East Campus">East Campus</option>
-            <option value="West Campus">West Campus</option>
-            <option value="Central Campus">Central Campus</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="">All Locations</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="North Campus">North Campus</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="South Campus">South Campus</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="East Campus">East Campus</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="West Campus">West Campus</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="Central Campus">Central Campus</option>
           </select>
         </div>
 
         <div className="filter-box">
           <select value={priceRange} onChange={(e)=>setPriceRange(e.target.value)}>
-            <option value="">All Prices</option>
-            <option value="low">Below ₹500</option>
-            <option value="medium">₹500 - ₹700</option>
-            <option value="high">Above ₹700</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="">All Prices</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="low">Below ₹500</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="medium">₹500 - ₹700</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="high">Above ₹700</option>
           </select>
         </div>
 
         <div className="filter-box">
           <select value={availabilityFilter} onChange={(e)=>setAvailabilityFilter(e.target.value)}>
-            <option value="">All</option>
-            <option value="available">Available Only</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="">All</option>
+            <option style={{ background: 'var(--bg-light)', color: 'var(--text-primary)' }} value="available">Available Only</option>
           </select>
         </div>
       </section>
