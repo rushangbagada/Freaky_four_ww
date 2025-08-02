@@ -124,6 +124,16 @@ export const API_ENDPOINTS = {
   USER_BY_EMAIL: '/api/user',
   USER_LIVE_PREDICTIONS: '/api/user',
   SUBMIT_LIVE_PREDICTION: '/api/user/live-match-prediction',
+  
+  // Admin endpoints
+  ADMIN_LIVE_MATCHES: '/api/admin/live-matches',
+  ADMIN_MATCHES: '/api/admin/matches',
+  ADMIN_CLUBS: '/api/admin/clubs',
+  ADMIN_USERS: '/api/admin/users',
+  ADMIN_TURFS: '/api/admin/turfs',
+  ADMIN_NEWS: '/api/admin/news',
+  ADMIN_GALLERY: '/api/admin/gallery',
+  ADMIN_ANALYTICS: '/api/admin/analytics',
 };
 
 export default API_BASE_URL;

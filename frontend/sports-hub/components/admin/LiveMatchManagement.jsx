@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
+import { getApiUrl, API_ENDPOINTS, apiRequest } from '../../src/config/api';
 import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
 import './css/live-match-management.css';
 
@@ -46,26 +46,64 @@ export default function LiveMatchManagement({ user }) {
 
   const fetchLiveMatches = async () => {
     try {
-      console.log('🔄 Fetching live matches from admin API...');
-      const response = await fetch(getApiUrl('/api/admin/live-matches'), {
+      console.log('\ud83d\udd04 [ADMIN] Fetching live matches from admin API...');
+      console.log('\ud83d\udd10 [ADMIN] User role:', user?.role);
+      console.log('\ud83d\udd11 [ADMIN] Token exists:', !!localStorage.getItem('token'));
+      
+      // Use the admin endpoint from API_ENDPOINTS
+      const endpoint = API_ENDPOINTS.ADMIN_LIVE_MATCHES;
+      console.log('\ud83c\udf10 [ADMIN] Using endpoint:', endpoint);
+      
+      const data = await apiRequest(endpoint, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
       
-      if (response.ok) {
-        const data = await response.json();
-        console.log('✅ Fetched live matches data:', data);
-        const matchArray = Array.isArray(data) ? data : [];
-        console.log('📊 Setting live matches:', matchArray);
-        setLiveMatches(matchArray);
+      console.log('\u2705 [ADMIN] Fetched live matches data:', data);
+      console.log('\ud83d\udd0d [ADMIN] Data type:', typeof data, 'Is array:', Array.isArray(data));
+      
+      let matchArray = [];
+      if (Array.isArray(data)) {
+        matchArray = data;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        matchArray = data.data;
+      } else if (data && data.matches && Array.isArray(data.matches)) {
+        matchArray = data.matches;
       } else {
-        console.error('❌ Failed to fetch live matches:', response.status, response.statusText);
+        console.warn('\u26a0\ufe0f [ADMIN] Unexpected data structure:', data);
+        console.log('\ud83d\udd0d [ADMIN] Available properties:', Object.keys(data || {}));
+        matchArray = [];
+      }
+      
+      console.log('\ud83d\udcca [ADMIN] Setting live matches:', matchArray.length, 'matches');
+      if (matchArray.length > 0) {
+        console.log('\ud83c\udfaf [ADMIN] First match sample:', matchArray[0]);
+      }
+      setLiveMatches(matchArray);
+      
+    } catch (error) {
+      console.error('\u274c [ADMIN] Error fetching live matches:', error);
+      console.error('\u274c [ADMIN] Error stack:', error.stack);
+      
+      // Try fallback to general live matches endpoint
+      console.log('\ud83d\udd04 [ADMIN] Trying fallback to general live matches...');
+      try {
+        const fallbackData = await apiRequest(API_ENDPOINTS.LIVE_MATCHES, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        console.log('\u2705 [ADMIN] Fallback data:', fallbackData);
+        const fallbackArray = Array.isArray(fallbackData) ? fallbackData : [];
+        setLiveMatches(fallbackArray);
+        console.log('\ud83d\udd04 [ADMIN] Using fallback data with', fallbackArray.length, 'matches');
+        
+      } catch (fallbackError) {
+        console.error('\u274c [ADMIN] Fallback also failed:', fallbackError);
         setLiveMatches([]);
       }
-    } catch (error) {
-      console.error('❌ Error fetching live matches:', error);
-      setLiveMatches([]);
     } finally {
       setLoading(false);
     }
