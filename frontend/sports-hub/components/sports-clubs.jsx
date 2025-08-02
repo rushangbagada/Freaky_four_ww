@@ -76,7 +76,8 @@ export default function SportsClubs() {
     }
   };
 
-  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+  // Set up silent real-time updates
+  useDatabaseChangeDetection(
     fetchClubs,
     [type]
   );

@@ -1,9 +1,37 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const transporter = require("../config/mailer");
+/**
+ * Authentication Controller - Professional Business Platform
+ * 
+ * Handles user authentication, registration, OTP verification, and password management
+ * for the professional business analytics platform.
+ * 
+ * Features:
+ * - User registration with email verification
+ * - OTP-based login system for enhanced security
+ * - Password reset functionality
+ * - JWT token management
+ * - Professional email templates
+ * 
+ * @author Web Wonders Team
+ * @version 1.0.0
+ */
 
-// Reusable OTP sender with better email templates
+// Dependencies
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");           // Password hashing
+const jwt = require("jsonwebtoken");         // JWT token generation
+const transporter = require("../config/mailer"); // Email service
+
+/**
+ * Professional Email OTP Service
+ * 
+ * Sends professional-themed OTP emails for various authentication scenarios.
+ * Includes development mode support for testing without email credentials.
+ * 
+ * @param {string} email - Recipient email address
+ * @param {string} otp - One-time password or token
+ * @param {string} subject - Email subject line
+ * @param {string} type - Email type: 'verification', 'login', or 'reset'
+ */
 async function sendOTPEmail(email, otp, subject = "Verify your email", type = "verification") {
   // Check if we're in development mode without email credentials
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -112,7 +140,22 @@ async function sendOTPEmail(email, otp, subject = "Verify your email", type = "v
   }
 }
 
-// Register
+/**
+ * User Registration
+ * 
+ * Creates a new user account with email verification via OTP.
+ * Validates unique email and mobile number constraints.
+ * 
+ * @route POST /api/auth/register
+ * @param {Object} req.body - Registration data
+ * @param {string} req.body.name - Full name of the user
+ * @param {string} req.body.email - Email address (must be unique)
+ * @param {string} req.body.password - Plain text password (will be hashed)
+ * @param {string} [req.body.mobile] - Mobile number (optional, must be unique if provided)
+ * @param {string} [req.body.year] - Academic year or experience level
+ * @param {string} [req.body.department] - Department or specialization
+ * @returns {Object} Success message with email for OTP verification
+ */
 exports.register = async (req, res) => {
   try {
     const { name, email, password, mobile, year, department } = req.body;

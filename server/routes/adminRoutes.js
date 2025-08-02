@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken, requireAdmin, requireClubLeader } = require('../middlewares/adminMiddleware');
+
+// Apply authentication to all admin routes
+router.use(authenticateToken);
 // Add this line after importing the controller functions
 const {
   // Club Management

@@ -1,42 +1,60 @@
+/**
+ * Professional Business Management Platform - Main Server File
+ * 
+ * This is the main Express.js server that handles:
+ * - Database connections and management
+ * - API routes for business analytics, events, and user management
+ * - Real-time event simulation and updates
+ * - Payment processing integration
+ * - Authentication and authorization
+ * 
+ * @author Web Wonders Team
+ * @version 1.0.0
+ * @description Professional platform for business analytics, event management, and predictions
+ */
 
-
-
-
-const express=require('express');
-const app=express();
-const mongoose=require('mongoose');
-const dotenv=require('dotenv');
-const path=require('path');
-const cors=require('cors');
+// Core dependencies
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const path = require('path');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-const port=process.env.PORT || 5000;
+// Server configuration
+const port = process.env.PORT || 5000;
 
-const jwt = require("jsonwebtoken"); // Add this line
+// Authentication and security dependencies
+const jwt = require("jsonwebtoken");
 const connectDB = require("./config/db");
+
+// Route handlers
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const quizRoutes = require("./routes/quizRoutes");
 
-const Gallery=require('./models/gallery');
-const User=require('./models/User');
-const Review=require('./models/review');
-const Match=require('./models/match');
-const Club=require('./models/club');
-const methodoverride=require('method-override');
-const New_match = require('./models/new_match');
-const News = require('./models/news');
-const Facts = require('./models/facts');
-const Stats = require('./models/web_stats');
-const Live_Match = require('./models/live_match');
-const Prediction_user = require('./models/prediction_user');
-const Prediction_Match = require('./models/prediction_match');
-const Player_user = require('./models/player_user');
-const Club_Details = require('./models/club-detail');
-const Club_player = require('./models/club-player');
-const Turf = require('./models/turf');
+// Database Models - Business Analytics Platform
+const Gallery = require('./models/gallery');           // Image gallery management
+const User = require('./models/User');                 // User authentication and profiles
+const Review = require('./models/review');             // Client testimonials and reviews
+const Match = require('./models/match');               // Historical event/match data
+const Club = require('./models/club');                 // Organization/team information
+const methodoverride = require('method-override');     // HTTP method override for REST APIs
+const New_match = require('./models/new_match');       // Upcoming events/matches
+const News = require('./models/news');                 // News and announcements
+const Facts = require('./models/facts');               // Business facts and insights
+const Stats = require('./models/web_stats');           // Website/platform statistics
+const Live_Match = require('./models/live_match');     // Real-time event tracking
+const Prediction_user = require('./models/prediction_user');  // User prediction analytics
+const Prediction_Match = require('./models/prediction_match'); // Event prediction data
+const Player_user = require('./models/player_user');   // Player/participant profiles
+const Club_Details = require('./models/club-detail');  // Detailed organization info
+const Club_player = require('./models/club-player');   // Organization member mapping
+const Turf = require('./models/turf');                 // Venue/facility management
 
 // Configure CORS to allow requests from the frontend
 const allowedOrigins = [
@@ -56,10 +74,65 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+
+// Security: Rate limiting
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests from this IP, please try again later.',
+    retryAfter: '15 minutes'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Stricter rate limiting for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 auth requests per windowMs
+  message: {
+    error: 'Too many authentication attempts, please try again later.',
+    retryAfter: '15 minutes'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Very strict rate limiting for admin endpoints
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // Limit each IP to 50 admin requests per windowMs
+  message: {
+    error: 'Too many admin requests, please try again later.',
+    retryAfter: '15 minutes'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply general rate limiting to all requests
+app.use(generalLimiter);
+
+// Apply stricter rate limiting to auth routes
+app.use('/api/auth', authLimiter);
+
+// Apply admin rate limiting to admin routes
+app.use('/api/admin', adminLimiter);
+
+app.use(express.json({ limit: '10mb' })); // Limit payload size
+app.use(express.urlencoded({extended:true, limit: '10mb'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodoverride('_method'));
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
 
 
 

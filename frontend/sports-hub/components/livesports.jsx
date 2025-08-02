@@ -28,8 +28,8 @@ const LiveSports = () => {
     }
   };
 
-  // Use the real-time database change detection hook
-  const { isPolling, hasChanges, lastUpdated } = useDatabaseChangeDetection(
+  // Use the real-time database change detection hook for silent updates
+  useDatabaseChangeDetection(
     fetchLiveMatches,
     []
   );

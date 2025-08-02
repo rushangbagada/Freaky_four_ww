@@ -12,33 +12,15 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
   const [hasChanges, setHasChanges] = useState(false);
 
   const pollAndDetectChanges = async () => {
-    console.log('🔄 Starting polling cycle...');
-    setIsPolling(true);
+    // Silent polling - no visual indicators
     try {
       await fetchData();
       const now = new Date();
-      console.log('✅ Polling completed successfully at:', now.toLocaleTimeString());
-      if (lastUpdated && (now - lastUpdated) < 15000) {
-        console.log('📊 Changes detected - showing indicator');
-        setHasChanges(true);
-        setTimeout(() => {
-          console.log('📊 Hiding changes indicator');
-          setHasChanges(false);
-        }, 3000);
-      }
       setLastUpdated(now);
+      // No visual changes indicator - just update data silently
     } catch (error) {
-      // Check if error is related to JSON parsing (HTML response)
-      if (error.message && (error.message.includes('Unexpected token') || error.message.includes('<!doctype'))) {
-        console.error('❌ Error during polling: Received HTML instead of JSON - likely API endpoint issue');
-        console.error('📄 This usually means the API endpoint returned an error page instead of JSON data');
-        console.error('🔧 Consider checking if the API server is running and accessible');
-        console.error('🌐 URL being polled:', error.url || 'Unknown');
-      } else {
-        console.error('❌ Error during polling:', error);
-      }
-    } finally {
-      setIsPolling(false);
+      // Silent error handling - only log to console for debugging
+      console.error('Polling error:', error.message);
     }
   };
 
@@ -47,10 +29,16 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
     fetchData();
     setLastUpdated(new Date());
     
-    // Temporarily disable polling to prevent JSON parsing errors
-    // const intervalId = setInterval(pollAndDetectChanges, 30000); // Poll every 30 seconds
+    // Set up polling for real-time updates
+    console.log('🔄 Setting up polling with 1-second intervals');
+    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
     
-    return () => {}; // No cleanup needed when polling is disabled
+    return () => {
+      if (intervalId) {
+        console.log('🛑 Cleaning up polling interval');
+        clearInterval(intervalId);
+      }
+    };
   }, dependencies);
 
   return { isPolling, hasChanges, lastUpdated };

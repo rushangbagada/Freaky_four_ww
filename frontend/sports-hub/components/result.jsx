@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getApiUrl, API_ENDPOINTS, apiRequest } from '../src/config/api'
+import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection'
 import './css/result.css'
 
 export default function Result() {
@@ -65,132 +66,131 @@ export default function Result() {
     console.log('✅ [MVP DEBUG] MVP state updated');
   }
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      console.log('🚀 [RESULT DEBUG] Starting fetchResults function');
-      console.log('🔧 [RESULT DEBUG] Current state:', { sport, time, sortBy });
-      
+  // Function to fetch results with filters
+  const fetchResults = async () => {
+    console.log('🚀 [RESULT DEBUG] Starting fetchResults function');
+    console.log('🔧 [RESULT DEBUG] Current state:', { sport, time, sortBy });
+    
+    try {
       setLoading(true);
       setError(null);
       console.log('⏳ [RESULT DEBUG] Set loading to true');
       
+      console.log('🏆 [RESULT DEBUG] Fetching results data...', { sport, time, sortBy });
+      
+      // Construct query parameters
+      const queryParams = new URLSearchParams();
+      if (sport && sport !== 'All Sports') {
+        queryParams.append('sport', sport.toLowerCase());
+        console.log('🎯 [RESULT DEBUG] Added sport filter:', sport.toLowerCase());
+      }
+      if (time && time !== 'All Time' && time !== 'All Times') {
+        queryParams.append('time', time.toLowerCase());
+        console.log('⏰ [RESULT DEBUG] Added time filter:', time.toLowerCase());
+      }
+      
+      console.log('📋 [RESULT DEBUG] Query params constructed:', queryParams.toString());
+      
+      // Try both endpoints
+      let endpoint = `/api/result${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      console.log('🌐 [RESULT DEBUG] Primary endpoint:', endpoint);
+      
+      let data;
       try {
-        console.log('🏆 [RESULT DEBUG] Fetching results data...', { sport, time, sortBy });
+        data = await apiRequest(endpoint);
+        console.log('📊 [RESULT DEBUG] Primary endpoint response:', data);
         
-        // Construct query parameters
-        const queryParams = new URLSearchParams();
-        if (sport && sport !== 'All Sports') {
-          queryParams.append('sport', sport.toLowerCase());
-          console.log('🎯 [RESULT DEBUG] Added sport filter:', sport.toLowerCase());
-        }
-        if (time && time !== 'All Time' && time !== 'All Times') {
-          queryParams.append('time', time.toLowerCase());
-          console.log('⏰ [RESULT DEBUG] Added time filter:', time.toLowerCase());
-        }
-        
-        console.log('📋 [RESULT DEBUG] Query params constructed:', queryParams.toString());
-        
-        // Try both endpoints
-        let endpoint = `/api/result${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-        console.log('🌐 [RESULT DEBUG] Primary endpoint:', endpoint);
-        
-        let data;
-        try {
-          data = await apiRequest(endpoint);
-          console.log('📊 [RESULT DEBUG] Primary endpoint response:', data);
-          
-          // Check if result endpoint has data
-          if (!data || (data.value && data.value.length === 0) || (Array.isArray(data) && data.length === 0)) {
-            console.log('⚠️ [RESULT DEBUG] Primary endpoint empty, trying recent_matches');
-            endpoint = `/api/recent_matches${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-            console.log('🌐 [RESULT DEBUG] Fallback endpoint:', endpoint);
-            data = await apiRequest(endpoint);
-            console.log('📊 [RESULT DEBUG] Fallback endpoint response:', data);
-          }
-        } catch (primaryError) {
-          console.error('❌ [RESULT DEBUG] Primary endpoint failed:', primaryError);
-          console.log('🔄 [RESULT DEBUG] Trying fallback endpoint...');
+        // Check if result endpoint has data
+        if (!data || (data.value && data.value.length === 0) || (Array.isArray(data) && data.length === 0)) {
+          console.log('⚠️ [RESULT DEBUG] Primary endpoint empty, trying recent_matches');
           endpoint = `/api/recent_matches${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+          console.log('🌐 [RESULT DEBUG] Fallback endpoint:', endpoint);
           data = await apiRequest(endpoint);
           console.log('📊 [RESULT DEBUG] Fallback endpoint response:', data);
         }
-        
-        console.log('🔍 [RESULT DEBUG] Final data received:', data);
-        console.log('🔍 [RESULT DEBUG] Data type:', typeof data);
-        console.log('🔍 [RESULT DEBUG] Is array:', Array.isArray(data));
-        
-        // Handle different data structures
-        let resultsArray = [];
-        if (Array.isArray(data)) {
-          console.log('✅ [RESULT DEBUG] Data is direct array');
-          resultsArray = data;
-        } else if (data && data.value && Array.isArray(data.value)) {
-          console.log('✅ [RESULT DEBUG] Data has value property with array');
-          resultsArray = data.value;
-        } else if (data && data.data && Array.isArray(data.data)) {
-          console.log('✅ [RESULT DEBUG] Data has data property with array');
-          resultsArray = data.data;
-        } else {
-          console.warn('⚠️ [RESULT DEBUG] Unexpected data structure for results:', data);
-          console.log('🔍 [RESULT DEBUG] Available properties:', Object.keys(data || {}));
-          resultsArray = [];
-        }
-        
-        console.log('📝 [RESULT DEBUG] Extracted results array:', resultsArray);
-        console.log('📊 [RESULT DEBUG] Results array length:', resultsArray.length);
-        
-        if (resultsArray.length > 0) {
-          console.log('🎯 [RESULT DEBUG] First result sample:', resultsArray[0]);
-        }
-        
-        // Sort data based on sortBy value
-        let sortedData = [...resultsArray];
-        console.log('🔄 [RESULT DEBUG] Sorting by:', sortBy);
-        
-        if (sortBy === "date") {
-          sortedData.sort((a, b) => new Date(b.date) - new Date(a.date));
-          console.log('📅 [RESULT DEBUG] Sorted by date');
-        } else if (sortBy === "team1") {
-          sortedData.sort((a, b) => a.team1.localeCompare(b.team1));
-          console.log('🏟️ [RESULT DEBUG] Sorted by team1');
-        } else if (sortBy === "team2") {
-          sortedData.sort((a, b) => a.team2.localeCompare(b.team2));
-          console.log('🏟️ [RESULT DEBUG] Sorted by team2');
-        } else if (sortBy === "venue") {
-          sortedData.sort((a, b) => a.venue.localeCompare(b.venue));
-          console.log('📍 [RESULT DEBUG] Sorted by venue');
-        } else if (sortBy === "score") {
-          sortedData.sort((a, b) => (b.team1_score + b.team2_score) - (a.team1_score + a.team2_score));
-          console.log('⚽ [RESULT DEBUG] Sorted by score');
-        }
-        
-        console.log('✅ [RESULT DEBUG] Final processed results data:', sortedData);
-        console.log('📊 [RESULT DEBUG] Setting data state with', sortedData.length, 'items');
-        
-        setData(sortedData);
-        
-        console.log('🏆 [RESULT DEBUG] Calling find_mvp with data');
-        find_mvp(sortedData);
-        
-        console.log('🎉 [RESULT DEBUG] fetchResults completed successfully');
-        setLoading(false);
-        console.log('✅ [RESULT DEBUG] Set loading to false');
-        
-      } catch (err) {
-        console.error('💥 [RESULT DEBUG] Failed to fetch results data:', err);
-        console.error('💥 [RESULT DEBUG] Error stack:', err.stack);
-        console.log('🧹 [RESULT DEBUG] Setting empty state due to error');
-        setData([]);
-        setMvp([]);
-        setError(err.message || 'Failed to fetch data');
-        setLoading(false);
-        console.log('❌ [RESULT DEBUG] Set loading to false due to error');
+      } catch (primaryError) {
+        console.error('❌ [RESULT DEBUG] Primary endpoint failed:', primaryError);
+        console.log('🔄 [RESULT DEBUG] Trying fallback endpoint...');
+        endpoint = `/api/recent_matches${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        data = await apiRequest(endpoint);
+        console.log('📊 [RESULT DEBUG] Fallback endpoint response:', data);
       }
-    };
-    
-    console.log('🎬 [RESULT DEBUG] useEffect triggered with dependencies:', { sport, time, sortBy });
-    fetchResults();
-  }, [sport, time, sortBy]);
+      
+      console.log('🔍 [RESULT DEBUG] Final data received:', data);
+      console.log('🔍 [RESULT DEBUG] Data type:', typeof data);
+      console.log('🔍 [RESULT DEBUG] Is array:', Array.isArray(data));
+      
+      // Handle different data structures
+      let resultsArray = [];
+      if (Array.isArray(data)) {
+        console.log('✅ [RESULT DEBUG] Data is direct array');
+        resultsArray = data;
+      } else if (data && data.value && Array.isArray(data.value)) {
+        console.log('✅ [RESULT DEBUG] Data has value property with array');
+        resultsArray = data.value;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        console.log('✅ [RESULT DEBUG] Data has data property with array');
+        resultsArray = data.data;
+      } else {
+        console.warn('⚠️ [RESULT DEBUG] Unexpected data structure for results:', data);
+        console.log('🔍 [RESULT DEBUG] Available properties:', Object.keys(data || {}));
+        resultsArray = [];
+      }
+      
+      console.log('📝 [RESULT DEBUG] Extracted results array:', resultsArray);
+      console.log('📊 [RESULT DEBUG] Results array length:', resultsArray.length);
+      
+      if (resultsArray.length > 0) {
+        console.log('🎯 [RESULT DEBUG] First result sample:', resultsArray[0]);
+      }
+      
+      // Sort data based on sortBy value
+      let sortedData = [...resultsArray];
+      console.log('🔄 [RESULT DEBUG] Sorting by:', sortBy);
+      
+      if (sortBy === "date") {
+        sortedData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        console.log('📅 [RESULT DEBUG] Sorted by date');
+      } else if (sortBy === "team1") {
+        sortedData.sort((a, b) => a.team1.localeCompare(b.team1));
+        console.log('🏟️ [RESULT DEBUG] Sorted by team1');
+      } else if (sortBy === "team2") {
+        sortedData.sort((a, b) => a.team2.localeCompare(b.team2));
+        console.log('🏟️ [RESULT DEBUG] Sorted by team2');
+      } else if (sortBy === "venue") {
+        sortedData.sort((a, b) => a.venue.localeCompare(b.venue));
+        console.log('📍 [RESULT DEBUG] Sorted by venue');
+      } else if (sortBy === "score") {
+        sortedData.sort((a, b) => (b.team1_score + b.team2_score) - (a.team1_score + a.team2_score));
+        console.log('⚽ [RESULT DEBUG] Sorted by score');
+      }
+      
+      console.log('✅ [RESULT DEBUG] Final processed results data:', sortedData);
+      console.log('📊 [RESULT DEBUG] Setting data state with', sortedData.length, 'items');
+      
+      setData(sortedData);
+      
+      console.log('🏆 [RESULT DEBUG] Calling find_mvp with data');
+      find_mvp(sortedData);
+      
+      console.log('🎉 [RESULT DEBUG] fetchResults completed successfully');
+      setLoading(false);
+      console.log('✅ [RESULT DEBUG] Set loading to false');
+      
+    } catch (err) {
+      console.error('💥 [RESULT DEBUG] Failed to fetch results data:', err);
+      console.error('💥 [RESULT DEBUG] Error stack:', err.stack);
+      console.log('🧹 [RESULT DEBUG] Setting empty state due to error');
+      setData([]);
+      setMvp([]);
+      setError(err.message || 'Failed to fetch data');
+      setLoading(false);
+      console.log('❌ [RESULT DEBUG] Set loading to false due to error');
+    }
+  };
+  
+  // Use the real-time database change detection hook for automatic updates
+  useDatabaseChangeDetection(fetchResults, [sport, time, sortBy]);
   
   return (
     <div className="result-container">
