@@ -63,7 +63,7 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5000',
   // Add your Vercel domain when you deploy
-  // 'https://your-app-name.vercel.app',
+  'https://freaky-four-ww.vercel.app',
   // You can also use environment variables
   process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
