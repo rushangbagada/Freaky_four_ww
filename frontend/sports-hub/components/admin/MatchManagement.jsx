@@ -520,7 +520,8 @@ export default function MatchManagement({ user }) {
               </button>
             </div>
           </div>
-        ))}
+        ))
+        )}
       </div>
 
       {/* Add Match Modal */}
