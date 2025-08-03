@@ -28,6 +28,35 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 // Server configuration
 const port = process.env.PORT || 5000;
 
+
+
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  'http://localhost:3000', 
+  'http://localhost:5000',
+  // Add your Vercel domain when you deploy
+  'https://freaky-four-ww.vercel.app',
+  // You can also use environment variables
+  process.env.FRONTEND_URL
+].filter(Boolean); // Remove undefined values
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Allow OPTIONS requests to pass through without requiring auth
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(204);
+    return;
+  }
+  next();
+});
+
 // Authentication and security dependencies
 const jwt = require("jsonwebtoken");
 const connectDB = require("./config/db");
@@ -56,69 +85,44 @@ const Club_Details = require('./models/club-detail');  // Detailed organization 
 const Club_player = require('./models/club-player');   // Organization member mapping
 const Turf = require('./models/turf');                 // Venue/facility management
 
-// Configure CORS to allow requests from the frontend
-const allowedOrigins = [
-  'http://localhost:5173', 
-  'http://localhost:5174', 
-  'http://localhost:3000', 
-  'http://localhost:5000',
-  // Add your Vercel domain when you deploy
-  'https://freaky-four-ww.vercel.app',
-  // You can also use environment variables
-  process.env.FRONTEND_URL
-].filter(Boolean); // Remove undefined values
+// // Configure CORS to allow requests from the frontend
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
+// // Security: Rate limiting
+// const generalLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // Limit each IP to 100 requests per windowMs
+//   message: {
+//     error: 'Too many requests from this IP, please try again later.',
+//     retryAfter: '15 minutes'
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-// Security: Rate limiting
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// // Stricter rate limiting for auth endpoints
+// const authLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 10, // Limit each IP to 10 auth requests per windowMs
+//   message: {
+//     error: 'Too many authentication attempts, please try again later.',
+//     retryAfter: '15 minutes'
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-// Stricter rate limiting for auth endpoints
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each IP to 10 auth requests per windowMs
-  message: {
-    error: 'Too many authentication attempts, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// // Very strict rate limiting for admin endpoints
+// const adminLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 50, // Limit each IP to 50 admin requests per windowMs
+//   message: {
+//     error: 'Too many admin requests, please try again later.',
+//     retryAfter: '15 minutes'
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-// Very strict rate limiting for admin endpoints
-const adminLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // Limit each IP to 50 admin requests per windowMs
-  message: {
-    error: 'Too many admin requests, please try again later.',
-    retryAfter: '15 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Apply general rate limiting to all requests
-app.use(generalLimiter);
-
-// Apply stricter rate limiting to auth routes
-app.use('/api/auth', authLimiter);
-
-// Apply admin rate limiting to admin routes
-app.use('/api/admin', adminLimiter);
 
 app.use(express.json({ limit: '10mb' })); // Limit payload size
 app.use(express.urlencoded({extended:true, limit: '10mb'}));
