@@ -63,53 +63,17 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5000',
   // Add your Vercel domain when you deploy
-  'https://freaky-four-ww.vercel.app',
+  // 'https://your-app-name.vercel.app',
   // You can also use environment variables
   process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
 
-console.log('🔧 CORS Configuration:', {
-  allowedOrigins,
-  timestamp: new Date().toISOString()
-});
-
-// Primary CORS middleware - Allow all origins
 app.use(cors({
-  origin: true, // Allow all origins
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
-
-// Fallback CORS headers middleware (in case the above doesn't work)
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  
-  // Allow all origins
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    console.log('🔧 Manual CORS header set for:', origin);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  
-  // Set other CORS headers
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    console.log('🔄 Handling preflight request for:', req.url);
-    res.status(204).end();
-    return;
-  }
-  
-  next();
-});
 
 // Security: Rate limiting
 const generalLimiter = rateLimit({
@@ -1051,8 +1015,8 @@ app.post("/api/booking", async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "https://freaky-four-ww.vercel.app/payment/PaymentSuccess", // ✅ make sure this exists in frontend
-      cancel_url: "https://freaky-four-ww.vercel.app/payment/PaymentFailed",   // ✅ make sure this exists in frontend
+      success_url: "http://localhost:5173/payment/PaymentSuccess", // ✅ make sure this exists in frontend
+      cancel_url: "http://localhost:5173/payment/PaymentFailed",   // ✅ make sure this exists in frontend
     });
 
     res.status(200).json({ id: session.id, url: session.url });
@@ -1182,41 +1146,6 @@ const stopLiveMatchSimulation = () => {
   }
 };
 
-// Start evaluation of predictions for a match
-app.post("/api/predictions/evaluate-match", async (req, res) => {
-  try {
-    const { matchId } = req.body;
-    if (!matchId) {
-      return res.status(400).json({ message: "Match ID is required" });
-    }
-
-    const match = await Live_Match.findById(matchId);
-    if (!match) {
-      return res.status(404).json({ message: "Match not found" });
-    }
-
-    if (match.status !== 'finished') {
-      return res.status(400).json({ message: "Cannot evaluate predictions for a match that is not finished" });
-    }
-
-    const predictions = await LiveMatchPrediction.find({ matchId });
-
-    for (const prediction of predictions) {
-      if (prediction.predictedTeam1Score === match.team1_score && prediction.predictedTeam2Score === match.team2_score) {
-        await Prediction_user.findByIdAndUpdate(prediction.userId, {
-          $inc: { total_point: 10, wins: 1, streak: 1 }
-        });
-        prediction.isProcessed = true;
-        await prediction.save();
-      }
-    }
-
-    res.status(200).json({ message: "Predictions evaluated" });
-  } catch (error) {
-    res.status(500).json({ message: "Error evaluating predictions", error: error.message });
-  }
-});
-
 // Start simulation when server is ready
 startLiveMatchSimulation();
 
@@ -1240,5 +1169,3 @@ const { exec } = require('child_process');
 
 // Use the game routes for the /api endpoint
 // app.use('/api', gameRoutes);
-
-// CORS fix deployment - January 2025 - Updated
