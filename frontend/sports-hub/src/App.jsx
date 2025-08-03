@@ -20,6 +20,11 @@ import SportsBot from '../components/SportsBot';
 import GamePage from '../components/gamepage';
 import Blog from '../components/blog';
 import LiveSports from '../components/livesports';
+import OTPVerification from '../components/OTPVerification';
+import ResetPassword from '../components/ResetPassword';
+import NotFound from '../components/NotFound';
+import DataDebugTest from '../components/DataDebugTest';
+import TurfSimple from '../components/TurfSimple';
 
 import TurfCard from '../components/payment/TurfCard';
 
@@ -70,6 +75,10 @@ function AppRoutes() {
         <Route path="/gamepage" element={<GamePage />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/livesports" element={<LiveSports />} />
+        <Route path="/verify-otp" element={<OTPVerification />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/debug-test" element={<DataDebugTest />} />
+        <Route path="/turf-simple" element={<TurfSimple />} />
        
         <Route path="/TurfCard" element={<TurfCard />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

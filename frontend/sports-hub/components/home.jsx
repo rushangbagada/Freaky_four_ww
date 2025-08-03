@@ -183,19 +183,25 @@ export default function Home() {
     return () => clearInterval(slideInterval);
   }, [nextSlide]);
 
-  // Functions for real-time data fetching
-  const fetchHomeData = async () => {
-    console.log('🏠 Fetching home page data...');
+  // Functions for real-time data fetching with retry logic
+  const fetchHomeData = async (retryCount = 0) => {
+    console.log('🏠 Fetching home page data...', retryCount > 0 ? `(Retry ${retryCount})` : '');
     try {
-      // Fetch recent matches
+      // Fetch recent matches with timeout
       console.log('📊 Fetching recent matches...');
-      const recentData = await apiRequest(API_ENDPOINTS.RECENT_MATCHES);
+      const recentData = await Promise.race([
+        apiRequest(API_ENDPOINTS.RECENT_MATCHES),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+      ]);
       console.log('📊 Recent matches data:', recentData);
       setRecentMatches(Array.isArray(recentData) ? recentData : []);
 
-      // Fetch clubs
+      // Fetch clubs with timeout
       console.log('🏟️ Fetching clubs...');
-      const clubsData = await apiRequest(API_ENDPOINTS.CLUBS);
+      const clubsData = await Promise.race([
+        apiRequest(API_ENDPOINTS.CLUBS),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+      ]);
       console.log('🏟️ Clubs data:', clubsData);
       setClubs(Array.isArray(clubsData) ? clubsData : []);
       

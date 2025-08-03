@@ -1,6 +1,7 @@
 import React from 'react';
 import './TurfCard.css';
 import { loadStripe } from '@stripe/stripe-js';
+import { getApiUrl } from '../../src/config/api';
 
 console.log("Loaded Stripe Key:", import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -10,10 +11,13 @@ const TurfCard = ({ id, name, location, price, imageUrl, availability }) => {
   const handleBooking = async () => {
     try {
       console.log("Starting booking process for:", { name, location, price });
+      console.log("Stripe Key Available:", !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+      console.log("Environment:", import.meta.env.MODE);
       
-      // DEMO MODE: Skip Stripe for now
+      // Check if Stripe is properly configured
       if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY.includes('YOUR_KEY_HERE')) {
-        alert(`Demo: Booking ${name} at ${location} for ₹${price}/hour\n\n(Stripe not configured - this is just a demo)`);
+        console.error('Stripe publishable key not configured properly');
+        alert(`Payment system not configured properly.\n\nPlease contact support or try again later.`);
         return;
       }
       
@@ -38,7 +42,7 @@ const TurfCard = ({ id, name, location, price, imageUrl, availability }) => {
       const body = { name, location, price };
       console.log("Sending booking request with payload:", body);
 
-      const response = await fetch("/api/booking", {
+      const response = await fetch(getApiUrl("/api/booking"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

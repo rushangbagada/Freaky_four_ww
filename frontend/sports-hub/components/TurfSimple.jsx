@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TurfCard from './payment/TurfCard';
-import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 import { getApiUrl, apiRequest, API_ENDPOINTS } from '../src/config/api';
 import './css/turf.css';
 
-const Turf = () => {
+const TurfSimple = () => {
   const [turfs, setTurfs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,28 +34,25 @@ const Turf = () => {
     return matchesSearch && matchesLocation && matchesPrice && matchesAvailability;
   });
 
-  // Fetch turf data from backend API
+  // Fetch turf data from backend API - SIMPLE VERSION
   const fetchTurfs = async () => {
     try {
-      console.log('🔄 Fetching turfs data...');
+      console.log('🔄 [SIMPLE] Fetching turfs data...');
       const data = await apiRequest('/api/turfs');
-      console.log('✅ Turfs data fetched successfully:', data.length, 'turfs');
+      console.log('✅ [SIMPLE] Turfs data fetched successfully:', data.length, 'turfs');
+      console.log('📋 [SIMPLE] First turf:', data[0]);
       setTurfs(data);
       setError(null);
-      if (loading) setLoading(false);
+      setLoading(false);
     } catch (err) {
-      console.error('❌ Error fetching turfs:', err);
+      console.error('❌ [SIMPLE] Error fetching turfs:', err);
       setError(err.message);
-      if (loading) setLoading(false);
+      setLoading(false);
     }
   };
 
-  // Use the live data update hook for real-time updates
-  useDatabaseChangeDetection(fetchTurfs, []);
-
   useEffect(() => {
-    // Initial load will be handled by the hook
-    setLoading(true);
+    fetchTurfs();
   }, []);
 
   if (loading) {
@@ -64,7 +60,7 @@ const Turf = () => {
       <div className="turf-page">
         <div className="loading">
           <div className="spinner"></div>
-          <p>Loading turfs...</p>
+          <p>Loading turfs... (Simple Version)</p>
         </div>
       </div>
     );
@@ -74,7 +70,7 @@ const Turf = () => {
     return (
       <div className="turf-page">
         <div className="error-section">
-          <h2>⚠️ Error Loading Turfs</h2>
+          <h2>⚠️ Error Loading Turfs (Simple Version)</h2>
           <p>{error}</p>
           <button onClick={() => {
             setError(null);
@@ -90,8 +86,13 @@ const Turf = () => {
 
   return (
     <div className="turf-page">
+      <div style={{ background: '#e7f3ff', padding: '1rem', margin: '1rem 0', borderRadius: '8px', border: '2px solid #3b82f6' }}>
+        <h3>🧪 SIMPLE TURF COMPONENT (No Database Change Detection Hook)</h3>
+        <p>This version directly fetches data without the polling hook to isolate the issue.</p>
+        <p><strong>Data Status:</strong> {turfs.length} turfs loaded, {filteredTurfs.length} after filtering</p>
+      </div>
       
-{/* Hero Section */}
+      {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
           <div className="hero-icon">
@@ -100,7 +101,7 @@ const Turf = () => {
               <path d="M10 17l5-5-5-5v10z"/>
             </svg>
           </div>
-          <h1 className="hero-title">Turf Booking</h1>
+          <h1 className="hero-title">Turf Booking (Simple)</h1>
           <p className="hero-subtitle">Find and book the best sports facilities with ease</p>
         </div>
         <div className="hero-stats">
@@ -188,4 +189,4 @@ const Turf = () => {
   );
 };
 
-export default Turf;
+export default TurfSimple;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
+import { getApiUrl, apiRequest, API_ENDPOINTS } from '../../src/config/api';
 import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
 import './css/turf-management.css';
 
@@ -16,11 +16,7 @@ export default function TurfManagement() {
     const fetchTurfs = async () => {
         try {
             console.log('🔄 [Admin] Fetching turfs data...');
-              const response = await fetch(getApiUrl('/api/turfs'));
-            if (!response.ok) {
-                throw new Error('Failed to fetch turfs');
-            }
-            const data = await response.json();
+            const data = await apiRequest('/api/turfs');
             // Map database fields to our component structure
             const mappedTurfs = data.map(turf => ({
                 ...turf,
@@ -51,11 +47,8 @@ export default function TurfManagement() {
         e.preventDefault();
         if (newTurf.name && newTurf.location) {
             try {
-                const response = await fetch(getApiUrl('/api/admin/turfs'), {
+                const savedTurf = await apiRequest('/api/admin/turfs', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify({
                         name: newTurf.name,
                         location: newTurf.location,
@@ -63,20 +56,15 @@ export default function TurfManagement() {
                     })
                 });
                 
-                if (response.ok) {
-                    const savedTurf = await response.json();
-                    // Add the new turf to state with status mapping
-                    const mappedTurf = {
-                        ...savedTurf,
-                        status: savedTurf.availability ? 'Available' : 'Booked',
-                        lastUpdated: new Date()
-                    };
-                    setTurfs([...turfs, mappedTurf]);
-                    setNewTurf({ name: '', location: '', price: '' });
-                    setLastUpdate(new Date());
-                } else {
-                    throw new Error('Failed to create turf');
-                }
+                // Add the new turf to state with status mapping
+                const mappedTurf = {
+                    ...savedTurf,
+                    status: savedTurf.availability ? 'Available' : 'Booked',
+                    lastUpdated: new Date()
+                };
+                setTurfs([...turfs, mappedTurf]);
+                setNewTurf({ name: '', location: '', price: '' });
+                setLastUpdate(new Date());
             } catch (err) {
                 console.error('Error adding turf:', err);
                 setError('Failed to add turf: ' + err.message);

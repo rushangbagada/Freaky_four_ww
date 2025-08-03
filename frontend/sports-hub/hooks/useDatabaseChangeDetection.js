@@ -25,13 +25,21 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
   };
 
   useEffect(() => {
-    // Initial fetch
-    fetchData();
-    setLastUpdated(new Date());
+    // Initial fetch with error handling
+    const initialFetch = async () => {
+      try {
+        await fetchData();
+        setLastUpdated(new Date());
+      } catch (error) {
+        console.error('Initial fetch error:', error);
+      }
+    };
     
-    // Set up polling for real-time updates
-    console.log('🔄 Setting up polling with 1-second intervals');
-    const intervalId = setInterval(pollAndDetectChanges, 1000); // Poll every 1 second
+    initialFetch();
+    
+    // Set up polling for real-time updates with more reasonable interval
+    console.log('🔄 Setting up polling with 30-second intervals');
+    const intervalId = setInterval(pollAndDetectChanges, 30000); // Poll every 30 seconds
     
     return () => {
       if (intervalId) {
