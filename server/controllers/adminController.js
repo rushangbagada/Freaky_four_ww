@@ -67,9 +67,33 @@ const deleteClub = async (req, res) => {
 const getAllMatches = async (req, res) => {
   try {
     const matches = await Match.find().sort({ date: -1 });
-    res.json(matches);
+    
+    // Ensure each match includes the ID in a readable format
+    const matchesWithId = matches.map(match => ({
+      id: match._id,
+      _id: match._id,
+      team1: match.team1,
+      team2: match.team2,
+      date: match.date,
+      venue: match.venue,
+      category: match.category,
+      team1_score: match.team1_score,
+      team2_score: match.team2_score,
+      mvp: match.mvp
+    }));
+    
+    res.json({
+      success: true,
+      count: matches.length,
+      matches: matchesWithId
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching matches', error: error.message });
+    console.error('Error fetching matches:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error fetching matches', 
+      error: error.message 
+    });
   }
 };
 
