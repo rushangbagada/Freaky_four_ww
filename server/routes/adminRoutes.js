@@ -86,8 +86,8 @@ router.post('/clubs', requireAdmin, createClub);
 router.put('/clubs/:id', requireAdmin, updateClub);
 router.delete('/clubs/:id', requireAdmin, deleteClub);
 
-// Club Management Routes (club_leader)
-router.put('/my-club', requireClubLeader('club'), updateClub);
+// // Club Management Routes (club_leader)
+// router.put('/my-club', requireClubLeader('club'), updateClub);
 
 // Match Management Routes (admin)
 router.get('/matches', requireAdmin, getAllMatches);
@@ -95,10 +95,10 @@ router.post('/matches', requireAdmin, createMatch);
 router.put('/matches/:id', requireAdmin, updateMatch);
 router.delete('/matches/:id', requireAdmin, deleteMatch);
 
-// Match Management Routes (club_leader)
-router.post('/my-matches', requireClubLeader('club'), createMatch);
-router.put('/my-matches/:id', requireClubLeader('match'), updateMatch);
-router.delete('/my-matches/:id', requireClubLeader('match'), deleteMatch);
+// // Match Management Routes (club_leader)
+// router.post('/my-matches', requireClubLeader('club'), createMatch);
+// router.put('/my-matches/:id', requireClubLeader('match'), updateMatch);
+// router.delete('/my-matches/:id', requireClubLeader('match'), deleteMatch);
 
 // Upcoming Match Management Routes (admin)
 router.post('/upcoming-matches', requireAdmin, createUpcomingMatch);

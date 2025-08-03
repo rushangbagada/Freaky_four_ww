@@ -196,21 +196,21 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/quiz", quizRoutes);
 
-// Debug endpoint to check if admin routes are loaded
-app.get("/api/debug/admin-routes", (req, res) => {
-  res.json({
-    message: "Admin routes are loaded",
-    availableRoutes: [
-      "GET /api/admin/matches",
-      "POST /api/admin/matches",
-      "PUT /api/admin/matches/:id",
-      "DELETE /api/admin/matches/:id",
-      "GET /api/admin/dashboard",
-      "POST /api/admin/VITE_SERVER_URL"
-    ],
-    timestamp: new Date().toISOString()
-  });
-});
+// // Debug endpoint to check if admin routes are loaded
+// app.get("/api/debug/admin-routes", (req, res) => {
+//   res.json({
+//     message: "Admin routes are loaded",
+//     availableRoutes: [
+//       "GET /api/admin/matches",
+//       "POST /api/admin/matches",
+//       "PUT /api/admin/matches/:id",
+//       "DELETE /api/admin/matches/:id",
+//       "GET /api/admin/dashboard",
+//       "POST /api/admin/VITE_SERVER_URL"
+//     ],
+//     timestamp: new Date().toISOString()
+//   });
+// });
 
 
 
