@@ -87,36 +87,77 @@ const PredictionGamePage = () => {
     try {
       console.log('⚽ Fetching all match data...');
       
-      // Fetch regular matches
-      console.log('📊 Fetching prediction matches...');
-      const predictionData = await apiRequest(API_ENDPOINTS.PREDICTION_MATCHES);
-      console.log('✅ Prediction matches received:', predictionData);
+      // Fetch matches from multiple sources to get comprehensive data
+      const endpoints = [
+        { name: 'Admin Matches', endpoint: API_ENDPOINTS.ADMIN_MATCHES },
+        { name: 'Admin Live Matches', endpoint: API_ENDPOINTS.ADMIN_LIVE_MATCHES },
+        { name: 'Live Matches', endpoint: API_ENDPOINTS.LIVE_MATCHES },
+        { name: 'Prediction Matches', endpoint: API_ENDPOINTS.PREDICTION_MATCHES },
+        { name: 'Recent Matches', endpoint: API_ENDPOINTS.RECENT_MATCHES },
+        { name: 'Upcoming Matches', endpoint: API_ENDPOINTS.UPCOMING_MATCHES }
+      ];
       
-      // Handle different data structures for prediction matches
-      if (Array.isArray(predictionData)) {
-        setMatches(predictionData);
-      } else if (predictionData && predictionData.data && Array.isArray(predictionData.data)) {
-        setMatches(predictionData.data);
-      } else {
-        console.warn('⚠️ Unexpected prediction matches data structure:', predictionData);
-        setMatches([]);
-      }
-
-      // Fetch live matches
-      console.log('🅸 Fetching live matches...');
-      const liveData = await apiRequest(API_ENDPOINTS.LIVE_MATCHES);
-      console.log('✅ Live matches received:', liveData);
+      let allMatches = [];
       
-      // Handle different data structures for live matches
-      if (Array.isArray(liveData)) {
-        setLiveMatches(liveData);
-      } else if (liveData && liveData.data && Array.isArray(liveData.data)) {
-        setLiveMatches(liveData.data);
-      } else {
-        console.warn('⚠️ Unexpected live matches data structure:', liveData);
-        setLiveMatches([]);
+      for (const { name, endpoint } of endpoints) {
+        try {
+          console.log(`📊 Fetching ${name}...`);
+          const data = await apiRequest(endpoint, {
+            headers: {
+              'Authorization': `Bearer ${token || localStorage.getItem('token')}`
+            }
+          });
+          
+          console.log(`✅ ${name} received:`, data);
+          
+          // Handle different data structures
+          let matches = [];
+          if (Array.isArray(data)) {
+            matches = data;
+          } else if (data && data.data && Array.isArray(data.data)) {
+            matches = data.data;
+          } else if (data && data.matches && Array.isArray(data.matches)) {
+            matches = data.matches;
+          } else if (data && typeof data === 'object') {
+            matches = [data];
+          }
+          
+          allMatches = [...allMatches, ...matches];
+          
+        } catch (error) {
+          console.warn(`⚠️ Failed to fetch ${name}:`, error.message);
+        }
       }
-
+      
+      // Remove duplicates based on _id or id
+      const uniqueMatches = allMatches.filter((match, index, self) => {
+        const id = match._id || match.id;
+        return index === self.findIndex(m => (m._id || m.id) === id);
+      });
+      
+      console.log('🔍 Total unique matches found:', uniqueMatches.length);
+      
+      // Separate matches by status and type
+      const liveMatches = uniqueMatches.filter(match => 
+        match.status === 'ongoing' || match.status === 'live'
+      );
+      
+      const otherMatches = uniqueMatches.filter(match => 
+        match.status !== 'ongoing' && match.status !== 'live'
+      );
+      
+      // Sort live matches by priority (ongoing first, then live)
+      liveMatches.sort((a, b) => {
+        const statusPriority = { 'ongoing': 2, 'live': 1 };
+        return (statusPriority[b.status] || 0) - (statusPriority[a.status] || 0);
+      });
+      
+      console.log('🔥 Live/Ongoing matches found:', liveMatches.length);
+      console.log('📊 Other matches found:', otherMatches.length);
+      
+      setLiveMatches(liveMatches);
+      setMatches(otherMatches);
+      
       // Refresh leaderboard
       await refreshLeaderboard();
       

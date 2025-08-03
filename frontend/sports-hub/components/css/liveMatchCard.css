@@ -103,19 +103,44 @@
 .upcoming-indicator {
   background-color: #4d79ff;
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  animation: glow-blue 2s ease-in-out infinite alternate;
 }
 
 .finished-indicator {
-  background-color: #4dff4d;
+  background-color: #22c55e;
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.unknown-indicator {
+  background-color: #6b7280;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Enhanced live match card for ongoing status */
+.live-match-card.ongoing {
+  border-left-color: #f59e0b;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
+}
+
+/* Glow animations */
+@keyframes glow-blue {
+  from { box-shadow: 0 0 5px rgba(77, 121, 255, 0.6); }
+  to { box-shadow: 0 0 10px rgba(77, 121, 255, 0.8), 0 0 15px rgba(77, 121, 255, 0.4); }
 }
 
 .final-score p {
