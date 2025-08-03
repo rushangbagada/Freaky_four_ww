@@ -73,6 +73,7 @@ console.log('🔧 CORS Configuration:', {
   timestamp: new Date().toISOString()
 });
 
+// Primary CORS middleware
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -95,6 +96,32 @@ app.use(cors({
   preflightContinue: false,
   optionsSuccessStatus: 204
 }));
+
+// Fallback CORS headers middleware (in case the above doesn't work)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Check if origin is in allowed list
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    console.log('🔧 Manual CORS header set for:', origin);
+  }
+  
+  // Set other CORS headers
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('🔄 Handling preflight request for:', req.url);
+    res.status(204).end();
+    return;
+  }
+  
+  next();
+});
 
 // Security: Rate limiting
 const generalLimiter = rateLimit({
