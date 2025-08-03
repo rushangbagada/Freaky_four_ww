@@ -1170,4 +1170,4 @@ const { exec } = require('child_process');
 // Use the game routes for the /api endpoint
 // app.use('/api', gameRoutes);
 
-// CORS fix deployment - January 2025
+// CORS fix deployment - January 2025 - Updated
