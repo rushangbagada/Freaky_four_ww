@@ -206,7 +206,7 @@ app.get("/api/debug/admin-routes", (req, res) => {
       "PUT /api/admin/matches/:id",
       "DELETE /api/admin/matches/:id",
       "GET /api/admin/dashboard",
-      "POST /api/admin/predictions/evaluate-match"
+      "POST /api/admin/VITE_SERVER_URL"
     ],
     timestamp: new Date().toISOString()
   });
