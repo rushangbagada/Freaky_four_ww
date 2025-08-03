@@ -122,6 +122,16 @@ const deleteMatch = async (req, res) => {
   }
 };
 
+// Get all matches for admin
+const getAllMatches = async (req, res) => {
+  try {
+    const matches = await Match.find().sort({ date: -1 });
+    res.json({ matches });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching matches', error: error.message });
+  }
+};
+
 // Upcoming Match Management
 const createUpcomingMatch = async (req, res) => {
   try {
@@ -714,6 +724,7 @@ module.exports = {
   createMatch,
   updateMatch,
   deleteMatch,
+  getAllMatches,
   
   // Upcoming Match Management
   createUpcomingMatch,

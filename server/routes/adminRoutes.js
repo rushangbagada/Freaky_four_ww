@@ -15,6 +15,7 @@ const {
   createMatch,
   updateMatch,
   deleteMatch,
+  getAllMatches,
   
   // Upcoming Match Management
   createUpcomingMatch,
@@ -85,6 +86,7 @@ router.delete('/clubs/:id', requireAdmin, deleteClub);
 router.put('/my-club', requireClubLeader('club'), updateClub);
 
 // Match Management Routes (admin)
+router.get('/matches', requireAdmin, getAllMatches);
 router.post('/matches', requireAdmin, createMatch);
 router.put('/matches/:id', requireAdmin, updateMatch);
 router.delete('/matches/:id', requireAdmin, deleteMatch);

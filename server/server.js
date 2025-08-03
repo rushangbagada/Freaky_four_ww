@@ -73,23 +73,9 @@ console.log('🔧 CORS Configuration:', {
   timestamp: new Date().toISOString()
 });
 
-// Primary CORS middleware
+// Primary CORS middleware - Allow all origins
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    console.log('🌐 CORS Check - Origin:', origin);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      console.log('✅ CORS - Origin allowed:', origin);
-      callback(null, true);
-    } else {
-      console.log('❌ CORS - Origin blocked:', origin);
-      console.log('📋 CORS - Allowed origins:', allowedOrigins);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true, // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true,
@@ -101,10 +87,12 @@ app.use(cors({
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   
-  // Check if origin is in allowed list
-  if (origin && allowedOrigins.includes(origin)) {
+  // Allow all origins
+  if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     console.log('🔧 Manual CORS header set for:', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
   }
   
   // Set other CORS headers
@@ -1193,6 +1181,41 @@ const stopLiveMatchSimulation = () => {
     console.log('⏹️ Live match score simulation stopped.');
   }
 };
+
+// Start evaluation of predictions for a match
+app.post("/api/predictions/evaluate-match", async (req, res) => {
+  try {
+    const { matchId } = req.body;
+    if (!matchId) {
+      return res.status(400).json({ message: "Match ID is required" });
+    }
+
+    const match = await Live_Match.findById(matchId);
+    if (!match) {
+      return res.status(404).json({ message: "Match not found" });
+    }
+
+    if (match.status !== 'finished') {
+      return res.status(400).json({ message: "Cannot evaluate predictions for a match that is not finished" });
+    }
+
+    const predictions = await LiveMatchPrediction.find({ matchId });
+
+    for (const prediction of predictions) {
+      if (prediction.predictedTeam1Score === match.team1_score && prediction.predictedTeam2Score === match.team2_score) {
+        await Prediction_user.findByIdAndUpdate(prediction.userId, {
+          $inc: { total_point: 10, wins: 1, streak: 1 }
+        });
+        prediction.isProcessed = true;
+        await prediction.save();
+      }
+    }
+
+    res.status(200).json({ message: "Predictions evaluated" });
+  } catch (error) {
+    res.status(500).json({ message: "Error evaluating predictions", error: error.message });
+  }
+});
 
 // Start simulation when server is ready
 startLiveMatchSimulation();
