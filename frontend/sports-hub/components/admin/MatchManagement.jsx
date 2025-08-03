@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getApiUrl } from '../../src/config/api';
+import { getApiUrl, API_ENDPOINTS } from '../../src/config/api';
 import './css/match-management.css';
 
 export default function MatchManagement({ user }) {
@@ -31,51 +31,83 @@ export default function MatchManagement({ user }) {
   }, []);
 
   const fetchMatches = async () => {
+    console.log('⚽ [MATCH MGMT] Fetching matches...');
+    setLoading(true);
+    
     try {
-      let url = getApiUrl('/api/matches');
+      // Try admin matches endpoint first (for comprehensive data)
+      let response;
+      let data = [];
       
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data && (Array.isArray(data) || typeof data === 'object')) {
-          setMatches(Array.isArray(data) ? data : [data]);
+      if (isAdmin) {
+        console.log('⚽ [MATCH MGMT] Fetching from admin endpoint...');
+        response = await fetch(getApiUrl(API_ENDPOINTS.ADMIN_MATCHES), {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        
+        if (response.ok) {
+          data = await response.json();
+          console.log('✅ [MATCH MGMT] Admin matches fetched:', data);
         } else {
-          const fallbackResponse = await fetch(getApiUrl('/api/result'));
-          if (fallbackResponse.ok) {
-            const fallbackData = await fallbackResponse.json();
-            setMatches(Array.isArray(fallbackData) ? fallbackData : []);
-          } else {
-            setMatches([]);
+          console.warn('⚠️ [MATCH MGMT] Admin endpoint failed, trying fallback...');
+        }
+      }
+      
+      // If admin endpoint failed or user is not admin, try regular endpoints
+      if (!response || !response.ok || !data || data.length === 0) {
+        console.log('⚽ [MATCH MGMT] Trying regular matches endpoints...');
+        
+        // Try multiple endpoints to get comprehensive match data
+        const endpoints = [
+          '/api/matches',
+          API_ENDPOINTS.RECENT_MATCHES,
+          API_ENDPOINTS.UPCOMING_MATCHES,
+          '/api/result'
+        ];
+        
+        let allMatches = [];
+        
+        for (const endpoint of endpoints) {
+          try {
+            console.log(`⚽ [MATCH MGMT] Trying endpoint: ${endpoint}`);
+            const resp = await fetch(getApiUrl(endpoint), {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+            });
+            
+            if (resp.ok) {
+              const endpointData = await resp.json();
+              console.log(`✅ [MATCH MGMT] Data from ${endpoint}:`, endpointData);
+              
+              if (Array.isArray(endpointData)) {
+                allMatches = [...allMatches, ...endpointData];
+              } else if (endpointData && typeof endpointData === 'object') {
+                allMatches.push(endpointData);
+              }
+            }
+          } catch (endpointError) {
+            console.warn(`⚠️ [MATCH MGMT] Endpoint ${endpoint} failed:`, endpointError);
           }
         }
-      } else {
-        const fallbackResponse = await fetch(getApiUrl('/api/result'));
-        if (fallbackResponse.ok) {
-          const fallbackData = await fallbackResponse.json();
-          setMatches(Array.isArray(fallbackData) ? fallbackData : []);
-        } else {
-          setMatches([]);
-        }
+        
+        data = allMatches;
       }
+      
+      // Remove duplicates based on _id or id
+      const uniqueMatches = data.filter((match, index, self) => {
+        const id = match._id || match.id;
+        return index === self.findIndex(m => (m._id || m.id) === id);
+      });
+      
+      console.log('✅ [MATCH MGMT] Final matches data:', uniqueMatches);
+      setMatches(uniqueMatches || []);
+      
     } catch (error) {
-      console.error('Error fetching matches:', error);
-      try {
-        const fallbackResponse = await fetch(getApiUrl('/api/result'));
-        if (fallbackResponse.ok) {
-          const fallbackData = await fallbackResponse.json();
-          setMatches(Array.isArray(fallbackData) ? fallbackData : []);
-        } else {
-          setMatches([]);
-        }
-      } catch (fallbackError) {
-        console.error('Error fetching fallback matches:', fallbackError);
-        setMatches([]);
-      }
+      console.error('❌ [MATCH MGMT] Error fetching matches:', error);
+      setMatches([]);
     } finally {
       setLoading(false);
     }
@@ -102,8 +134,10 @@ export default function MatchManagement({ user }) {
 
   const handleAddMatch = async (e) => {
     e.preventDefault();
+    console.log('⚽ [MATCH MGMT] Adding new match:', newMatch);
+    
     try {
-      const response = await fetch(getApiUrl('/api/admin/matches'), {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.ADMIN_MATCHES), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,8 +145,13 @@ export default function MatchManagement({ user }) {
         },
         body: JSON.stringify(newMatch)
       });
+      
+      console.log('⚽ [MATCH MGMT] Add match response status:', response.status);
 
       if (response.ok) {
+        const result = await response.json();
+        console.log('✅ [MATCH MGMT] Match added successfully:', result);
+        
         setShowAddMatch(false);
         setNewMatch({
           team1: '',
@@ -125,10 +164,32 @@ export default function MatchManagement({ user }) {
           mvp: '',
           status: 'scheduled'
         });
-        fetchMatches();
+        
+        // Refresh matches list
+        await fetchMatches();
+        alert('Match added successfully!');
+      } else {
+        const errorText = await response.text();
+        let errorMessage;
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorText;
+        } catch {
+          errorMessage = errorText;
+        }
+        
+        console.error('❌ [MATCH MGMT] Failed to add match:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorMessage
+        });
+        
+        alert(`Failed to add match: ${errorMessage}`);
       }
     } catch (error) {
-      console.error('Error adding match:', error);
+      console.error('❌ [MATCH MGMT] Network error adding match:', error);
+      alert(`Network error: ${error.message}`);
     }
   };
 
@@ -212,12 +273,34 @@ export default function MatchManagement({ user }) {
     <div className="match-management">
       <div className="match-management-header">
         <h2>Match Management</h2>
-        <button 
-          className="add-match-btn"
-          onClick={() => setShowAddMatch(true)}
-        >
-          + Schedule New Match
-        </button>
+        <div className="header-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button 
+            className="refresh-btn"
+            onClick={fetchMatches}
+            style={{
+              background: 'transparent',
+              color: 'var(--accent-blue)',
+              border: '1px solid var(--accent-blue)',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            disabled={loading}
+          >
+            <span style={{ transform: loading ? 'rotate(360deg)' : 'none', transition: 'transform 1s ease' }}>🔄</span>
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button 
+            className="add-match-btn"
+            onClick={() => setShowAddMatch(true)}
+          >
+            + Schedule New Match
+          </button>
+        </div>
       </div>
 
       {/* Search and Filter */}
@@ -242,10 +325,143 @@ export default function MatchManagement({ user }) {
         </select>
       </div>
 
+      {/* Match Statistics Summary */}
+      <div className="match-stats-summary" style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1rem',
+        marginBottom: '2rem'
+      }}>
+        <div className="stat-card" style={{
+          background: 'var(--card-dark)',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '2rem', color: 'var(--accent-blue)', marginBottom: '0.5rem' }}>⚽</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>{matches.length}</div>
+          <div style={{ color: 'var(--text-secondary)' }}>Total Matches</div>
+        </div>
+        
+        <div className="stat-card" style={{
+          background: 'var(--card-dark)',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '2rem', color: 'var(--accent-gold)', marginBottom: '0.5rem' }}>📅</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            {matches.filter(m => m.status === 'scheduled').length}
+          </div>
+          <div style={{ color: 'var(--text-secondary)' }}>Scheduled</div>
+        </div>
+        
+        <div className="stat-card" style={{
+          background: 'var(--card-dark)',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '2rem', color: 'var(--accent-finished)', marginBottom: '0.5rem' }}>✅</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            {matches.filter(m => m.status === 'completed').length}
+          </div>
+          <div style={{ color: 'var(--text-secondary)' }}>Completed</div>
+        </div>
+        
+        <div className="stat-card" style={{
+          background: 'var(--card-dark)',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '2rem', color: 'var(--accent-live)', marginBottom: '0.5rem' }}>🔴</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            {matches.filter(m => m.status === 'ongoing').length}
+          </div>
+          <div style={{ color: 'var(--text-secondary)' }}>Live</div>
+        </div>
+      </div>
+
       {/* Matches List */}
       <div className="matches-list">
-        {filteredMatches.map(match => (
-          <div key={match._id} className="match-card">
+        {loading ? (
+          <div className="loading-container" style={{
+            textAlign: 'center',
+            padding: '3rem',
+            color: 'var(--text-secondary)'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+            <p>Loading matches...</p>
+          </div>
+        ) : filteredMatches.length === 0 ? (
+          <div className="no-matches-container" style={{
+            textAlign: 'center',
+            padding: '3rem',
+            color: 'var(--text-secondary)',
+            background: 'var(--card-dark)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚽</div>
+            <h3 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+              {matches.length === 0 ? 'No matches yet' : 'No matches found'}
+            </h3>
+            <p style={{ marginBottom: '1.5rem' }}>
+              {matches.length === 0 
+                ? "Get started by scheduling your first match!"
+                : `No matches match your current filters (${filterStatus} status${searchTerm ? `, "${searchTerm}" search` : ''}).`
+              }
+            </p>
+            {matches.length === 0 && (
+              <button 
+                className="add-match-btn"
+                onClick={() => setShowAddMatch(true)}
+                style={{
+                  background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  transition: 'transform 0.2s ease',
+                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                }}
+                onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+              >
+                + Schedule Your First Match
+              </button>
+            )}
+            {matches.length > 0 && (
+              <button 
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilterStatus('all');
+                }}
+                style={{
+                  background: 'transparent',
+                  color: 'var(--accent-blue)',
+                  border: '1px solid var(--accent-blue)',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Clear Filters
+              </button>
+            )}
+          </div>
+        ) : (
+          filteredMatches.map(match => (
+            <div key={match._id} className="match-card">
             <div className="match-header">
               <h3>{match.team1} vs {match.team2}</h3>
               <span className={`status-badge ${getStatusColor(match.status || 'scheduled')}`}>

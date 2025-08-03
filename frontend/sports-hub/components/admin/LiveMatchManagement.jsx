@@ -75,7 +75,62 @@ export default function LiveMatchManagement({ user }) {
         console.log('\ud83d\udd0d [ADMIN] Available properties:', Object.keys(data || {}));
         matchArray = [];
       }
-      
+
+      // Collect matches from additional endpoints
+      console.log('🔄 [ADMIN] Trying to fetch from general live matches endpoint...');
+      const fallbackMatches = await apiRequest(API_ENDPOINTS.LIVE_MATCHES, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).catch((err) => {
+        console.log('⚠️ [ADMIN] General live matches fetch failed:', err.message);
+        return [];
+      });
+
+      if (Array.isArray(fallbackMatches)) {
+        matchArray = matchArray.concat(fallbackMatches);
+      }
+
+      // Try prediction matches endpoint as well
+      console.log('🔄 [ADMIN] Trying to fetch from prediction matches endpoint...');
+      const predictionMatches = await apiRequest(API_ENDPOINTS.PREDICTION_MATCHES, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }).catch((err) => {
+        console.log('⚠️ [ADMIN] Prediction matches fetch failed:', err.message);
+        return [];
+      });
+
+      if (Array.isArray(predictionMatches)) {
+        matchArray = matchArray.concat(predictionMatches);
+      }
+
+      console.log('🔍 [ADMIN] Total matches before deduplication:', matchArray.length);
+
+      // Remove duplicates (check both id and _id fields)
+      matchArray = matchArray.reduce((unique, o) => {
+        const matchId = o.id || o._id;
+        if (!unique.some(obj => (obj.id === matchId || obj._id === matchId))) {
+          unique.push(o);
+        }
+        return unique;
+      }, []);
+
+      console.log('🔍 [ADMIN] Total matches after deduplication:', matchArray.length);
+
+      // Sort matches by status priority (live -> upcoming -> finished)
+      const statusPriority = { 'live': 3, 'upcoming': 2, 'finished': 1 };
+      matchArray.sort((a, b) => {
+        const aPriority = statusPriority[a.status] || 0;
+        const bPriority = statusPriority[b.status] || 0;
+        return bPriority - aPriority;
+      });
+
+      console.log('🔍 [ADMIN] Match statuses after sorting:', matchArray.map(m => m.status));
+
+      // Sorting or further processing can be done here
+
       console.log('\ud83d\udcca [ADMIN] Setting live matches:', matchArray.length, 'matches');
       if (matchArray.length > 0) {
         console.log('\ud83c\udfaf [ADMIN] First match sample:', matchArray[0]);
@@ -371,7 +426,14 @@ export default function LiveMatchManagement({ user }) {
   };
   
   if (loading) {
-    return <div className="loading">Loading live matches...</div>;
+    return (
+      <div className="loading">
+        <div className="loading-spinner"></div>
+        <p>Loading live matches...</p>
+        <p style={{fontSize: '12px', color: '#666'}}>Debug: User role - {user?.role}</p>
+        <p style={{fontSize: '12px', color: '#666'}}>Debug: Token exists - {!!localStorage.getItem('token') ? 'Yes' : 'No'}</p>
+      </div>
+    );
   }
 
   return (
@@ -618,7 +680,33 @@ export default function LiveMatchManagement({ user }) {
             </div>
           ))
         ) : (
-          <div className="no-matches">No live matches found</div>
+          <div className="no-matches">
+            <div className="no-matches-content">
+              <h3>No live matches found</h3>
+              <div className="debug-info" style={{marginTop: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px', fontSize: '12px'}}>
+                <h4>Debug Information:</h4>
+                <p><strong>User Role:</strong> {user?.role || 'undefined'}</p>
+                <p><strong>Is Admin:</strong> {isAdmin ? 'Yes' : 'No'}</p>
+                <p><strong>Token Exists:</strong> {!!localStorage.getItem('token') ? 'Yes' : 'No'}</p>
+                <p><strong>Live Matches Array Length:</strong> {liveMatches.length}</p>
+                <p><strong>Admin Endpoint:</strong> {API_ENDPOINTS.ADMIN_LIVE_MATCHES}</p>
+                <p><strong>Fallback Endpoint:</strong> {API_ENDPOINTS.LIVE_MATCHES}</p>
+                <button 
+                  onClick={() => {
+                    console.log('🔍 Manual debug - Current state:');
+                    console.log('User:', user);
+                    console.log('Live matches:', liveMatches);
+                    console.log('Loading:', loading);
+                    console.log('Is admin:', isAdmin);
+                    fetchLiveMatches();
+                  }}
+                  style={{marginTop: '10px', padding: '5px 10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'}}
+                >
+                  🔍 Debug & Retry Fetch
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 

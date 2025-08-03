@@ -52,8 +52,11 @@ export default function GalleryManagement({ user }) {
     e.preventDefault();
     setAddError('');
     setAddLoading(true);
+    
+    console.log('🖼️ [GALLERY MGMT] Adding new gallery item:', newItem);
+    
     try {
-      const response = await fetch(getApiUrl('/api/gallery/update'), {
+      const response = await fetch(getApiUrl(API_ENDPOINTS.ADMIN_GALLERY), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +64,13 @@ export default function GalleryManagement({ user }) {
         },
         body: JSON.stringify(newItem)
       });
+      
+      console.log('🖼️ [GALLERY MGMT] Add response status:', response.status);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log('✅ [GALLERY MGMT] Successfully added gallery item:', result);
+        
         setShowAddModal(false);
         setNewItem({
           id: Math.floor(Math.random() * 1000), // Generate a new random ID
@@ -74,11 +83,27 @@ export default function GalleryManagement({ user }) {
         });
         fetchGallery();
       } else {
-        const errorData = await response.json();
-        setAddError(errorData.message || 'Failed to add gallery item.');
+        const errorText = await response.text();
+        let errorMessage;
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorText;
+        } catch {
+          errorMessage = errorText;
+        }
+        
+        console.error('❌ [GALLERY MGMT] Failed to add gallery item:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorMessage
+        });
+        
+        setAddError(`Failed to add gallery item: ${errorMessage}`);
       }
     } catch (error) {
-      setAddError('Network or server error.');
+      console.error('❌ [GALLERY MGMT] Network error adding gallery item:', error);
+      setAddError(`Network or server error: ${error.message}`);
     } finally {
       setAddLoading(false);
     }
@@ -87,7 +112,7 @@ export default function GalleryManagement({ user }) {
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/api/admin/gallery/${editingItem._id}`, {
+      const response = await fetch(getApiUrl(`${API_ENDPOINTS.ADMIN_GALLERY}/${editingItem._id}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +132,7 @@ export default function GalleryManagement({ user }) {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this gallery item?')) return;
     try {
-      const response = await fetch(`/api/admin/gallery/${id}`, {
+      const response = await fetch(getApiUrl(`${API_ENDPOINTS.ADMIN_GALLERY}/${id}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
