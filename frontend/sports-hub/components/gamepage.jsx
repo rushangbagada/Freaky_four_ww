@@ -239,7 +239,42 @@ const PredictionGamePage = () => {
         setTimeout(async () => {
           console.log('🔄 Refreshing data after prediction evaluation...');
           
-          // Refresh live predictions
+          // Calculate and update local scores for finished matches
+          let totalPointsEarned = 0;
+          
+          // Check each newly finished match for user predictions
+          for (const match of newlyFinishedMatches) {
+            const userPredictionForMatch = livePredictions.find(p => p.matchId?._id === match._id);
+            
+            if (userPredictionForMatch) {
+              try {
+                const scoreResult = PredictionScoring.calculatePoints(
+                  userPredictionForMatch.predictedTeam1Score,
+                  userPredictionForMatch.predictedTeam2Score,
+                  match.team1_score,
+                  match.team2_score
+                );
+                
+                if (scoreResult.isValid) {
+                  totalPointsEarned += scoreResult.points;
+                  console.log(`📊 User earned ${scoreResult.points} points for match ${match.team1} vs ${match.team2}`);
+                }
+              } catch (error) {
+                console.error('❌ Error calculating points for finished match:', error);
+              }
+            }
+          }
+          
+          // Update user's total score locally if points were earned
+          if (totalPointsEarned > 0 && predictionUser) {
+            console.log(`🎯 Updating user's total score: +${totalPointsEarned} points`);
+            setPredictionUser(prev => ({
+              ...prev,
+              total_point: (prev.total_point || 0) + totalPointsEarned
+            }));
+          }
+          
+          // Refresh live predictions with updated data from backend
           if (predictionUser && predictionUser._id) {
             try {
               const endpoint = `${API_ENDPOINTS.USER_LIVE_PREDICTIONS}/${predictionUser._id}/live-match-predictions`;
@@ -257,16 +292,18 @@ const PredictionGamePage = () => {
             }
           }
           
-          // Refresh leaderboard
-          await refreshLeaderboard();
-          
-          // Refresh user data
+          // Refresh user data to get the most up-to-date stats from backend
           if (currentUser && currentUser.email) {
+            console.log('🔄 Fetching updated user data from backend...');
             await fetchPredictionUser(currentUser.email);
           }
           
+          // Refresh leaderboard to show updated rankings
+          console.log('🏆 Refreshing leaderboard with updated scores...');
+          await refreshLeaderboard();
+          
           console.log('✅ Data refresh completed after prediction evaluation');
-        }, 2000); // 2 second delay to allow backend processing
+        }, 3000); // 3 second delay to allow backend processing
       }
     } catch (error) {
       console.error('❌ Error in evaluateFinishedMatches:', error);
@@ -429,19 +466,31 @@ const PredictionGamePage = () => {
           return [...prev, data.prediction];
         });
 
-        // Update user stats and refresh prediction user data
+        // Update user stats for prediction count
         setCurrentUser(prev => ({
           ...prev,
           predictions: (prev.predictions || 0) + 1
         }));
         
-        // Refresh prediction user data to get updated stats
+        // Update prediction user stats for prediction count
+        if (predictionUser) {
+          setPredictionUser(prev => ({
+            ...prev,
+            prediction: (prev.prediction || 0) + 1
+          }));
+        }
+        
+        // Refresh prediction user data to get updated stats from backend
         if (currentUser && currentUser.email) {
-          fetchPredictionUser(currentUser.email);
+          setTimeout(() => {
+            fetchPredictionUser(currentUser.email);
+          }, 500); // Small delay to allow backend processing
         }
         
         // Refresh leaderboard to show updated rankings
-        refreshLeaderboard();
+        setTimeout(() => {
+          refreshLeaderboard();
+        }, 500);
 
         alert("Prediction submitted successfully!");
       })

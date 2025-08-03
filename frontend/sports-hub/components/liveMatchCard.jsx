@@ -96,17 +96,17 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
 
   const handleSubmit = async () => {
     if (team1Score === '' || team2Score === '') {
-      alert('Please enter scores for both teams');
+      console.log('Please enter scores for both teams');
       return;
     }
     
     if (formattedPrediction) {
-      alert('You have already made a prediction for this match!');
+      console.log('You have already made a prediction for this match!');
       return;
     }
     
     if (match.status === 'completed' || match.status === 'finished') {
-      alert('This match has already finished. Predictions are no longer allowed.');
+      console.log('This match has already finished. Predictions are no longer allowed.');
       return;
     }
     
