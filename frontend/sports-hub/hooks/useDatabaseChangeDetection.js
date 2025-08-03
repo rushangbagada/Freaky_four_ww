@@ -36,17 +36,22 @@ function useDatabaseChangeDetection(fetchData, dependencies = []) {
     };
     
     initialFetch();
-    
-    // Set up polling for real-time updates with more reasonable interval
-    console.log('🔄 Setting up polling with 30-second intervals');
-    const intervalId = setInterval(pollAndDetectChanges, 30000); // Poll every 30 seconds
-    
-    return () => {
-      if (intervalId) {
-        console.log('🛑 Cleaning up polling interval');
-        clearInterval(intervalId);
-      }
-    };
+
+    // Check if polling is needed based on certain conditions
+    if (dependencies && dependencies.length) {
+      console.log('Dependencies present, setting up polling');
+
+      // Set up polling for real-time updates with reduced frequency
+      console.log('🔄 Setting up polling with 1-minute intervals');
+      const intervalId = setInterval(pollAndDetectChanges, 60000); // Poll every 1 minute
+      
+      return () => {
+        if (intervalId) {
+          console.log('🛑 Cleaning up polling interval');
+          clearInterval(intervalId);
+        }
+      };
+    }
   }, dependencies);
 
   return { isPolling, hasChanges, lastUpdated };

@@ -190,7 +190,14 @@ export default function Result() {
   };
   
   // Use the real-time database change detection hook for automatic updates
-  useDatabaseChangeDetection(fetchResults, [sport, time, sortBy]);
+  // Only poll when filters change or on initial load
+  useDatabaseChangeDetection(fetchResults, []);
+  
+  // Handle filter changes separately to avoid excessive polling
+  useEffect(() => {
+    console.log('🔧 [RESULT DEBUG] Filter changed, fetching new data');
+    fetchResults();
+  }, [sport, time, sortBy]);
   
   return (
     <div className="result-container">
