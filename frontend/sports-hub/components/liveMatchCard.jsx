@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PredictionScoring from './utils/PredictionScoring';
 import './css/liveMatchCard.css';
 
 const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
@@ -17,13 +18,26 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
       return userPrediction.points;
     }
     
-    // Calculate points based on current match results
-    return calculatePoints(
-      userPrediction.predictedTeam1Score,
-      userPrediction.predictedTeam2Score,
-      match.team1_score,
-      match.team2_score
-    );
+    // Use enhanced calculation with error handling
+    try {
+      const result = PredictionScoring.calculatePoints(
+        userPrediction.predictedTeam1Score,
+        userPrediction.predictedTeam2Score,
+        match.team1_score,
+        match.team2_score,
+        { debug: process.env.NODE_ENV === 'development' }
+      );
+      
+      if (!result.isValid) {
+        console.warn('⚠️ Prediction calculation failed:', result.errors);
+        return 0;
+      }
+      
+      return result.points;
+    } catch (error) {
+      console.error('❌ Error calculating prediction points:', error);
+      return 0;
+    }
   };
   
   // Format the prediction object for display

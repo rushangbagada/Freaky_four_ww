@@ -1,3 +1,6 @@
+/* Themed Admin Dashboard Redesign */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 /* Admin Form Labels - Ensure all labels are white with high specificity */
 .admin-content label,
 .admin-dashboard label,
@@ -8,9 +11,6 @@
 .modal .form-group label {
   color: white !important;
 }
-
-/* Themed Admin Dashboard Redesign */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 * {
   box-sizing: border-box;

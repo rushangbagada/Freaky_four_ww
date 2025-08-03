@@ -5,7 +5,7 @@
  * and updates the backend leaderboard with calculated points.
  */
 
-import { apiRequest, API_ENDPOINTS } from '../src/config/api';
+import { apiRequest, API_ENDPOINTS } from '../../src/config/api';
 import PredictionScoring from '../utils/PredictionScoring';
 
 export class PredictionEvaluationService {

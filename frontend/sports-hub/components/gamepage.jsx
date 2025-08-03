@@ -338,46 +338,62 @@ const PredictionGamePage = () => {
     }
   };
 
-  // Handle live match prediction submission
+  // Handle live match prediction submission with enhanced validation
   const handleLivePrediction = (matchId, team1Score, team2Score) => {
-    console.log('handleLivePrediction called with:', { matchId, team1Score, team2Score });
-    console.log('Authentication check:', {
+    console.log('🎯 handleLivePrediction called with:', { matchId, team1Score, team2Score });
+    console.log('🔐 Authentication check:', {
       isAuthenticated: isAuthenticated(),
-      currentUser,
-      predictionUser,
-      hasPredictionUserId: predictionUser?.id,
+      currentUser: !!currentUser,
+      predictionUser: !!predictionUser,
+      hasPredictionUserId: !!predictionUser?._id,
       token: !!token
     });
     
-    // Use the prediction user's MongoDB _id for the API call
-    const userId = predictionUser?._id;
-    if (!isAuthenticated() || !currentUser || !predictionUser || !userId) {
-      console.log('Authentication failed - missing prediction user data');
-      alert("Please log in to submit predictions. If you continue to see this error, your account may need to be set up for predictions.");
-      return;
-    }
-    
-    // Validate input scores
-    if (team1Score === '' || team2Score === '' || team1Score === null || team2Score === null) {
-      alert("Please enter scores for both teams");
-      return;
-    }
-    
-    const parsedTeam1Score = parseInt(team1Score);
-    const parsedTeam2Score = parseInt(team2Score);
-    
-    if (isNaN(parsedTeam1Score) || isNaN(parsedTeam2Score) || parsedTeam1Score < 0 || parsedTeam2Score < 0) {
-      alert("Please enter valid positive numbers for scores");
-      return;
-    }
-    
-    console.log('Authentication passed - proceeding with prediction submission');
-    console.log('Request payload:', {
-      userId: userId,
-      matchId,
-      team1Score: parsedTeam1Score,
-      team2Score: parsedTeam2Score
-    });
+    try {
+      // Enhanced authentication validation
+      const userId = predictionUser?._id;
+      if (!isAuthenticated() || !currentUser || !predictionUser || !userId) {
+        console.log('❌ Authentication failed - missing prediction user data');
+        alert("Please log in to submit predictions. If you continue to see this error, your account may need to be set up for predictions.");
+        return;
+      }
+      
+      // Enhanced input validation using PredictionScoring utility
+      const validationResult = PredictionScoring.validatePrediction({
+        team1Score,
+        team2Score
+      });
+      
+      if (!validationResult.isValid) {
+        alert(`Validation Error: ${validationResult.error}`);
+        return;
+      }
+      
+      // Additional score validation
+      const team1Validation = PredictionScoring.validateScore(team1Score);
+      const team2Validation = PredictionScoring.validateScore(team2Score);
+      
+      if (!team1Validation.isValid) {
+        alert(`Team 1 Score Error: ${team1Validation.error}`);
+        return;
+      }
+      
+      if (!team2Validation.isValid) {
+        alert(`Team 2 Score Error: ${team2Validation.error}`);
+        return;
+      }
+      
+      // Use sanitized scores
+      const parsedTeam1Score = team1Validation.sanitized;
+      const parsedTeam2Score = team2Validation.sanitized;
+      
+      console.log('✅ Validation successful - proceeding with prediction submission');
+      console.log('Request payload:', {
+        userId: userId,
+        matchId,
+        team1Score: parsedTeam1Score,
+        team2Score: parsedTeam2Score
+      });
 
     const headers = {
       "Content-Type": "application/json"
@@ -442,6 +458,10 @@ const PredictionGamePage = () => {
         });
         alert(`Error submitting prediction: ${err.message}`);
       });
+    } catch (error) {
+      console.error('❌ Error in handleLivePrediction:', error);
+      alert(`Validation Error: ${error.message}`);
+    }
   };
 
   const now = new Date();
