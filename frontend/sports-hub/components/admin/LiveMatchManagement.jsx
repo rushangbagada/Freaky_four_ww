@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getApiUrl, API_ENDPOINTS, apiRequest } from '../../src/config/api';
 import useDatabaseChangeDetection from '../../hooks/useDatabaseChangeDetection';
+import PredictionEvaluationService from '../services/PredictionEvaluationService';
 import './css/live-match-management.css';
 
 export default function LiveMatchManagement({ user }) {
@@ -389,37 +390,111 @@ export default function LiveMatchManagement({ user }) {
   const handleFinishMatchAndCalculatePoints = async (matchId, team1Score, team2Score) => {
     try {
       setLoading(true);
-      const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}/update-scores`), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          team1_score: parseInt(team1Score),
-          team2_score: parseInt(team2Score),
-          status: 'finished'
-        })
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to finish match and calculate points');
+      console.log(`🏁 Finishing match ${matchId} with scores: ${team1Score}-${team2Score}`);
+      
+      // First, update the match status and scores
+      const currentMatch = liveMatches.find(m => m._id === matchId);
+      if (!currentMatch) {
+        throw new Error('Match not found');
       }
-  
-      const data = await response.json();
-      console.log('Match finished and points calculated:', data);
+      
+      // Update match to finished status
+      const finishedMatch = {
+        ...currentMatch,
+        team1_score: parseInt(team1Score),
+        team2_score: parseInt(team2Score),
+        status: 'completed'
+      };
+      
+      // Try to update via backend first
+      try {
+        const response = await fetch(getApiUrl(`/api/admin/live-matches/${matchId}`), {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(finishedMatch)
+        });
+        
+        if (response.ok) {
+          console.log('✅ Match updated in backend successfully');
+        } else {
+          console.warn('⚠️ Backend update failed, proceeding with evaluation anyway');
+        }
+      } catch (updateError) {
+        console.warn('⚠️ Failed to update match in backend:', updateError.message);
+      }
+      
+      // Now evaluate predictions using our service
+      console.log('🎯 Starting prediction evaluation...');
+      const evaluationResult = await PredictionEvaluationService.triggerAutomaticEvaluation(
+        finishedMatch,
+        localStorage.getItem('token')
+      );
+      
+      console.log('📊 Evaluation result:', evaluationResult);
       
       // Update the match in the UI
       setLiveMatches(prevMatches => 
         prevMatches.map(match => 
-          match._id === matchId ? data.match : match
+          match._id === matchId ? finishedMatch : match
         )
       );
-  
-      alert('Match finished and user points calculated successfully!');
+      
+      if (evaluationResult.success) {
+        const message = `Match finished successfully!\n\n` +
+          `📊 Final Score: ${team1Score} - ${team2Score}\n` +
+          `🎯 Predictions Evaluated: ${evaluationResult.evaluatedCount || 0}\n` +
+          `🏆 Leaderboard Updates: ${evaluationResult.leaderboardUpdates || 0}\n` +
+          `⭐ Total Points Awarded: ${evaluationResult.totalPointsAwarded || 0}`;
+        
+        alert(message);
+      } else {
+        const message = `Match finished, but prediction evaluation had issues:\n\n` +
+          `Reason: ${evaluationResult.reason || evaluationResult.error || 'Unknown error'}`;
+        
+        alert(message);
+      }
+      
     } catch (error) {
-      console.error('Error finishing match:', error);
-      alert(`Error: ${error.message}`);
+      console.error('❌ Error finishing match:', error);
+      alert(`Error finishing match: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Function to manually evaluate predictions for a completed match
+  const handleManualPredictionEvaluation = async (matchId) => {
+    try {
+      setLoading(true);
+      const match = liveMatches.find(m => m._id === matchId);
+      if (!match) {
+        throw new Error('Match not found');
+      }
+      
+      console.log('🔄 Manually evaluating predictions for match:', match.team1, 'vs', match.team2);
+      
+      const evaluationResult = await PredictionEvaluationService.evaluateMatchPredictions(
+        match,
+        localStorage.getItem('token')
+      );
+      
+      if (evaluationResult.success) {
+        const message = `Prediction evaluation completed!\n\n` +
+          `🎯 Predictions Evaluated: ${evaluationResult.evaluatedCount}\n` +
+          `🏆 Leaderboard Updates: ${evaluationResult.leaderboardUpdates}\n` +
+          `⭐ Total Points Awarded: ${evaluationResult.totalPointsAwarded}`;
+        
+        alert(message);
+      } else {
+        alert('Failed to evaluate predictions. Check console for details.');
+      }
+      
+    } catch (error) {
+      console.error('❌ Error evaluating predictions:', error);
+      alert(`Error evaluating predictions: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -632,7 +707,7 @@ export default function LiveMatchManagement({ user }) {
                     <span className="btn-text">Update Score</span>
                   </button>
                   
-                  {match.status !== 'finished' && (
+                  {match.status !== 'finished' && match.status !== 'completed' && (
                     <button 
                       className="action-btn finish-btn"
                       onClick={() => {
@@ -647,6 +722,17 @@ export default function LiveMatchManagement({ user }) {
                     >
                       <span className="btn-icon">🏁</span>
                       <span className="btn-text">Finish Match</span>
+                    </button>
+                  )}
+                  
+                  {(match.status === 'finished' || match.status === 'completed') && (
+                    <button 
+                      className="action-btn evaluate-btn"
+                      onClick={() => handleManualPredictionEvaluation(match._id)}
+                      title="Manually evaluate predictions for this match"
+                    >
+                      <span className="btn-icon">🎯</span>
+                      <span className="btn-text">Evaluate Predictions</span>
                     </button>
                   )}
                 </div>

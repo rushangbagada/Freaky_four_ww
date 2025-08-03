@@ -124,6 +124,7 @@ export const API_ENDPOINTS = {
   USER_BY_EMAIL: '/api/user',
   USER_LIVE_PREDICTIONS: '/api/user',
   SUBMIT_LIVE_PREDICTION: '/api/user/live-match-prediction',
+  EVALUATE_MATCH_PREDICTIONS: '/api/predictions/evaluate-match',
   
   // Admin endpoints
   ADMIN_LIVE_MATCHES: '/api/admin/live-matches',

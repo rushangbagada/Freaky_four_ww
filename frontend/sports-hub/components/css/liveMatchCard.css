@@ -287,3 +287,35 @@
 .live-match-card .event-player {
   color: var(--text-secondary);
 }
+
+/* More events indicator */
+.live-match-card .more-events-indicator {
+  padding: 0.5rem 0;
+  border-bottom: none !important;
+  justify-content: center;
+  background: rgba(56, 189, 248, 0.05);
+  border-radius: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.live-match-card .more-text {
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.live-match-card .more-text::before {
+  content: '⋯';
+  font-size: 1.2rem;
+  color: var(--accent-gold);
+}
+
+.live-match-card .more-text::after {
+  content: '⋯';
+  font-size: 1.2rem;
+  color: var(--accent-gold);
+}

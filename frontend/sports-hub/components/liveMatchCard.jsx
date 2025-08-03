@@ -6,11 +6,31 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
   const [team2Score, setTeam2Score] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // Calculate points if match is finished and we have prediction data
+  const calculateCurrentPoints = () => {
+    if (!userPrediction || !match || (match.status !== 'completed' && match.status !== 'finished')) {
+      return userPrediction?.points || 0;
+    }
+    
+    // If points are already calculated from backend, use them
+    if (userPrediction.points !== undefined && userPrediction.points !== null) {
+      return userPrediction.points;
+    }
+    
+    // Calculate points based on current match results
+    return calculatePoints(
+      userPrediction.predictedTeam1Score,
+      userPrediction.predictedTeam2Score,
+      match.team1_score,
+      match.team2_score
+    );
+  };
+  
   // Format the prediction object for display
   const formattedPrediction = userPrediction ? {
     team1Score: userPrediction.predictedTeam1Score,
     team2Score: userPrediction.predictedTeam2Score,
-    points: userPrediction.points || 0
+    points: calculateCurrentPoints()
   } : null;
 
   // Calculate prediction points based on accuracy
@@ -42,6 +62,22 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
     
     // No points for incorrect prediction
     return 0;
+  };
+
+  // Get scoring explanation for display
+  const getScoreExplanation = (points) => {
+    switch (points) {
+      case 5:
+        return '🎯 Perfect! Exact score match';
+      case 3:
+        return '🎉 Great! Correct result and goal difference';
+      case 1:
+        return '👍 Good! Correct match result';
+      case 0:
+        return '😔 Better luck next time!';
+      default:
+        return '⏳ Pending evaluation';
+    }
   };
 
   const handleSubmit = async () => {
@@ -101,9 +137,16 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
         </div>
       )}
 
-      {match.status === 'finished' ? (
+      {(match.status === 'finished' || match.status === 'completed') ? (
         <div className="final-score">
           <p>Final Score: {match.team1_score} - {match.team2_score}</p>
+          {formattedPrediction && (
+            <div className="user-prediction">
+              <p>Your Prediction: {formattedPrediction.team1Score} - {formattedPrediction.team2Score}</p>
+              <p className="points-earned">Points earned: {formattedPrediction.points}</p>
+              <p className="score-explanation">{getScoreExplanation(formattedPrediction.points)}</p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="prediction-form">
@@ -133,7 +176,7 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
               </div>
               <button 
                 onClick={handleSubmit}
-                disabled={match.status === 'finished'}
+                disabled={match.status === 'finished' || match.status === 'completed'}
               >
                 Submit Prediction
               </button>
@@ -141,8 +184,11 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
           ) : (
             <div className="user-prediction">
               <p>Your Prediction: {formattedPrediction.team1Score} - {formattedPrediction.team2Score}</p>
-              {match.status === 'finished' && (
-                <p className="points-earned">Points earned: {formattedPrediction.points}</p>
+              {(match.status === 'finished' || match.status === 'completed') && (
+                <>
+                  <p className="points-earned">Points earned: {formattedPrediction.points}</p>
+                  <p className="score-explanation">{getScoreExplanation(formattedPrediction.points)}</p>
+                </>
               )}
             </div>
           )}
@@ -151,10 +197,10 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
 
       {(match.status === 'live' || match.status === 'ongoing') && (
         <div className="match-events">
-          <h4>Match Events</h4>
+          <h4>Recent Events</h4>
           <ul>
             {match.events && match.events.length > 0 ? (
-              match.events.map((event, index) => (
+              match.events.slice(0, 3).map((event, index) => (
                 <li key={index}>
                   <span className="event-time">{event.time}</span>
                   <span className="event-type">{event.type}</span>
@@ -164,6 +210,11 @@ const LiveMatchCard = ({ match, onPredict, userPrediction }) => {
               ))
             ) : (
               <li>No events yet</li>
+            )}
+            {match.events && match.events.length > 3 && (
+              <li className="more-events-indicator">
+                <span className="more-text">+{match.events.length - 3} more events...</span>
+              </li>
             )}
           </ul>
         </div>

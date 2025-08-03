@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MatchCard from './matchcard.jsx';
 import LiveMatchCard from './liveMatchCard.jsx'; // New component for live matches
 import Leaderboard from './leader.jsx';
@@ -7,6 +7,7 @@ import Quiz from './quiz.jsx';
 import { useAuth } from '../src/AuthContext';
 import useDatabaseChangeDetection from '../hooks/useDatabaseChangeDetection';
 import { apiRequest, getApiUrl, API_ENDPOINTS } from '../src/config/api';
+import PredictionScoring from './utils/PredictionScoring.js';
 import './css/gamepage.css';
 
 const PredictionGamePage = () => {
@@ -17,7 +18,9 @@ const PredictionGamePage = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [predictionUser, setPredictionUser] = useState(null);
+  const [finishedMatches, setFinishedMatches] = useState(new Set());
   const { user, isAuthenticated, token } = useAuth();
+  const evaluationInProgress = useRef(false);
 
   // Set current user from AuthContext
   useEffect(() => {
@@ -174,6 +177,108 @@ const PredictionGamePage = () => {
     fetchAllMatchData,
     []
   );
+
+  // Function to evaluate predictions for finished matches
+  const evaluateFinishedMatches = async () => {
+    if (evaluationInProgress.current || !token) {
+      return;
+    }
+
+    try {
+      evaluationInProgress.current = true;
+      console.log('🎯 Checking for finished matches to evaluate predictions...');
+      
+      // Get all matches (live and other)
+      const allCurrentMatches = [...liveMatches, ...matches];
+      
+      // Find newly finished matches
+      const newlyFinishedMatches = allCurrentMatches.filter(match => {
+        const isFinished = match.status === 'completed' || match.status === 'finished';
+        const isNewlyFinished = isFinished && !finishedMatches.has(match._id);
+        return isNewlyFinished && match.team1_score !== undefined && match.team2_score !== undefined;
+      });
+      
+      if (newlyFinishedMatches.length > 0) {
+        console.log('🏁 Found newly finished matches:', newlyFinishedMatches.map(m => `${m.team1} vs ${m.team2}`));
+        
+        // Update finished matches set
+        setFinishedMatches(prev => {
+          const newSet = new Set(prev);
+          newlyFinishedMatches.forEach(match => newSet.add(match._id));
+          return newSet;
+        });
+        
+        // Trigger prediction evaluation API call for each finished match
+        for (const match of newlyFinishedMatches) {
+          try {
+            console.log(`📊 Triggering evaluation for match: ${match.team1} vs ${match.team2}`);
+            
+            // Call backend to evaluate all predictions for this match
+            await apiRequest(API_ENDPOINTS.EVALUATE_MATCH_PREDICTIONS, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                matchId: match._id,
+                finalScore: {
+                  team1Score: match.team1_score,
+                  team2Score: match.team2_score
+                }
+              })
+            });
+            
+            console.log(`✅ Successfully triggered evaluation for match ${match._id}`);
+          } catch (error) {
+            console.error(`❌ Failed to evaluate predictions for match ${match._id}:`, error);
+          }
+        }
+        
+        // Refresh user predictions and leaderboard after evaluation
+        setTimeout(async () => {
+          console.log('🔄 Refreshing data after prediction evaluation...');
+          
+          // Refresh live predictions
+          if (predictionUser && predictionUser._id) {
+            try {
+              const endpoint = `${API_ENDPOINTS.USER_LIVE_PREDICTIONS}/${predictionUser._id}/live-match-predictions`;
+              const data = await apiRequest(endpoint, {
+                headers: { "Authorization": `Bearer ${token}` }
+              });
+              
+              if (Array.isArray(data)) {
+                setLivePredictions(data);
+              } else if (data && data.data && Array.isArray(data.data)) {
+                setLivePredictions(data.data);
+              }
+            } catch (error) {
+              console.error('❌ Error refreshing predictions after evaluation:', error);
+            }
+          }
+          
+          // Refresh leaderboard
+          await refreshLeaderboard();
+          
+          // Refresh user data
+          if (currentUser && currentUser.email) {
+            await fetchPredictionUser(currentUser.email);
+          }
+          
+          console.log('✅ Data refresh completed after prediction evaluation');
+        }, 2000); // 2 second delay to allow backend processing
+      }
+    } catch (error) {
+      console.error('❌ Error in evaluateFinishedMatches:', error);
+    } finally {
+      evaluationInProgress.current = false;
+    }
+  };
+
+  // Monitor for finished matches and trigger evaluation
+  useEffect(() => {
+    evaluateFinishedMatches();
+  }, [liveMatches, matches, token]);
 
   // Fetch user's predictions if user is logged in
   useEffect(() => {
