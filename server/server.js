@@ -63,7 +63,7 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5000',
   // Add your Vercel domain when you deploy
-  // 'https://your-app-name.vercel.app',
+  'https://freaky-four-ww.vercel.app',
   // You can also use environment variables
   process.env.FRONTEND_URL
 ].filter(Boolean); // Remove undefined values
@@ -1015,8 +1015,8 @@ app.post("/api/booking", async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:5173/payment/PaymentSuccess", // ✅ make sure this exists in frontend
-      cancel_url: "http://localhost:5173/payment/PaymentFailed",   // ✅ make sure this exists in frontend
+      success_url: "https://freaky-four-ww.vercel.app/payment/PaymentSuccess", // ✅ make sure this exists in frontend
+      cancel_url: "https://freaky-four-ww.vercel.app/payment/PaymentFailed",   // ✅ make sure this exists in frontend
     });
 
     res.status(200).json({ id: session.id, url: session.url });
