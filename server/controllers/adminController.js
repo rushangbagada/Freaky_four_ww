@@ -64,6 +64,15 @@ const deleteClub = async (req, res) => {
 };
 
 // Match Management
+const getAllMatches = async (req, res) => {
+  try {
+    const matches = await Match.find().sort({ date: -1 });
+    res.json(matches);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching matches', error: error.message });
+  }
+};
+
 const createMatch = async (req, res) => {
   try {
     const { team1, team2, date, venue, category, team1_score, team2_score, mvp } = req.body;
@@ -711,6 +720,7 @@ module.exports = {
   deleteClub,
   
   // Match Management
+  getAllMatches,
   createMatch,
   updateMatch,
   deleteMatch,

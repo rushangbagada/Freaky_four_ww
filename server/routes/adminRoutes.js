@@ -12,6 +12,7 @@ const {
   deleteClub,
   
   // Match Management
+  getAllMatches,
   createMatch,
   updateMatch,
   deleteMatch,
@@ -71,6 +72,10 @@ const {
   getQuizQuestion
 } = require('../controllers/adminQuizController');
 
+const {
+  evaluateMatchPredictions
+} = require('../controllers/predictionController');
+
 // Then add this route after the dashboard route
 // Dashboard
 router.get('/dashboard', requireAdmin, getDashboardStats);
@@ -85,6 +90,7 @@ router.delete('/clubs/:id', requireAdmin, deleteClub);
 router.put('/my-club', requireClubLeader('club'), updateClub);
 
 // Match Management Routes (admin)
+router.get('/matches', requireAdmin, getAllMatches);
 router.post('/matches', requireAdmin, createMatch);
 router.put('/matches/:id', requireAdmin, updateMatch);
 router.delete('/matches/:id', requireAdmin, deleteMatch);
@@ -168,5 +174,8 @@ router.get('/quiz', requireAdmin, getAllQuizQuestions);
 router.get('/quiz/:id', requireAdmin, getQuizQuestion);
 router.put('/quiz/:id', requireAdmin, updateQuizQuestion);
 router.delete('/quiz/:id', requireAdmin, deleteQuizQuestion);
+
+// Prediction Management Routes (admin only)
+router.post('/predictions/evaluate-match', requireAdmin, evaluateMatchPredictions);
 
 module.exports = router;
