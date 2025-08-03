@@ -2,12 +2,20 @@
 const API_BASE_URL = import.meta.env.VITE_APP_API_URL || 'https://freaky-four.onrender.com';
 
 // Always log API configuration for debugging
-console.log('🔧 API Configuration:', {
-  VITE_APP_API_URL: import.meta.env.VITE_APP_API_URL,
-  API_BASE_URL,
-  environment: import.meta.env.MODE,
-  allEnvVars: Object.keys(import.meta.env).filter(key => key.startsWith('VITE_'))
-});
+// console.log('🔧 API Configuration:', {
+//   VITE_APP_API_URL: import.meta.env.VITE_APP_API_URL,
+//   API_BASE_URL,
+//   environment: import.meta.env.MODE,
+//   allEnvVars: Object.keys(import.meta.env).filter(key => key.startsWith('VITE_'))
+// });
+
+if (import.meta.env.MODE === 'development') {
+  console.log('🔧 API Configuration:', {
+    VITE_APP_API_URL: import.meta.env.VITE_APP_API_URL,
+    API_BASE_URL,
+    environment: import.meta.env.MODE
+  });
+}
 
 // Utility function to get the full API URL
 export const getApiUrl = (endpoint) => {
